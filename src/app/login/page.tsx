@@ -56,7 +56,9 @@ function LoginForm() {
             // Delay redirect
             setTimeout(() => {
                 // Redirect based on role
-                if (data.user.role === 'PARTNER_OWNER' || data.user.role === 'PARTNER_STAFF') {
+                if (data.user.role === 'ADMIN') {
+                    router.push('/admin/dashboard')
+                } else if (data.user.role === 'PARTNER_OWNER' || data.user.role === 'PARTNER_STAFF') {
                     router.push('/partner/dashboard')
                 } else if (data.user.role === 'PROVIDER_ADMIN') {
                     router.push('/provider/dashboard')

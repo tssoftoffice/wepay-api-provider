@@ -27,5 +27,14 @@ export async function validateApiKey(req: NextRequest) {
         return { error: 'Partner subscription is not active', status: 403 }
     }
 
+    if (partner.subscriptionEnd && new Date() > partner.subscriptionEnd) {
+        // Auto-expire if date passed
+        await prisma.partner.update({
+            where: { id: partner.id },
+            data: { subscriptionStatus: 'EXPIRED' }
+        })
+        return { error: 'Partner subscription has expired', status: 403 }
+    }
+
     return { partner }
 }

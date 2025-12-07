@@ -71,9 +71,17 @@ export default function SubscriptionHistoryPage() {
                         <tbody>
                             {transactions.map((txn) => {
                                 const isSuccess = ['SUCCESS', 'SUCCEEDED', 'PAID'].includes(txn.status)
-                                const validUntil = isSuccess
-                                    ? new Date(new Date(txn.createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()
-                                    : '-'
+                                let validUntil = '-'
+                                if (isSuccess) {
+                                    validUntil = new Date(new Date(txn.createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()
+                                } else if (txn.status === 'PENDING') {
+                                    const expiryTime = new Date(new Date(txn.createdAt).getTime() + 15 * 60 * 1000)
+                                    if (expiryTime < new Date()) {
+                                        validUntil = 'Expired'
+                                    } else {
+                                        validUntil = expiryTime.toLocaleTimeString()
+                                    }
+                                }
 
                                 return (
                                     <tr key={txn.id}>

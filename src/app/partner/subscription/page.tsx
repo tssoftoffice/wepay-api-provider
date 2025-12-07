@@ -70,22 +70,22 @@ export default function SubscriptionPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Subscription Management</h1>
+            <h1 className={styles.title}>{t.subscription.title}</h1>
 
             <Card className={styles.card}>
                 <div className={styles.planInfo}>
-                    <h2>Starter Plan</h2>
-                    <div className={styles.price}>1 THB <span className={styles.period}>/ Month</span></div>
+                    <h2>{t.subscription.starterPlan}</h2>
+                    <div className={styles.price}>1 THB <span className={styles.period}>{t.subscription.pricePerMonth}</span></div>
                     <ul className={styles.features}>
-                        <li>✓ 24/7 Automated System</li>
-                        <li>✓ High Profit Margin</li>
-                        <li>✓ Full Support</li>
+                        <li>✓ {t.subscription.feature1}</li>
+                        <li>✓ {t.subscription.feature2}</li>
+                        <li>✓ {t.subscription.feature3}</li>
                     </ul>
                 </div>
 
                 <div className={styles.action}>
                     <Button onClick={handleRenew} disabled={loading} className={styles.renewButton}>
-                        {loading ? 'Processing...' : 'Renew Subscription (1 THB)'}
+                        {loading ? t.subscription.processing : `${t.subscription.renew} (1 THB)`}
                     </Button>
                 </div>
             </Card>
@@ -95,23 +95,36 @@ export default function SubscriptionPage() {
                     {isSuccess ? (
                         <div style={{ textAlign: 'center', padding: '2rem' }}>
                             <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
-                            <h3 style={{ color: '#10b981', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Payment Successful!</h3>
-                            <p style={{ color: '#6b7280' }}>Redirecting to dashboard...</p>
+                            <h3 style={{ color: '#10b981', fontSize: '1.5rem', marginBottom: '0.5rem' }}>{t.subscription.paymentSuccess}</h3>
+                            <p style={{ color: '#6b7280' }}>{t.subscription.redirecting}</p>
                         </div>
                     ) : (
                         qrCode && (
                             <>
-                                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+                                <div className={styles.qrHeader}>
+                                    <div className={styles.qrTitle}>{t.subscription.totalPayment}</div>
+                                    <div className={styles.qrAmount}>฿1.00</div>
+                                </div>
+
+                                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
                                     <img
                                         src={qrCode}
                                         alt="Payment QR Code"
-                                        style={{ width: '250px', height: '250px', objectFit: 'contain' }}
+                                        style={{ width: '240px', height: '240px', objectFit: 'contain', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px' }}
                                     />
                                 </div>
-                                <p style={{ fontSize: '0.9rem', color: '#666' }}>
-                                    Reference ID: {transactionId}
-                                </p>
-                                <p className={styles.instruction}>Scan with your banking app</p>
+
+                                <div style={{ textAlign: 'center' }}>
+                                    <div className={styles.qrRef}>
+                                        {t.subscription.ref} {transactionId}
+                                    </div>
+                                    <p className={styles.instruction} style={{ fontSize: '1rem', fontWeight: 500, color: '#334155' }}>
+                                        {t.subscription.scanInstruction}
+                                    </p>
+                                    <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.5rem' }}>
+                                        {t.subscription.timeLimit}
+                                    </p>
+                                </div>
                             </>
                         )
                     )}

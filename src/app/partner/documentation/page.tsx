@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import styles from './page.module.css'
+import GenerateKeysButton from './GenerateKeysButton'
 
 async function getPartnerData() {
     const session = await getSession()
@@ -59,6 +60,11 @@ export default async function DocumentationPage() {
                             <p className={styles.keyHint}>เก็บเป็นความลับ! ใช้ยืนยันคำสั่งซื้อและการทำธุรกรรม</p>
                         </div>
                     </div>
+                    {(!partner.apiKey || !partner.secretKey) && (
+                        <div style={{ marginTop: '1rem' }}>
+                            <GenerateKeysButton />
+                        </div>
+                    )}
                 </section>
 
                 <hr className={styles.divider} />
@@ -93,7 +99,17 @@ console.log(response.data);`}
   "data": {
     "partner_name": "My Shop",
     "wallet_balance": 1540.00,
-    "currency": "THB"
+    "currency": "THB",
+    "contact": {
+        "lineId": "@mystore",
+        "email": "contact@example.com"
+    },
+    "statistics": {
+        "total_revenue": 50000,
+        "total_profit": 5200,
+        "daily_revenue": 1500,
+        "daily_profit": 120
+    }
   }
 }`}
                     </pre>

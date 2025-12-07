@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -68,7 +68,8 @@ model Game {
   id       String                 @id @default(uuid())
   name     String
   code     String                 @unique
-  baseCost Decimal
+  providerPrice Decimal       @default(0) // Cost from Supplier (WePay)
+  baseCost Decimal            // Cost for Partners (Provider Price + Platform Margin)
   status   String                 @default("ACTIVE")
   imageUrl String?
   description String?
@@ -106,6 +107,7 @@ model GameTopupTransaction {
   partnerId     String
   gameId        String
   baseCost      Decimal
+  providerPrice Decimal   @default(0) // Cost from Supplier (WePay) at time of transaction
   sellPrice     Decimal
   status        String   @default("PENDING")
   server        String?
@@ -134,4 +136,12 @@ model SubscriptionTransaction {
   status    String   @default("PENDING")
   createdAt DateTime @default(now())
   partner   Partner  @relation(fields: [partnerId], references: [id])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

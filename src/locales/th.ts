@@ -248,5 +248,21 @@ export const th = {
         sales: 'ยอดขาย',
         profit: 'กำไร',
         noData: 'ไม่พบข้อมูลในช่วงเวลาที่เลือก'
+    },
+    subscription: {
+        title: 'จัดการแพ็กเกจสมาชิก',
+        starterPlan: 'แพ็กเกจเริ่มต้น',
+        pricePerMonth: '/ เดือน',
+        feature1: 'ระบบอัตโนมัติ 24/7',
+        feature2: 'กำไรสูง',
+        feature3: 'ดูแลตลอดการใช้งาน',
+        renew: 'ต่ออายุสมาชิก',
+        processing: 'กำลังดำเนินการ...',
+        paymentSuccess: 'ชำระเงินสำเร็จ!',
+        redirecting: 'กำลังกลับหน้าแดชบอร์ด...',
+        totalPayment: 'ยอดชำระเงิน (รวม)',
+        ref: 'หมายเลขทำรายการ:',
+        scanInstruction: 'สแกน QR เพื่อชำระเงินด้วยแอปธนาคาร',
+        timeLimit: 'กรุณาชำระเงินภายใน 15 นาที'
     }
 }

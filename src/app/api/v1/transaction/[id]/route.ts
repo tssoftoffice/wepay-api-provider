@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         data: {
             id: transaction.id,
             status: transaction.status,
-            amount: Number(transaction.amount),
+            amount: Number(transaction.sellPrice),
             game: transaction.game.name,
             target_id: transaction.targetId,
             created_at: transaction.createdAt,

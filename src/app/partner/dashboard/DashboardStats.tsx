@@ -14,7 +14,7 @@ async function getStats(partnerId: string) {
         },
         include: {
             game: {
-                select: { code: true, name: true }
+                select: { code: true, name: true, baseCost: true }
             }
         },
         orderBy: { createdAt: 'desc' } // Get distinct latest for recent transactions if needed
@@ -24,6 +24,7 @@ async function getStats(partnerId: string) {
     let totalRevenue = 0
     let monthlyRevenue = 0
     let dailyRevenue = 0
+    let dailyProfit = 0
     let profit = 0
 
     // Status Counts
@@ -38,6 +39,9 @@ async function getStats(partnerId: string) {
     const revenueHistory: Record<string, number> = {}
     const volumeHistory: Record<string, number> = {}
 
+    // Group for Monthly Revenue (Last 6 months)
+    const monthlyRevenueHistory: Record<string, number> = {}
+
     // Initialize last 7 days keys
     for (let i = 6; i >= 0; i--) {
         const d = new Date()
@@ -47,9 +51,18 @@ async function getStats(partnerId: string) {
         volumeHistory[key] = 0
     }
 
+    // Initialize last 6 months keys
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date()
+        d.setMonth(d.getMonth() - i)
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` // YYYY-MM
+        monthlyRevenueHistory[key] = 0
+    }
+
     transactions.forEach(tx => {
         const txDate = new Date(tx.createdAt)
         const dateKey = tx.createdAt.toISOString().split('T')[0]
+        const monthKey = `${txDate.getFullYear()}-${String(txDate.getMonth() + 1).padStart(2, '0')}`
 
         // Volume Stats (All Status)
         if (volumeHistory[dateKey] !== undefined) {
@@ -63,17 +76,19 @@ async function getStats(partnerId: string) {
 
         // Revenue Stats (Only Success)
         if (tx.status === 'SUCCESS' || tx.status === 'SUCCEEDED') {
-            const amount = Number(tx.sellPrice)
-            const estimatedSellingPrice = amount * 1.15 // Simulated 15% margin
+            const revenue = Number(tx.sellPrice)
+            const cost = Number(tx.baseCost)
+            const realProfit = revenue - cost
 
-            totalRevenue += estimatedSellingPrice
-            profit += (estimatedSellingPrice - amount)
+            totalRevenue += revenue
+            profit += realProfit
 
             if (txDate >= firstDayOfMonth) {
-                monthlyRevenue += estimatedSellingPrice
+                monthlyRevenue += revenue
             }
             if (dateKey === now.toISOString().split('T')[0]) {
-                dailyRevenue += estimatedSellingPrice
+                dailyRevenue += revenue
+                dailyProfit += realProfit
             }
 
             // Pie Chart Data (Only Success Sales)
@@ -86,9 +101,14 @@ async function getStats(partnerId: string) {
 
             gameSales[groupName] = (gameSales[groupName] || 0) + 1
 
-            // Revenue History
+            // Revenue History (Daily)
             if (revenueHistory[dateKey] !== undefined) {
-                revenueHistory[dateKey] += estimatedSellingPrice
+                revenueHistory[dateKey] += revenue
+            }
+
+            // Revenue History (Monthly)
+            if (monthlyRevenueHistory[monthKey] !== undefined) {
+                monthlyRevenueHistory[monthKey] += revenue
             }
         }
     })
@@ -102,6 +122,7 @@ async function getStats(partnerId: string) {
     return {
         financials: {
             daily: dailyRevenue,
+            dailyProfit: dailyProfit,
             monthly: monthlyRevenue,
             total: totalRevenue,
             profit: profit
@@ -110,6 +131,7 @@ async function getStats(partnerId: string) {
         charts: {
             pie: Object.entries(gameSales).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
             revenueArea: Object.entries(revenueHistory).map(([name, value]) => ({ name, value })),
+            revenueMonthly: Object.entries(monthlyRevenueHistory).map(([name, value]) => ({ name, value })),
             volumeBar: Object.entries(volumeHistory).map(([name, value]) => ({ name, value })),
             statusPie: [
                 { name: 'สำเร็จ', value: successCount, color: '#10b981' },
@@ -148,6 +170,26 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                     {partner?.subscriptionStatus !== 'ACTIVE' && (
                         <a href="/partner/subscription" className={styles.statLink}>ต่ออายุ →</a>
                     )}
+                </div>
+
+                {/* Daily Revenue (New) */}
+                <div className={styles.card}>
+                    <div className={styles.cardHeader}>
+                        <span>รายได้วันนี้</span>
+                        <span className={styles.icon}>☀️</span>
+                    </div>
+                    <div className={styles.cardValue}>฿{financials.daily.toLocaleString()}</div>
+                    <div className={styles.cardSub}>ยอดขายเฉพาะวันนี้</div>
+                </div>
+
+                {/* Daily Profit (New) */}
+                <div className={styles.card}>
+                    <div className={styles.cardHeader}>
+                        <span>กำไรวันนี้</span>
+                        <span className={styles.icon}>📈</span>
+                    </div>
+                    <div className={`${styles.cardValue} ${styles.profit}`}>฿{financials.dailyProfit.toLocaleString()}</div>
+                    <div className={styles.cardSub}>กำไรเฉพาะวันนี้</div>
                 </div>
 
                 <div className={styles.card}>

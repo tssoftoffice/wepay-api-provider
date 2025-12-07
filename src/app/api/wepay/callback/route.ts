@@ -3,11 +3,33 @@ import prisma from '@/lib/prisma'
 
 export async function POST(request: Request) {
     try {
-        // WePay sends data as form-data or urlencoded
-        const formData = await request.formData()
-        const destRef = formData.get('dest_ref') as string
-        const wepayTxnId = formData.get('transaction_id') as string
-        const status = formData.get('status') as string // 2 = Success, 4 = Failed
+        // WePay sends data as form-data or urlencoded, but we need to handling content-type strictly
+        const contentType = request.headers.get('content-type') || ''
+        let destRef = ''
+        let wepayTxnId = ''
+        let status = ''
+
+        console.log('WePay Callback Content-Type:', contentType)
+
+        if (contentType.includes('application/json')) {
+            const body = await request.json()
+            destRef = body.dest_ref
+            wepayTxnId = body.transaction_id
+            status = body.status
+        } else if (contentType.includes('multipart/form-data') || contentType.includes('application/x-www-form-urlencoded')) {
+            const formData = await request.formData()
+            destRef = formData.get('dest_ref') as string
+            wepayTxnId = formData.get('transaction_id') as string
+            status = formData.get('status') as string
+        } else {
+            // Fallback: parse as text/urlencoded manually
+            const text = await request.text()
+            console.log('WePay Callback Raw Body:', text)
+            const params = new URLSearchParams(text)
+            destRef = params.get('dest_ref') || ''
+            wepayTxnId = params.get('transaction_id') || ''
+            status = params.get('status') || ''
+        }
 
         console.log('WePay Callback:', { destRef, wepayTxnId, status })
 

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { SocksProxyAgent } from 'socks-proxy-agent'
+import { getWePayErrorMessage } from './wepay-errors'
 
 const WEPAY_ENDPOINT = process.env.WEPAY_ENDPOINT || 'https://www.wepay.in.th/client_api.json.php'
 const USERNAME = process.env.WEPAY_USERNAME
@@ -52,8 +53,12 @@ export class WePayClient {
         try {
             const response = await axios.post(WEPAY_ENDPOINT, formData, config)
             return response.data
-        } catch (error) {
-            console.error('WePay Request Error:', error)
+        } catch (error: any) {
+            console.error('WePay Request Error:', error.message)
+            if (error.response) {
+                console.error('WePay Status:', error.response.status)
+                console.error('WePay Data:', error.response.data)
+            }
             throw error
         }
     }
@@ -61,7 +66,7 @@ export class WePayClient {
     static async getBalance(): Promise<{ ledger: number, available: number }> {
         const res = await this.request({ type: 'balance_inquiry' })
         if (res.code !== '00000') {
-            throw new Error(`WePay Balance Error: ${res.code}`)
+            throw new Error(`WePay Balance Error: ${getWePayErrorMessage(res.code)}`)
         }
         return {
             ledger: Number(res.ledger_balance),
@@ -90,7 +95,7 @@ export class WePayClient {
 
         // Note: Code 00000 here means "Accepted for processing", not "Success"
         if (res.code !== '00000') {
-            throw new Error(`WePay Payment Error: ${res.code}`)
+            throw new Error(`WePay Payment Error: ${getWePayErrorMessage(res.code)}`)
         }
 
         return {

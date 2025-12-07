@@ -54,7 +54,15 @@ export function GameHistoryClient({ initialData }: Props) {
                                 })}
                             </td>
                             <td>
-                                <span className={styles.txnId}>
+                                <span
+                                    className={styles.txnId}
+                                    title="Click to copy full ID"
+                                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(txn.id)
+                                        alert('Copied Full ID: ' + txn.id)
+                                    }}
+                                >
                                     {txn.transactionId || txn.id.substring(0, 8)}
                                 </span>
                             </td>

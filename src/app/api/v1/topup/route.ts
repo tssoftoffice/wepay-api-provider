@@ -29,8 +29,24 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Game not found or inactive' }, { status: 404 })
         }
 
-        // 2. Determine cost (Partner's cost is baseCost)
+        // 2. Determine cost & sell price
         const cost = Number(game.baseCost)
+        let sellPrice = cost
+
+        // Check if partner has set a custom price
+        const customPrice = await prisma.partnerGamePrice.findUnique({
+            where: {
+                partnerId_gameId: {
+                    partnerId: partner!.id,
+                    gameId: game.id
+                }
+            }
+        })
+
+        if (customPrice) {
+            sellPrice = Number(customPrice.sellPrice)
+        }
+
         const partnerBalance = Number(partner!.walletBalance)
 
         if (partnerBalance < cost) {
@@ -44,10 +60,9 @@ export async function POST(req: NextRequest) {
                 gameId: game.id,
                 // customerId is optional/undefined for API
                 targetId: player_id,
-                amount: cost,
-                cost: cost,
                 baseCost: cost, // For API, baseCost from game
-                sellPrice: cost, // For API, sellPrice is what we charge partner
+                providerPrice: game.providerPrice,
+                sellPrice: sellPrice, // Use determined sellPrice
                 status: 'PENDING',
                 server: server || null
             }
@@ -111,7 +126,8 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json({
                 error: 'Provider Error',
-                details: error.message
+                details: error.message,
+                transaction_id: transaction.id
             }, { status: 502 })
         }
 

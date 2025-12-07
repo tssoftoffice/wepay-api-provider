@@ -26,7 +26,11 @@ async function getHistory() {
         }
     })
 
-    return transactions
+    return transactions.map(tx => ({
+        ...tx,
+        baseCost: Number(tx.baseCost),
+        sellPrice: Number(tx.sellPrice)
+    }))
 }
 
 export default async function GameHistoryPage() {

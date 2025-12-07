@@ -66,11 +66,47 @@
 }
 
 .qrContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.qrHeader {
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+    padding: 1.5rem;
+    border-radius: 12px 12px 0 0;
+    margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+    color: white;
     text-align: center;
-    padding: 1rem;
+    width: calc(100% + 3rem);
+}
+
+.qrTitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.qrAmount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.qrRef {
+    background: #f1f5f9;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #475569;
+    display: inline-block;
+    margin-bottom: 1rem;
 }
 
 .instruction {
-    margin-top: 1rem;
-    color: #6b7280;
+    font-weight: 500;
+    color: #374151;
 }

@@ -1,138 +1,15 @@
 'use client'
 
-import React, { useState, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { Card } from '@/components/ui/Card'
-import { Input } from '@/components/ui/Input'
+import React, { Suspense } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
-import { Modal } from '@/components/ui/Modal'
 import Link from 'next/link'
 import styles from './page.module.css'
 import { useLanguage } from '@/contexts/LanguageContext'
 
-function RegisterForm() {
+function RegisterLanding() {
     const router = useRouter()
-    const searchParams = useSearchParams()
-    const roleParam = searchParams.get('role')
-    const isAgent = roleParam === 'PARTNER_OWNER'
-
     const { t } = useLanguage()
-
-    const [formData, setFormData] = useState({
-        username: '',
-        password: '',
-        email: '',
-        role: 'CUSTOMER', // Default to customer for this form
-        storeName: '',
-    })
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [showSuccessModal, setShowSuccessModal] = useState(false)
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setLoading(true)
-
-        try {
-            const res = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            })
-
-            const data = await res.json()
-
-            if (!res.ok) {
-                throw new Error(data.error || 'Registration failed')
-            }
-
-            // Show success modal
-            setShowSuccessModal(true)
-
-            // Delay redirect
-            setTimeout(() => {
-                router.push('/')
-                router.refresh()
-            }, 2500)
-
-        } catch (err: any) {
-            setError(err.message)
-            setLoading(false)
-        }
-    }
-
-    // Form for Customer Registration
-    const FormContent = (
-        <Card className={styles.card}>
-            <h1 className={styles.title}>{t.auth.registerTitle}</h1>
-            <p className={styles.subtitle}>{t.auth.registerSubtitle}</p>
-
-            {error && <div className={styles.error}>{error}</div>}
-
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <Input
-                    label={t.auth.username}
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                />
-                <Input
-                    label={t.auth.password}
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <Input
-                    label={t.auth.email}
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-
-                <Button type="submit" disabled={loading} className={styles.submitButton}>
-                    {loading ? t.auth.creatingAccount : t.auth.register}
-                </Button>
-            </form>
-
-            <p className={styles.footer}>
-                {t.auth.alreadyHaveAccount} <Link href="/login" className={styles.link}>{t.auth.login}</Link>
-            </p>
-        </Card>
-    )
-
-    if (!isAgent) {
-        return (
-            <div className={styles.customerContainer}>
-                <div className={styles.contentWrapper}>
-                    {/* 3D Character */}
-                    <div className={styles.characterWrapper}>
-                        <img src="/register_customer_character.png" alt="Register Character" className={styles.character} />
-                    </div>
-                    {FormContent}
-                </div>
-                <Modal
-                    isOpen={showSuccessModal}
-                    onClose={() => { }}
-                    title="สมัครสมาชิกสำเร็จ"
-                >
-                    <div style={{ textAlign: 'center', padding: '20px' }}>
-                        <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
-                        <p>สมัครสมาชิกเรียบร้อยแล้ว</p>
-                        <p style={{ fontSize: '0.9em', color: '#666' }}>กำลังเข้าสู่ระบบ...</p>
-                    </div>
-                </Modal>
-            </div>
-        )
-    }
 
     // Agent Landing Page
     return (
@@ -189,7 +66,7 @@ function RegisterForm() {
                     </div>
                 </div>
 
-                {/* Card 4: CTA (Register Form) */}
+                {/* Card 4: CTA (Register Form Redirection) */}
                 <div className={`${styles.featureCard} ${styles.cardYellow} ${styles.ctaCard}`} onClick={() => document.getElementById('register-section')?.scrollIntoView({ behavior: 'smooth' })}>
                     <div className={styles.ctaContent}>
                         <h3>{t.agentLanding.ctaTitle}</h3>
@@ -273,7 +150,7 @@ function RegisterForm() {
 export default function RegisterPage() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <RegisterForm />
+            <RegisterLanding />
         </Suspense>
     )
 }
