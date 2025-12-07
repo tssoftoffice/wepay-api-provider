@@ -1,0 +1,14 @@
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    /* Light Gray Background */
+}
+
+.main {
+    flex: 1;
+    margin-left: 260px;
+    /* Width of sidebar */
+    padding: 2rem;
+    min-height: 100vh;
+}

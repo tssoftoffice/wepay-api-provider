@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  password  String
+  email     String?
+  role      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  partnerId String?
+  firstName String?
+  lastName  String?
+  phone     String?
+  customer  Customer?
+  partner   Partner?  @relation(fields: [partnerId], references: [id])
+}
+
+model Partner {
+  id                 String                    @id @default(uuid())
+  name               String
+  domain             String?                   @unique
+  logoUrl            String?
+  themeConfig        String?
+  subscriptionStatus String                    @default("PENDING")
+  subscriptionEnd    DateTime?
+  packageId          String?
+  walletBalance      Decimal                   @default(0)
+  apiKey             String?                   @unique
+  secretKey          String?
+  customers          Customer[]
+  gameTopups         GameTopupTransaction[]
+  package            SubscriptionPackage?      @relation(fields: [packageId], references: [id])
+  gamePrices         PartnerGamePrice[]
+  partnerTopups      PartnerTopupTransaction[]
+  subscriptionTxns   SubscriptionTransaction[]
+  users              User[]
+}
+
+model SubscriptionPackage {
+  id           String    @id @default(uuid())
+  name         String
+  price        Decimal
+  maxCustomers Int?
+  partners     Partner[]
+}
+
+model Customer {
+  id            String                 @id @default(uuid())
+  userId        String                 @unique
+  partnerId     String
+  walletBalance Decimal                @default(0)
+  partner       Partner                @relation(fields: [partnerId], references: [id])
+  createdAt     DateTime               @default(now())
+  user          User                   @relation(fields: [userId], references: [id])
+  gameTopups    GameTopupTransaction[]
+  topupRequests TopupRequest[]
+}
+
+model Game {
+  id       String                 @id @default(uuid())
+  name     String
+  code     String                 @unique
+  baseCost Decimal
+  status   String                 @default("ACTIVE")
+  imageUrl String?
+  description String?
+  servers  String?
+  topups   GameTopupTransaction[]
+  prices   PartnerGamePrice[]
+}
+
+model PartnerGamePrice {
+  id        String  @id @default(uuid())
+  partnerId String
+  gameId    String
+  sellPrice Decimal
+  game      Game    @relation(fields: [gameId], references: [id])
+  partner   Partner @relation(fields: [partnerId], references: [id])
+
+  @@unique([partnerId, gameId])
+}
+
+model TopupRequest {
+  id         String   @id @default(uuid())
+  customerId String
+  amount     Decimal
+  slipUrl    String?
+  status     String   @default("PENDING")
+  reason     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+model GameTopupTransaction {
+  id            String   @id @default(uuid())
+  customerId    String?
+  partnerId     String
+  gameId        String
+  baseCost      Decimal
+  sellPrice     Decimal
+  status        String   @default("PENDING")
+  server        String?
+  targetId      String? // Player ID in game
+  providerTxnId String?
+  createdAt     DateTime @default(now())
+  game          Game     @relation(fields: [gameId], references: [id])
+  partner       Partner  @relation(fields: [partnerId], references: [id])
+  customer      Customer? @relation(fields: [customerId], references: [id])
+}
+
+model PartnerTopupTransaction {
+  id            String   @id @default(uuid())
+  partnerId     String
+  amount        Decimal
+  status        String   @default("PENDING")
+  providerTxnId String?
+  createdAt     DateTime @default(now())
+  partner       Partner  @relation(fields: [partnerId], references: [id])
+}
+
+model SubscriptionTransaction {
+  id        String   @id @default(uuid())
+  partnerId String
+  amount    Decimal
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  partner   Partner  @relation(fields: [partnerId], references: [id])
+}

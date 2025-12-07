@@ -1,0 +1,76 @@
+.container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 2rem;
+}
+
+.card {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    border: 2px solid #fff7ed;
+    box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.1);
+}
+
+.planInfo {
+    text-align: center;
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ea580c;
+    margin: 1rem 0;
+}
+
+.period {
+    font-size: 1rem;
+    color: #6b7280;
+    font-weight: 400;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    display: inline-block;
+}
+
+.features li {
+    margin-bottom: 0.5rem;
+    color: #4b5563;
+    font-size: 1.1rem;
+}
+
+.renewButton {
+    background: #ea580c;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 1rem;
+    width: 100%;
+}
+
+.renewButton:hover {
+    background: #c2410c;
+}
+
+.qrContainer {
+    text-align: center;
+    padding: 1rem;
+}
+
+.instruction {
+    margin-top: 1rem;
+    color: #6b7280;
+}

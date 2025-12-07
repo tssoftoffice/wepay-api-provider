@@ -1,0 +1,169 @@
+.navbar {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.leftSection {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.logoPlaceholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.navLinks {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.navLink {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    font-size: 0.95rem;
+}
+
+.navLink:hover {
+    color: #3b82f6;
+}
+
+.activeLink {
+    color: #3b82f6;
+}
+
+.rightSection {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.langSwitcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.langBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 0;
+    font-weight: 500;
+}
+
+.langBtn:hover {
+    color: #64748b;
+}
+
+.activeLang {
+    color: #3b82f6;
+    font-weight: 700;
+}
+
+.divider {
+    color: #e2e8f0;
+}
+
+.authButtons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.loginBtn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+.loginBtn:hover {
+    background: #f8f9fa;
+    border-color: #cbd5e1;
+}
+
+.registerBtn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #3b82f6;
+    border: 1px solid #3b82f6;
+    color: white;
+}
+
+.registerBtn:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.backLink {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.backLink:hover {
+    background: #f1f5f9;
+    color: #64748b;
+}

@@ -1,0 +1,129 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+    /* Light Blue Gradient */
+    padding: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+}
+
+.characterWrapper {
+    margin-bottom: -40px;
+    /* Overlap with card */
+    z-index: 10;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.character {
+    width: 200px;
+    height: auto;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+
+.card {
+    width: 100%;
+    background: white;
+    padding: 3rem 2rem 2rem;
+    /* Extra top padding for character overlap */
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    position: relative;
+    z-index: 5;
+}
+
+.title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    /* Dark Blue */
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.submitButton {
+    margin-top: 1rem;
+    width: 100%;
+    background-color: #2563eb;
+    /* Blue */
+    font-weight: 600;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #1d4ed8;
+}
+
+.error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.agentLink {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
