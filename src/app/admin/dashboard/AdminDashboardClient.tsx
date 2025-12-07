@@ -7,11 +7,14 @@ interface Stats {
     totalPartners: number
     totalRevenue: number
     netProfit: number
+    todayProfit: number
     totalTxnCount: number
     todayTxnCount: number
     chartData: { date: string; revenue: number; profit: number }[]
-    topPartners: { name: string; revenue: number; txnCount: number }[]
+    topPartners: { name: string; revenue: number; sellPrice: number; profit: number; txnCount: number }[]
     salesDistribution: { name: string; revenue: number; percentage: number }[]
+    subscriptionRevenue: number
+    subscriptionCount: number
 }
 
 export default function AdminDashboardClient() {
@@ -40,8 +43,8 @@ export default function AdminDashboardClient() {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Row 1: 4 Stats Cards */}
-            <div style={{ display: 'flex', gap: '20px' }}>
+            {/* Row 1: 5 Stats Cards */}
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <StatCard
                     label="Partners ทั้งหมด"
                     value={stats.totalPartners.toLocaleString()}
@@ -59,6 +62,14 @@ export default function AdminDashboardClient() {
                     trend="up"
                 />
                 <StatCard
+                    label="รายได้ Subscription"
+                    value={`฿${(stats.subscriptionRevenue || 0).toLocaleString()}`}
+                    subtext={`${stats.subscriptionCount || 0} รายการ`}
+                    icon={<DollarSign size={24} />}
+                    iconBg="linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)"
+                    trend="up"
+                />
+                <StatCard
                     label="กำไรสุทธิ"
                     value={`฿${stats.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     subtext={stats.totalRevenue > 0 ? `Margin ${((stats.netProfit / stats.totalRevenue) * 100).toFixed(1)}%` : 'N/A'}
@@ -67,12 +78,12 @@ export default function AdminDashboardClient() {
                     trend="up"
                 />
                 <StatCard
-                    label="ธุรกรรมวันนี้"
-                    value={(stats.todayTxnCount || 0).toString()}
-                    subtext={`จาก ${stats.totalTxnCount || 0} รายการทั้งหมด`}
+                    label="กำไรวันนี้"
+                    value={`฿${(stats.todayProfit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    subtext={`${stats.todayTxnCount || 0} ธุรกรรมวันนี้`}
                     icon={<Calendar size={24} />}
                     iconBg="linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)"
-                    trend="neutral"
+                    trend="up"
                 />
             </div>
 
@@ -234,20 +245,17 @@ export default function AdminDashboardClient() {
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                         <thead>
                             <tr style={{ background: '#f9fafb' }}>
-                                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>เลขอ้างอิง</th>
                                 <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ร้านค้า</th>
-                                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ประเภท</th>
-                                <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ยอด</th>
-                                <th style={{ padding: '12px 24px', textAlign: 'center', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>สถานะ</th>
+                                <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ธุรกรรม</th>
+                                <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ต้นทุน</th>
+                                <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ราคาขาย</th>
+                                <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>กำไร Partner</th>
                             </tr>
                         </thead>
                         <tbody>
                             {stats.topPartners.length > 0 ? (
                                 stats.topPartners.slice(0, 5).map((p, i) => (
                                     <tr key={i} style={{ borderTop: '1px solid #f3f4f6' }}>
-                                        <td style={{ padding: '14px 24px', fontSize: '14px', color: '#374151' }}>
-                                            75698107-A00{i + 1}
-                                        </td>
                                         <td style={{ padding: '14px 24px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                 <div style={{
@@ -267,32 +275,17 @@ export default function AdminDashboardClient() {
                                                 <span style={{ fontSize: '14px', color: '#111827', fontWeight: 500 }}>{p.name}</span>
                                             </div>
                                         </td>
-                                        <td style={{ padding: '14px 24px' }}>
-                                            <span style={{
-                                                padding: '4px 10px',
-                                                borderRadius: '6px',
-                                                fontSize: '12px',
-                                                fontWeight: 500,
-                                                background: i % 2 === 0 ? '#fef3c7' : '#dbeafe',
-                                                color: i % 2 === 0 ? '#92400e' : '#1e40af'
-                                            }}>
-                                                {i % 2 === 0 ? 'สินค้าเชื่อมต่อ' : 'สินค้า OPP'}
-                                            </span>
+                                        <td style={{ padding: '14px 24px', textAlign: 'right', color: '#6b7280' }}>
+                                            {p.txnCount.toLocaleString()} รายการ
+                                        </td>
+                                        <td style={{ padding: '14px 24px', textAlign: 'right', color: '#374151' }}>
+                                            ฿{(p.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
                                         <td style={{ padding: '14px 24px', textAlign: 'right', fontWeight: 600, color: '#111827' }}>
-                                            {p.revenue.toLocaleString()}
+                                            ฿{(p.sellPrice || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
-                                        <td style={{ padding: '14px 24px', textAlign: 'center' }}>
-                                            <span style={{
-                                                padding: '4px 12px',
-                                                borderRadius: '20px',
-                                                fontSize: '12px',
-                                                fontWeight: 500,
-                                                background: '#d1fae5',
-                                                color: '#065f46'
-                                            }}>
-                                                อนุมัติ
-                                            </span>
+                                        <td style={{ padding: '14px 24px', textAlign: 'right', fontWeight: 600, color: '#10b981' }}>
+                                            ฿{((p.sellPrice || 0) - (p.revenue || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
                                     </tr>
                                 ))

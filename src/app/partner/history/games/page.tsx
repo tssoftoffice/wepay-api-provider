@@ -29,7 +29,8 @@ async function getHistory() {
     return transactions.map(tx => ({
         ...tx,
         baseCost: Number(tx.baseCost),
-        sellPrice: Number(tx.sellPrice)
+        sellPrice: Number(tx.sellPrice),
+        providerPrice: Number(tx.providerPrice)
     }))
 }
 

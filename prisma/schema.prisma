@@ -68,6 +68,7 @@ model Game {
   id       String                 @id @default(uuid())
   name     String
   code     String                 @unique
+  faceValue Decimal            @default(0) // Actual denomination value (10, 20, 50) for WePay
   providerPrice Decimal       @default(0) // Cost from Supplier (WePay)
   baseCost Decimal            // Cost for Partners (Provider Price + Platform Margin)
   status   String                 @default("ACTIVE")

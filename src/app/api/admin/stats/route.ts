@@ -38,10 +38,11 @@ export async function GET() {
         let totalRevenue = 0
         let totalCost = 0
         let todayTxnCount = 0
+        let todayProfit = 0
 
         // Calculate daily stats, Top Partners, and Game Distribution
         const dailyStats: Record<string, { revenue: number, profit: number }> = {}
-        const partnerStats: Record<string, { name: string, revenue: number, txnCount: number }> = {}
+        const partnerStats: Record<string, { name: string, revenue: number, sellPrice: number, profit: number, txnCount: number }> = {}
         const gameStats: Record<string, { name: string, revenue: number, count: number }> = {}
 
         for (const txn of transactions) {
@@ -57,6 +58,7 @@ export async function GET() {
             txnDate.setHours(0, 0, 0, 0)
             if (txnDate.getTime() === today.getTime()) {
                 todayTxnCount++
+                todayProfit += profit
             }
 
             // Daily grouping
@@ -73,10 +75,14 @@ export async function GET() {
                 partnerStats[partnerId] = {
                     name: txn.partner.name,
                     revenue: 0,
+                    sellPrice: 0,
+                    profit: 0,
                     txnCount: 0
                 }
             }
             partnerStats[partnerId].revenue += revenue
+            partnerStats[partnerId].sellPrice += Number(txn.sellPrice || 0)
+            partnerStats[partnerId].profit += profit
             partnerStats[partnerId].txnCount += 1
 
             // Game grouping for pie chart
@@ -130,15 +136,25 @@ export async function GET() {
             }
         }
 
+        // Get Subscription Revenue
+        const subscriptionTxns = await prisma.subscriptionTransaction.findMany({
+            where: { status: 'SUCCESS' }
+        })
+        const subscriptionRevenue = subscriptionTxns.reduce((sum, txn) => sum + Number(txn.amount), 0)
+        const subscriptionCount = subscriptionTxns.length
+
         return NextResponse.json({
             totalPartners,
             totalRevenue,
             netProfit,
+            todayProfit,
             totalTxnCount,
             todayTxnCount,
             chartData,
             topPartners,
-            salesDistribution
+            salesDistribution,
+            subscriptionRevenue,
+            subscriptionCount
         })
 
     } catch (error) {

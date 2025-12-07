@@ -79,10 +79,20 @@ export async function POST(req: NextRequest) {
                 company = parts[0] // Legacy fallback
             }
 
+            const wePayAmount = Number(game.faceValue) || cost
+            console.log('DEBUG WePay Payment:', {
+                game_code: game.code,
+                faceValue: game.faceValue,
+                baseCost: game.baseCost,
+                cost: cost,
+                wePayAmount: wePayAmount,
+                company: company
+            })
+
             const wepayRes = await WePayClient.makePayment({
                 destRef: Date.now().toString(), // Short unique ID
                 type: parts[0] as any,
-                amount: cost,
+                amount: wePayAmount, // Use faceValue for WePay (integer denomination)
                 company: company,
                 ref1: player_id,
                 ref2: server || undefined

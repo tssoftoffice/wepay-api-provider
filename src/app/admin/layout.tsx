@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ClipboardList, Factory, Package, Users, Settings, FileText, Database, LogOut, Menu, X, Bell, Search } from 'lucide-react'
+import { LayoutDashboard, LogOut, Menu, Bell, Search } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const pathname = usePathname()
+    const { logout } = useAuth()
 
     const menuItems = [
         { name: 'หน้าหลัก', href: '/admin/dashboard', icon: LayoutDashboard },
@@ -61,7 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <span style={{ color: 'white', fontSize: '20px', fontWeight: 'bold' }}>E</span>
                         </div>
                         <div>
-                            <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>EvoPlay</p>
+                            <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>Gamesflows</p>
                             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', margin: 0 }}>Admin System</p>
                         </div>
                     </div>
@@ -126,19 +128,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 {/* Logout */}
                 <div style={{ padding: '16px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <button style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        padding: '12px 16px',
-                        borderRadius: '10px',
-                        background: 'rgba(239,68,68,0.2)',
-                        border: 'none',
-                        color: '#fca5a5',
-                        fontSize: '14px',
-                        cursor: 'pointer'
-                    }}>
+                    <button
+                        onClick={() => logout()}
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '12px 16px',
+                            borderRadius: '10px',
+                            background: 'rgba(239,68,68,0.2)',
+                            border: 'none',
+                            color: '#fca5a5',
+                            fontSize: '14px',
+                            cursor: 'pointer'
+                        }}
+                    >
                         <LogOut size={20} />
                         ออกจากระบบ
                     </button>

@@ -206,7 +206,7 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                         <span>กำไรสุทธิ</span>
                         <span className={styles.icon}>💰</span>
                     </div>
-                    <div className={`${styles.cardValue} ${styles.profit}`}>฿{financials.profit.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                    <div className={`${styles.cardValue} ${styles.profit}`}>฿{financials.profit.toLocaleString()}</div>
                     {/* Using cardSub properly */}
                     <div className={styles.cardSub}>คำนวณจากส่วนต่างต้นทุน</div>
                 </div>

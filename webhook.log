@@ -466,3 +466,55 @@
   "updatedAt": "2025-12-07T15:07:46.636514Z"
 }
 ---
+{
+  "chargeId": "ch_36WyzNpQ3LcPdM8M8TUng2qyPTl",
+  "merchantId": "tssoft",
+  "referenceId": "fa46b4f9-19f8-406b-af23-912a51bfdff1",
+  "status": "SUCCEEDED",
+  "currency": "THB",
+  "amount": 1000,
+  "source": "API",
+  "sourceId": "",
+  "transactionTime": "2025-12-07T19:48:04Z",
+  "paymentMethod": {
+    "paymentMethodType": "QR_PROMPT_PAY",
+    "card": null,
+    "cardInstallments": null,
+    "qrPromptPay": {},
+    "alipay": null,
+    "weChatPay": null,
+    "trueMoney": null,
+    "linePay": null,
+    "shopeePay": null,
+    "make": null,
+    "bangkokBankApp": null,
+    "kPlus": null,
+    "scbEasy": null,
+    "krungsriApp": null,
+    "krungthaiNext": null
+  },
+  "failureCode": "",
+  "customer": {
+    "primaryPhone": {
+      "countryCode": "",
+      "number": ""
+    },
+    "email": "",
+    "deliveryAddress": {
+      "contactName": "",
+      "phone": {
+        "countryCode": "",
+        "number": ""
+      },
+      "address": {
+        "streetAddress": "",
+        "city": "",
+        "country": "",
+        "postCode": ""
+      }
+    }
+  },
+  "createdAt": "2025-12-07T19:48:03.931872Z",
+  "updatedAt": "2025-12-07T19:48:30.353311Z"
+}
+---
