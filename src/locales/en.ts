@@ -248,5 +248,21 @@ export const en = {
         sales: 'Sales',
         profit: 'Profit',
         noData: 'No data found for the selected period'
+    },
+    subscription: {
+        title: 'Manage Subscription',
+        starterPlan: 'Starter Plan',
+        pricePerMonth: '/ Month',
+        feature1: '24/7 Auto System',
+        feature2: 'High Profit',
+        feature3: 'Lifetime Support',
+        renew: 'Renew Subscription',
+        processing: 'Processing...',
+        paymentSuccess: 'Payment Successful!',
+        redirecting: 'Redirecting to Dashboard...',
+        totalPayment: 'Total Payment',
+        ref: 'Reference No:',
+        scanInstruction: 'Scan QR to pay via Banking App',
+        timeLimit: 'Please pay within 15 minutes'
     }
 }

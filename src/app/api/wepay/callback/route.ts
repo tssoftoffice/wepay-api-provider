@@ -61,19 +61,12 @@ export async function POST(request: Request) {
                 }
             })
         } else {
-            // Failed - Refund
+            // Failed - Refund Partner and update transaction
             await prisma.$transaction([
-                // Refund Customer
-                prisma.customer.update({
-                    where: { id: transaction.customerId },
-                    data: { walletBalance: { increment: transaction.sellPrice } }
-                }),
-                // Refund Partner
                 prisma.partner.update({
                     where: { id: transaction.partnerId },
                     data: { walletBalance: { increment: transaction.baseCost } }
                 }),
-                // Update Txn Status
                 prisma.gameTopupTransaction.update({
                     where: { id: transaction.id },
                     data: {
@@ -82,6 +75,14 @@ export async function POST(request: Request) {
                     }
                 })
             ])
+
+            // Refund Customer separately if exists
+            if (transaction.customerId) {
+                await prisma.customer.update({
+                    where: { id: transaction.customerId },
+                    data: { walletBalance: { increment: transaction.sellPrice } }
+                })
+            }
         }
 
         return new NextResponse(`SUCCEED ORDER_ID=${destRef}`)

@@ -23,7 +23,7 @@ export function DashboardContent({ partner }: DashboardContentProps) {
                 </div>
                 <div className={styles.headerActions}>
                     <Link href={`/store/${partner.domain}`} target="_blank">
-                        <Button variant="outline">{t.dashboard.viewStore}</Button>
+                        <Button variant="secondary">{t.dashboard.viewStore}</Button>
                     </Link>
                 </div>
             </header>

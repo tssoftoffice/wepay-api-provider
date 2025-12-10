@@ -56,7 +56,7 @@ export function GameTopupForm({ gameId, gameName, gamePrices, domain, servers }:
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    gameId: selectedPkg?.game.id,
+                    gameId: gameId,
                     priceId: selectedPackage,
                     playerId,
                     server: selectedServer || undefined

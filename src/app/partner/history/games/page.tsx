@@ -30,7 +30,8 @@ async function getHistory() {
         ...tx,
         baseCost: Number(tx.baseCost),
         sellPrice: Number(tx.sellPrice),
-        providerPrice: Number(tx.providerPrice)
+        providerPrice: Number(tx.providerPrice),
+        transactionId: tx.providerTxnId
     }))
 }
 

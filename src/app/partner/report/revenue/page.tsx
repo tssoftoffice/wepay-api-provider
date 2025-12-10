@@ -45,8 +45,16 @@ async function getRevenueData(searchParams: { startDate?: string, endDate?: stri
         }
     })
 
+    const mappedTransactions = transactions.map(tx => ({
+        ...tx,
+        baseCost: Number(tx.baseCost),
+        sellPrice: Number(tx.sellPrice),
+        providerPrice: Number(tx.providerPrice),
+        transactionId: tx.providerTxnId
+    }))
+
     return {
-        transactions,
+        transactions: mappedTransactions,
         dateRange: {
             start: start.toISOString().split('T')[0],
             end: end.toISOString().split('T')[0]
