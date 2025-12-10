@@ -15,11 +15,10 @@ export default function HomePage() {
         <div className={styles.agentContainer}>
             {/* Navbar Placeholder */}
             <nav className={styles.navbar}>
-                <div className={styles.logo}>EvoPlayShop</div>
+                <div className={styles.logo}>GamesFlows</div>
                 <div className={styles.navLinks}>
                     <Link href="/">Home</Link>
                     <Link href="#">Games</Link>
-                    {/* <Link href="#">Careers</Link> */}
                     <Link href="#">About</Link>
                     <Link href="#">Contact</Link>
                 </div>
@@ -30,17 +29,22 @@ export default function HomePage() {
                 <div className={styles.heroContent}>
                     <h1>{t.agentLanding.heroTitle}</h1>
                     <p>{t.agentLanding.heroSubtitle}</p>
+                    <Link href="/register/agent" className={styles.ctaButton}>
+                        {t.agentLanding.heroBtn}
+                    </Link>
                 </div>
                 <div className={styles.heroImage}>
-                    <img src="/agent_hero_cat.png" alt="Hero Cat" />
+                    <img src="/hero_orange.png" alt="Hero Gamer" />
                 </div>
             </section>
 
             {/* Cards Section */}
             <section className={styles.cardsSection}>
                 {/* Card 1: Cat Cup */}
-                <div className={`${styles.featureCard} ${styles.cardPurple}`}>
-                    <img src="/feature_cat_cup.png" alt="Cat Cup" className={styles.cardImage} />
+                <div className={styles.featureCard}>
+                    <div className={styles.iconWrapper}>
+                        <img src="/feature_rocket_orange.png" alt="Start Immediately" className={styles.cardImage} />
+                    </div>
                     <div className={styles.cardContent}>
                         <h3>{t.agentLanding.feature1Title}</h3>
                         <p>{t.agentLanding.feature1Desc}</p>
@@ -48,8 +52,10 @@ export default function HomePage() {
                 </div>
 
                 {/* Card 2: Robot */}
-                <div className={`${styles.featureCard} ${styles.cardRed}`}>
-                    <img src="/feature_robot.png" alt="Robot" className={styles.cardImage} />
+                <div className={styles.featureCard}>
+                    <div className={styles.iconWrapper}>
+                        <img src="/feature_auto_orange.png" alt="Auto System" className={styles.cardImage} />
+                    </div>
                     <div className={styles.cardContent}>
                         <h3>{t.agentLanding.feature2Title}</h3>
                         <p>{t.agentLanding.feature2Desc}</p>
@@ -57,40 +63,44 @@ export default function HomePage() {
                 </div>
 
                 {/* Card 3: Coins */}
-                <div className={`${styles.featureCard} ${styles.cardGold}`}>
-                    <img src="/feature_coins.png" alt="Coins" className={styles.cardImage} />
+                <div className={styles.featureCard}>
+                    <div className={styles.iconWrapper}>
+                        <img src="/feature_profit_orange.png" alt="High Profit" className={styles.cardImage} />
+                    </div>
                     <div className={styles.cardContent}>
                         <h3>{t.agentLanding.feature3Title}</h3>
                         <p>{t.agentLanding.feature3Desc}</p>
                     </div>
                 </div>
 
-                {/* Card 4: CTA (Register Form - Scroll to section) */}
-                <div className={`${styles.featureCard} ${styles.cardYellow} ${styles.ctaCard}`} onClick={() => document.getElementById('register-section')?.scrollIntoView({ behavior: 'smooth' })}>
-                    <div className={styles.ctaContent}>
-                        <h3>{t.agentLanding.ctaTitle}</h3>
-                        <p>{t.agentLanding.ctaSubtitle}</p>
-                        <div className={styles.arrowDown}>↓</div>
-                    </div>
-                </div>
+                {/* CTA Button */}
+                {/* New Dark CTA Section (Hostinger Style) */}
+                <section className={styles.ctaSection}>
+                    <h2>สมัครใช้งานฟรี</h2>
+                    <p>เริ่มต้นภายใน 1 นาที ระบบอัตโนมัติ 24 ชั่วโมง</p>
+                    <Link href="/register/agent" className={styles.ctaSectionButton}>
+                        เริ่มเลย
+                    </Link>
+                </section>
+
             </section>
 
             {/* About Section */}
             <section className={styles.aboutSection}>
                 <div className={styles.aboutContent}>
-                    <h4>About EvoPlayShop</h4>
+                    <h4>About GamesFlows</h4>
                     <h2>{t.agentLanding.aboutTitle}</h2>
                     <p>{t.agentLanding.aboutDesc}</p>
                 </div>
                 <div className={styles.aboutImage}>
                     <div className={styles.placeholderImage}>
-                        <img src="/feature_robot.png" alt="About Us" />
+                        <img src="/about_dashboard_orange.png" alt="GamesFlows Dashboard" />
                     </div>
                 </div>
             </section>
 
-            {/* Subscription / Register Section */}
-            <section className={styles.registerSection} id="register-section">
+            {/* Register/Pricing Section (Single Plan - Restored) */}
+            <section id="register-section" className={styles.registerSection}>
                 <h2>แพ็กเกจเจ้าของร้าน</h2>
 
                 <div className={styles.subscriptionCard}>
@@ -117,28 +127,43 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Footer */}
+            {/* Footer (Clean White Style) */}
             <footer className={styles.agentFooter}>
-                <div className={styles.footerContent}>
-                    <div className={styles.footerLogo}>EvoPlayShop</div>
-                    <div className={styles.footerLinks}>
-                        <Link href="/">{t.agentLanding.footerLinks.home}</Link>
-                        <Link href="#">{t.agentLanding.footerLinks.games}</Link>
-                        <Link href="#">{t.agentLanding.footerLinks.about}</Link>
-                        <Link href="#">{t.agentLanding.footerLinks.contact}</Link>
+                <div className={styles.footerGrid}>
+                    <div className={styles.footerColumn}>
+                        <div className={styles.footerLogo}>
+                            <span>GamesFlows</span>
+                        </div>
+                        <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
+                            เราคือแพลตฟอร์มเติมเกมชั้นนำที่มุ่งมั่นให้บริการที่ดีที่สุด
+                            <br />จดทะเบียนถูกต้อง ปลอดภัย 100%
+                        </p>
                     </div>
-                    <div className={styles.footerSocials}>
-                        {/* Social Icons Placeholders */}
-                        <div className={styles.socialIcon}>FB</div>
-                        <div className={styles.socialIcon}>IG</div>
-                        <div className={styles.socialIcon}>TW</div>
+                    <div className={styles.footerColumn}>
+                        <h4>บริการ</h4>
+                        <div className={styles.footerLinks}>
+                            <Link href="/">หน้าหลัก</Link>
+                            <Link href="/store">ร้านค้า</Link>
+                            <Link href="/topup">เติมเงิน</Link>
+                            <Link href="/contact">ติดต่อเรา</Link>
+                        </div>
+                    </div>
+                    <div className={styles.footerColumn}>
+                        <h4>ช่วยเหลือ</h4>
+                        <div className={styles.footerLinks}>
+                            <Link href="/faq">คำถามที่พบบ่อย</Link>
+                            <Link href="/terms">เงื่อนไขการใช้งาน</Link>
+                            <Link href="/privacy">นโยบายความเป็นส่วนตัว</Link>
+                        </div>
                     </div>
                 </div>
+
                 <div className={styles.footerBottom}>
-                    <p>{t.agentLanding.copyright}</p>
-                    <div className={styles.legalLinks}>
-                        <Link href="#">{t.agentLanding.footerLinks.privacy}</Link>
-                        <Link href="#">{t.agentLanding.footerLinks.terms}</Link>
+                    <div>© 2024 GamesFlows. สงวนลิขสิทธิ์.</div>
+                    <div className={styles.paymentIcons}>
+                        <span>Visa</span>
+                        <span>Mastercard</span>
+                        <span>PayPal</span>
                     </div>
                 </div>
             </footer>
