@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, LogOut, Menu, Bell, Search } from 'lucide-react'
+import { LayoutDashboard, LogOut, Menu, Bell, Search, Users } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -13,6 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const menuItems = [
         { name: 'หน้าหลัก', href: '/admin/dashboard', icon: LayoutDashboard },
+        { name: 'Partners', href: '/admin/partners', icon: Users },
     ]
 
     return (
@@ -225,22 +226,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </button>
 
                     {/* Action Button */}
-                    <button style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '10px 20px',
-                        background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '10px',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(59,130,246,0.3)'
-                    }}>
+                    <Link
+                        href="/admin/partners/create"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '10px 20px',
+                            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '10px',
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 12px rgba(59,130,246,0.3)',
+                            textDecoration: 'none'
+                        }}
+                    >
                         + เพิ่ม Partner
-                    </button>
+                    </Link>
                 </header>
 
                 {/* Content */}

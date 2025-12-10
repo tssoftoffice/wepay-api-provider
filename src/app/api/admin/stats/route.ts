@@ -35,39 +35,59 @@ export async function GET() {
         const today = new Date()
         today.setHours(0, 0, 0, 0)
 
-        let totalRevenue = 0
-        let totalCost = 0
+        let totalSales = 0 // Gross Transaction Value (sellPrice)
+        let totalAdminRevenue = 0 // What admin gets (baseCost)
+        let totalCost = 0 // What admin pays (providerPrice)
         let todayTxnCount = 0
-        let todayProfit = 0
+        let todayAdminProfit = 0
 
         // Calculate daily stats, Top Partners, and Game Distribution
         const dailyStats: Record<string, { revenue: number, profit: number }> = {}
-        const partnerStats: Record<string, { name: string, revenue: number, sellPrice: number, profit: number, txnCount: number }> = {}
+        const partnerStats: Record<string, {
+            name: string,
+            revenue: number, // sellPrice (Partner Revenue)
+            cost: number, // baseCost (Partner Cost)
+            profit: number, // sellPrice - baseCost (Partner Profit)
+            txnCount: number
+        }> = {}
         const gameStats: Record<string, { name: string, revenue: number, count: number }> = {}
 
         for (const txn of transactions) {
-            const revenue = Number(txn.sellPrice || txn.baseCost || 0)
-            const cost = Number(txn.providerPrice || 0)
-            const profit = revenue - cost
+            const sellPrice = Number(txn.sellPrice || 0)
+            const baseCost = Number(txn.baseCost || 0)
+            const providerPrice = Number(txn.providerPrice || 0)
 
-            totalRevenue += revenue
-            totalCost += cost
+            // Admin Logic
+            const adminRevenue = baseCost
+            const adminCost = providerPrice
+            const adminProfit = adminRevenue - adminCost
+
+            // Partner Logic
+            const partnerRevenue = sellPrice
+            const partnerCost = baseCost
+            const partnerProfit = partnerRevenue - partnerCost
+
+            totalSales += sellPrice
+            totalAdminRevenue += adminRevenue
+            totalCost += adminCost
 
             // Check if today's transaction
             const txnDate = new Date(txn.createdAt)
             txnDate.setHours(0, 0, 0, 0)
             if (txnDate.getTime() === today.getTime()) {
                 todayTxnCount++
-                todayProfit += profit
+                todayAdminProfit += adminProfit
             }
 
-            // Daily grouping
+            // Daily grouping (Using Admin Stats for Chart?)
+            // Usually charts show "System Growth", so maybe Sales + Admin Profit?
+            // Let's stick to Sales (GTV) and Admin Profit for now.
             const date = txn.createdAt.toISOString().split('T')[0]
             if (!dailyStats[date]) {
                 dailyStats[date] = { revenue: 0, profit: 0 }
             }
-            dailyStats[date].revenue += revenue
-            dailyStats[date].profit += profit
+            dailyStats[date].revenue += sellPrice
+            dailyStats[date].profit += adminProfit
 
             // Partner grouping
             const partnerId = txn.partnerId
@@ -75,14 +95,14 @@ export async function GET() {
                 partnerStats[partnerId] = {
                     name: txn.partner.name,
                     revenue: 0,
-                    sellPrice: 0,
+                    cost: 0,
                     profit: 0,
                     txnCount: 0
                 }
             }
-            partnerStats[partnerId].revenue += revenue
-            partnerStats[partnerId].sellPrice += Number(txn.sellPrice || 0)
-            partnerStats[partnerId].profit += profit
+            partnerStats[partnerId].revenue += partnerRevenue
+            partnerStats[partnerId].cost += partnerCost
+            partnerStats[partnerId].profit += partnerProfit
             partnerStats[partnerId].txnCount += 1
 
             // Game grouping for pie chart
@@ -90,11 +110,11 @@ export async function GET() {
             if (!gameStats[gameName]) {
                 gameStats[gameName] = { name: gameName, revenue: 0, count: 0 }
             }
-            gameStats[gameName].revenue += revenue
+            gameStats[gameName].revenue += sellPrice
             gameStats[gameName].count += 1
         }
 
-        const netProfit = totalRevenue - totalCost
+        const netAdminProfit = totalAdminRevenue - totalCost
         const totalTxnCount = transactions.length
 
         // Format dates for chart (last 7 days)
@@ -117,21 +137,21 @@ export async function GET() {
             .sort((a, b) => b.revenue - a.revenue)
 
         let salesDistribution: { name: string, revenue: number, percentage: number }[] = []
-        if (totalRevenue > 0) {
+        if (totalSales > 0) {
             const top4 = gameList.slice(0, 4)
             const othersRevenue = gameList.slice(4).reduce((sum, g) => sum + g.revenue, 0)
 
             salesDistribution = top4.map(g => ({
                 name: g.name,
                 revenue: g.revenue,
-                percentage: Math.round((g.revenue / totalRevenue) * 100)
+                percentage: Math.round((g.revenue / totalSales) * 100)
             }))
 
             if (othersRevenue > 0) {
                 salesDistribution.push({
                     name: 'อื่นๆ',
                     revenue: othersRevenue,
-                    percentage: Math.round((othersRevenue / totalRevenue) * 100)
+                    percentage: Math.round((othersRevenue / totalSales) * 100)
                 })
             }
         }
@@ -145,9 +165,9 @@ export async function GET() {
 
         return NextResponse.json({
             totalPartners,
-            totalRevenue,
-            netProfit,
-            todayProfit,
+            totalRevenue: totalSales, // Use Sales (GTV) for "Total Revenue" display
+            netProfit: netAdminProfit,
+            todayProfit: todayAdminProfit,
             totalTxnCount,
             todayTxnCount,
             chartData,

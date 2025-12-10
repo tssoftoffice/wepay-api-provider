@@ -35,6 +35,8 @@ async function getPricingData() {
         },
         games: games.map(g => ({
             ...g,
+            faceValue: Number(g.faceValue),
+            providerPrice: Number(g.providerPrice),
             baseCost: Number(g.baseCost)
         })),
         currentPrices: currentPrices.map(p => ({

@@ -42,6 +42,8 @@ model Partner {
   partnerTopups      PartnerTopupTransaction[]
   subscriptionTxns   SubscriptionTransaction[]
   users              User[]
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
 }
 
 model SubscriptionPackage {

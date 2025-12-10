@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { Users, DollarSign, TrendingUp, CheckCircle, AlertTriangle, Calendar, Plus, QrCode, FileDown, Printer, ChevronRight, Package } from 'lucide-react'
 
 interface Stats {
@@ -11,7 +12,7 @@ interface Stats {
     totalTxnCount: number
     todayTxnCount: number
     chartData: { date: string; revenue: number; profit: number }[]
-    topPartners: { name: string; revenue: number; sellPrice: number; profit: number; txnCount: number }[]
+    topPartners: { name: string; revenue: number; cost: number; profit: number; txnCount: number }[]
     salesDistribution: { name: string; revenue: number; percentage: number }[]
     subscriptionRevenue: number
     subscriptionCount: number
@@ -47,7 +48,7 @@ export default function AdminDashboardClient() {
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <StatCard
                     label="Partners ทั้งหมด"
-                    value={stats.totalPartners.toLocaleString()}
+                    value={(stats.totalPartners || 0).toLocaleString()}
                     subtext={`Active Partners`}
                     icon={<Users size={24} />}
                     iconBg="linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)"
@@ -55,7 +56,7 @@ export default function AdminDashboardClient() {
                 />
                 <StatCard
                     label="ยอดขายรวม"
-                    value={`฿${stats.totalRevenue.toLocaleString()}`}
+                    value={`฿${(stats.totalRevenue || 0).toLocaleString()}`}
                     subtext={`${stats.totalTxnCount || 0} ธุรกรรมสำเร็จ`}
                     icon={<CheckCircle size={24} />}
                     iconBg="linear-gradient(135deg, #10b981 0%, #059669 100%)"
@@ -71,8 +72,8 @@ export default function AdminDashboardClient() {
                 />
                 <StatCard
                     label="กำไรสุทธิ"
-                    value={`฿${stats.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                    subtext={stats.totalRevenue > 0 ? `Margin ${((stats.netProfit / stats.totalRevenue) * 100).toFixed(1)}%` : 'N/A'}
+                    value={`฿${(stats.netProfit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    subtext={(stats.totalRevenue || 0) > 0 ? `Margin ${((stats.netProfit / stats.totalRevenue) * 100).toFixed(1)}%` : 'N/A'}
                     icon={<TrendingUp size={24} />}
                     iconBg="linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
                     trend="up"
@@ -114,7 +115,7 @@ export default function AdminDashboardClient() {
 
                     {/* Chart Area */}
                     <div style={{ height: '280px', display: 'flex', alignItems: 'flex-end', gap: '16px', paddingTop: '20px', borderTop: '1px solid #f3f4f6' }}>
-                        {stats.chartData.length > 0 ? (
+                        {(stats.chartData || []).length > 0 ? (
                             stats.chartData.slice(-7).map((d, i) => {
                                 const max = Math.max(...stats.chartData.slice(-7).map(x => x.revenue), 1)
                                 const revenueH = Math.max((d.revenue / max) * 100, 8)
@@ -217,7 +218,7 @@ export default function AdminDashboardClient() {
                     <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: 600, color: '#111827' }}>การดำเนินการด่วน</h3>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        <ActionCard icon={<Plus size={20} />} iconBg="#3b82f6" title="สร้าง Partner ใหม่" subtitle="เพิ่มร้านค้าพันธมิตร" />
+                        <ActionCard icon={<Plus size={20} />} iconBg="#3b82f6" title="สร้าง Partner ใหม่" subtitle="เพิ่มร้านค้าพันธมิตร" href="/admin/partners/create" />
                         <ActionCard icon={<QrCode size={20} />} iconBg="#10b981" title="สแกน QR" subtitle="ตรวจสอบธุรกรรม" />
                         <ActionCard icon={<FileDown size={20} />} iconBg="#8b5cf6" title="Import ข้อมูล" subtitle="นำเข้าจากไฟล์ Excel" />
                         <ActionCard icon={<Printer size={20} />} iconBg="#f59e0b" title="พิมพ์รายงาน" subtitle="สรุปยอดขายประจำเดือน" />
@@ -253,7 +254,7 @@ export default function AdminDashboardClient() {
                             </tr>
                         </thead>
                         <tbody>
-                            {stats.topPartners.length > 0 ? (
+                            {(stats.topPartners || []).length > 0 ? (
                                 stats.topPartners.slice(0, 5).map((p, i) => (
                                     <tr key={i} style={{ borderTop: '1px solid #f3f4f6' }}>
                                         <td style={{ padding: '14px 24px' }}>
@@ -279,13 +280,13 @@ export default function AdminDashboardClient() {
                                             {p.txnCount.toLocaleString()} รายการ
                                         </td>
                                         <td style={{ padding: '14px 24px', textAlign: 'right', color: '#374151' }}>
-                                            ฿{(p.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            ฿{(p.cost || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
                                         <td style={{ padding: '14px 24px', textAlign: 'right', fontWeight: 600, color: '#111827' }}>
-                                            ฿{(p.sellPrice || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            ฿{(p.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
                                         <td style={{ padding: '14px 24px', textAlign: 'right', fontWeight: 600, color: '#10b981' }}>
-                                            ฿{((p.sellPrice || 0) - (p.revenue || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            ฿{(p.profit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </td>
                                     </tr>
                                 ))
@@ -356,8 +357,8 @@ function LegendRow({ color, label, value }: { color: string; label: string; valu
     )
 }
 
-function ActionCard({ icon, iconBg, title, subtitle }: { icon: React.ReactNode; iconBg: string; title: string; subtitle: string }) {
-    return (
+function ActionCard({ icon, iconBg, title, subtitle, href }: { icon: React.ReactNode; iconBg: string; title: string; subtitle: string; href?: string }) {
+    const Content = (
         <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -366,7 +367,8 @@ function ActionCard({ icon, iconBg, title, subtitle }: { icon: React.ReactNode; 
             borderRadius: '12px',
             border: '1px solid #e5e7eb',
             cursor: 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            background: 'white' // Ensure background is set
         }}>
             <div style={{
                 width: '44px',
@@ -388,4 +390,10 @@ function ActionCard({ icon, iconBg, title, subtitle }: { icon: React.ReactNode; 
             <ChevronRight size={18} color="#9ca3af" />
         </div>
     )
+
+    if (href) {
+        return <Link href={href} style={{ textDecoration: 'none', display: 'block' }}>{Content}</Link>
+    }
+
+    return Content
 }
