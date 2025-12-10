@@ -20,12 +20,28 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Partner not found' }, { status: 404 })
         }
 
-        const amount = 1 // Testing price
+        const body = await request.json()
+        const { planId } = body
+
+        if (!planId) {
+            return NextResponse.json({ error: 'Plan ID is required' }, { status: 400 })
+        }
+
+        const plan = await prisma.subscriptionPlan.findUnique({
+            where: { id: planId }
+        })
+
+        if (!plan) {
+            return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
+        }
+
+        const amount = Number(plan.price)
 
         // Create Transaction Record
         const transaction = await prisma.subscriptionTransaction.create({
             data: {
                 partnerId: user.partner.id,
+                planId: plan.id,
                 amount: amount,
                 status: 'PENDING',
             }

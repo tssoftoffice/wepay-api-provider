@@ -113,4 +113,15 @@ export class WePayClient {
             transaction_id: transactionId
         })
     }
+
+    static async getAvailableProducts(): Promise<any> {
+        // This public endpoint provides the full list of products and denominations
+        try {
+            const response = await axios.get('https://www.wepay.in.th/comp_export.php?json')
+            return response.data
+        } catch (error: any) {
+            console.error('Error fetching WePay products:', error.message)
+            throw new Error('Failed to fetch WePay products')
+        }
+    }
 }

@@ -7,15 +7,27 @@ import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { useLanguage } from '@/contexts/LanguageContext'
 import styles from './page.module.css'
+import { getActivePlans } from './actions'
 
 export default function SubscriptionPage() {
     const { t } = useLanguage()
     const [loading, setLoading] = useState(false)
+    const [plans, setPlans] = useState<any[]>([])
+    const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
     const [qrCode, setQrCode] = useState('')
     const [transactionId, setTransactionId] = useState('')
     const [showModal, setShowModal] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
     const router = useRouter()
+
+    useEffect(() => {
+        getActivePlans().then(res => {
+            if (res.success && res.data) {
+                setPlans(res.data)
+                if (res.data.length > 0) setSelectedPlan(res.data[0].id)
+            }
+        })
+    }, [])
 
     useEffect(() => {
         let interval: NodeJS.Timeout
@@ -37,7 +49,7 @@ export default function SubscriptionPage() {
                 } catch (error) {
                     console.error('Polling error:', error)
                 }
-            }, 3000) // Poll every 3 seconds
+            }, 3000)
         }
 
         return () => {
@@ -46,10 +58,13 @@ export default function SubscriptionPage() {
     }, [showModal, transactionId, isSuccess, router])
 
     const handleRenew = async () => {
+        if (!selectedPlan) return
         setLoading(true)
         try {
             const res = await fetch('/api/payment/subscription', {
-                method: 'POST'
+                method: 'POST',
+                body: JSON.stringify({ planId: selectedPlan }),
+                headers: { 'Content-Type': 'application/json' }
             })
             const data = await res.json()
 
@@ -68,27 +83,63 @@ export default function SubscriptionPage() {
         }
     }
 
+    const selectedPlanDetails = plans.find(p => p.id === selectedPlan)
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>{t.subscription.title}</h1>
 
-            <Card className={styles.card}>
-                <div className={styles.planInfo}>
-                    <h2>{t.subscription.starterPlan}</h2>
-                    <div className={styles.price}>1 THB <span className={styles.period}>{t.subscription.pricePerMonth}</span></div>
-                    <ul className={styles.features}>
-                        <li>✓ {t.subscription.feature1}</li>
-                        <li>✓ {t.subscription.feature2}</li>
-                        <li>✓ {t.subscription.feature3}</li>
-                    </ul>
-                </div>
+            <div style={{ display: 'grid', gap: '20px' }}>
+                {plans.length === 0 ? (
+                    <Card><p style={{ textAlign: 'center', padding: '20px' }}>No active plans available.</p></Card>
+                ) : (
+                    plans.map(plan => (
+                        <Card
+                            key={plan.id}
+                            className={styles.card}
+                            style={{
+                                border: selectedPlan === plan.id ? '2px solid #3b82f6' : '1px solid #e2e8f0',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                            }}
+                            onClick={() => setSelectedPlan(plan.id)}
+                        >
+                            <div className={styles.planInfo}>
+                                <h2 style={{ fontSize: '18px', fontWeight: 600 }}>{plan.name}</h2>
+                                <div className={styles.price}>
+                                    {parseInt(plan.price).toLocaleString()} THB
+                                    <span className={styles.period}> / {plan.duration} Days</span>
+                                </div>
+                                <div className={styles.features} style={{ marginTop: '12px' }}>
+                                    {plan.features ? (
+                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            {plan.features.split('\n').map((f: string, i: number) => (
+                                                <li key={i} style={{ marginBottom: '4px', fontSize: '14px', color: '#475569' }}>
+                                                    ✓ {f}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>No description</p>
+                                    )}
+                                </div>
+                            </div>
 
-                <div className={styles.action}>
-                    <Button onClick={handleRenew} disabled={loading} className={styles.renewButton}>
-                        {loading ? t.subscription.processing : `${t.subscription.renew} (1 THB)`}
-                    </Button>
-                </div>
-            </Card>
+                            {selectedPlan === plan.id && (
+                                <div className={styles.action} style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+                                    <Button
+                                        onClick={(e) => { e.stopPropagation(); handleRenew(); }}
+                                        disabled={loading}
+                                        className={styles.renewButton}
+                                    >
+                                        {loading ? t.subscription.processing : `${t.subscription.renew} (${parseInt(plan.price)} THB)`}
+                                    </Button>
+                                </div>
+                            )}
+                        </Card>
+                    ))
+                )}
+            </div>
 
             <Modal isOpen={showModal} onClose={() => !isSuccess && setShowModal(false)} title={isSuccess ? "Payment Successful!" : "Scan to Pay"}>
                 <div className={styles.qrContainer}>
@@ -103,7 +154,9 @@ export default function SubscriptionPage() {
                             <>
                                 <div className={styles.qrHeader}>
                                     <div className={styles.qrTitle}>{t.subscription.totalPayment}</div>
-                                    <div className={styles.qrAmount}>฿1.00</div>
+                                    <div className={styles.qrAmount}>
+                                        ฿{selectedPlanDetails ? Number(selectedPlanDetails.price).toLocaleString(undefined, { minimumFractionDigits: 2 }) : '0.00'}
+                                    </div>
                                 </div>
 
                                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>

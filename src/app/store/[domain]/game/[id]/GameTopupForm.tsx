@@ -13,6 +13,9 @@ interface GamePrice {
     price: number | string
     sellPrice: number | string
     description?: string
+    game: {
+        id: string
+    }
 }
 
 interface GameTopupFormProps {

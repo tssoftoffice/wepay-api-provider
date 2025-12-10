@@ -31,9 +31,13 @@ export async function GET() {
             }
         })
 
-        // 3. Today's date for filtering
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
+        // 3. Today's date for filtering (Thailand GMT+7)
+        // We want 'today' to represent 00:00:00 of the current day in Thailand
+        // Current UTC time
+        const now = new Date()
+        // Shift to Thai time (UTC+7)
+        const thaiNow = new Date(now.getTime() + (7 * 60 * 60 * 1000))
+        const todayDateStr = thaiNow.toISOString().split('T')[0] // "YYYY-MM-DD" in Thai time
 
         let totalSales = 0 // Gross Transaction Value (sellPrice)
         let totalAdminRevenue = 0 // What admin gets (baseCost)
@@ -58,8 +62,8 @@ export async function GET() {
             const providerPrice = Number(txn.providerPrice || 0)
 
             // Admin Logic
-            const adminRevenue = baseCost
-            const adminCost = providerPrice
+            const adminRevenue = providerPrice // Revenue is what Partner pays us
+            const adminCost = baseCost // Cost is what we pay WePay
             const adminProfit = adminRevenue - adminCost
 
             // Partner Logic
@@ -71,18 +75,18 @@ export async function GET() {
             totalAdminRevenue += adminRevenue
             totalCost += adminCost
 
-            // Check if today's transaction
-            const txnDate = new Date(txn.createdAt)
-            txnDate.setHours(0, 0, 0, 0)
-            if (txnDate.getTime() === today.getTime()) {
+            // Check if today's transaction (using Thai Date)
+            // Shift txn time to Thai time
+            const txnThaiDate = new Date(txn.createdAt.getTime() + (7 * 60 * 60 * 1000))
+            const txnDateStr = txnThaiDate.toISOString().split('T')[0]
+
+            if (txnDateStr === todayDateStr) {
                 todayTxnCount++
                 todayAdminProfit += adminProfit
             }
 
-            // Daily grouping (Using Admin Stats for Chart?)
-            // Usually charts show "System Growth", so maybe Sales + Admin Profit?
-            // Let's stick to Sales (GTV) and Admin Profit for now.
-            const date = txn.createdAt.toISOString().split('T')[0]
+            // Daily grouping
+            const date = txnDateStr
             if (!dailyStats[date]) {
                 dailyStats[date] = { revenue: 0, profit: 0 }
             }
@@ -163,18 +167,82 @@ export async function GET() {
         const subscriptionRevenue = subscriptionTxns.reduce((sum, txn) => sum + Number(txn.amount), 0)
         const subscriptionCount = subscriptionTxns.length
 
+        // Get Partner Topup (Wallet Load)
+        const topupTxns = await prisma.partnerTopupTransaction.findMany({
+            where: { status: 'SUCCESS' }
+        })
+        const totalPartnerTopup = topupTxns.reduce((sum, txn) => sum + Number(txn.amount), 0)
+        const totalPartnerTopupCount = topupTxns.length
+
+        // Calculate Today's specific extra stats
+        const todaySupscription = subscriptionTxns
+            .filter(t => {
+                // Shift to Thai time
+                const d = new Date(t.createdAt.getTime() + (7 * 60 * 60 * 1000))
+                return d.toISOString().split('T')[0] === todayDateStr
+            })
+            .reduce((sum, t) => sum + Number(t.amount), 0)
+
+        const todayTopup = topupTxns
+            .filter(t => {
+                // Shift to Thai time
+                const d = new Date(t.createdAt.getTime() + (7 * 60 * 60 * 1000))
+                return d.toISOString().split('T')[0] === todayDateStr
+            })
+            .reduce((sum, t) => sum + Number(t.amount), 0)
+
+        const todayTopupCount = topupTxns
+            .filter(t => {
+                // Shift to Thai time
+                const d = new Date(t.createdAt.getTime() + (7 * 60 * 60 * 1000))
+                return d.toISOString().split('T')[0] === todayDateStr
+            }).length
+
+        // Final Profit Calculations (User requested to add Subscriptions to Profit)
+        const finalNetProfit = netAdminProfit + subscriptionRevenue
+        const finalTodayProfit = todayAdminProfit + todaySupscription
+
+        // 4. New Partners Today
+        // Cannot use simple count because Prisma filter uses DB timezone. 
+        // We fetch generic range or just fetch recent and filter in JS if simple count not sufficient with timezone.
+        // Actually, for `count` with `gte` today, we need `today` variable to be start of day in UTC relative to Thai start of day.
+        // Thai start of day: 00:00:00 +07 => Previous Day 17:00:00 UTC.
+
+        // E.g. If Thai is 2025-12-11 00:00:00+07, UTC is 2025-12-10 17:00:00Z
+        const thaiStartOfDay = new Date(todayDateStr + 'T00:00:00.000Z') // Create as UTC
+        // But wait, todayDateStr is "2025-12-11".
+        // new Date("2025-12-11T00:00:00.000Z") is 11th 00:00 UTC.
+        // We want 11th 00:00 Thai Time = 10th 17:00 UTC.
+        // So minus 7 hours.
+        const utcStartOfThaiDay = new Date(thaiStartOfDay.getTime() - (7 * 60 * 60 * 1000))
+
+        const newPartnersToday = await prisma.partner.count({
+            // @ts-ignore: Prisma type issue with createdAt
+            where: {
+                createdAt: {
+                    gte: utcStartOfThaiDay
+                }
+            }
+        })
+
         return NextResponse.json({
             totalPartners,
-            totalRevenue: totalSales, // Use Sales (GTV) for "Total Revenue" display
-            netProfit: netAdminProfit,
-            todayProfit: todayAdminProfit,
+            newPartnersToday, // New field
+            totalRevenue: totalSales,
+            netProfit: finalNetProfit,
+            todayProfit: finalTodayProfit,
             totalTxnCount,
             todayTxnCount,
             chartData,
             topPartners,
             salesDistribution,
             subscriptionRevenue,
-            subscriptionCount
+            todaySubscriptionRevenue: todaySupscription, // New field from existing var
+            subscriptionCount,
+            totalPartnerTopup,
+            totalPartnerTopupCount,
+            todayTopup,
+            todayTopupCount
         })
 
     } catch (error) {

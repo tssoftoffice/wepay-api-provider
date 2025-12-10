@@ -134,15 +134,29 @@ export async function POST(req: NextRequest) {
                 data: { status: 'FAILED' }
             })
 
+            const providerError = error.response?.data
+            const errorMessage = providerError?.desc || error.message || 'Upstream Provider Error'
+            const errorCode = providerError?.code || 'PROVIDER_ERROR'
+
             return NextResponse.json({
-                error: 'Provider Error',
-                details: error.message,
-                transaction_id: transaction.id
+                success: false,
+                error: {
+                    code: errorCode,
+                    message: errorMessage,
+                    transaction_id: transaction.id,
+                    details: providerError // Keep original details just in case
+                }
             }, { status: 502 })
         }
 
     } catch (error: any) {
         console.error('API Error:', error)
-        return NextResponse.json({ error: 'Internal Server Error', details: error.message, stack: error.stack }, { status: 500 })
+        return NextResponse.json({
+            success: false,
+            error: {
+                code: 'INTERNAL_SERVER_ERROR',
+                message: error.message || 'Internal Server Error'
+            }
+        }, { status: 500 })
     }
 }

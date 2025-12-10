@@ -570,3 +570,107 @@
   "updatedAt": "2025-12-10T10:09:25.361857Z"
 }
 ---
+{
+  "chargeId": "ch_36fPapkzV6j1QlbK5sihezXPzNG",
+  "merchantId": "tssoft",
+  "referenceId": "7a9e1e33-193f-4b85-afd7-73ea2566fb8d",
+  "status": "SUCCEEDED",
+  "currency": "THB",
+  "amount": 100,
+  "source": "API",
+  "sourceId": "",
+  "transactionTime": "2025-12-10T19:25:19Z",
+  "paymentMethod": {
+    "paymentMethodType": "QR_PROMPT_PAY",
+    "card": null,
+    "cardInstallments": null,
+    "qrPromptPay": {},
+    "alipay": null,
+    "weChatPay": null,
+    "trueMoney": null,
+    "linePay": null,
+    "shopeePay": null,
+    "make": null,
+    "bangkokBankApp": null,
+    "kPlus": null,
+    "scbEasy": null,
+    "krungsriApp": null,
+    "krungthaiNext": null
+  },
+  "failureCode": "",
+  "customer": {
+    "primaryPhone": {
+      "countryCode": "",
+      "number": ""
+    },
+    "email": "",
+    "deliveryAddress": {
+      "contactName": "",
+      "phone": {
+        "countryCode": "",
+        "number": ""
+      },
+      "address": {
+        "streetAddress": "",
+        "city": "",
+        "country": "",
+        "postCode": ""
+      }
+    }
+  },
+  "createdAt": "2025-12-10T19:25:18.995095Z",
+  "updatedAt": "2025-12-10T19:25:38.289209Z"
+}
+---
+{
+  "chargeId": "ch_36fR0a0EaSTVGkIsB2PZIUHo0WB",
+  "merchantId": "tssoft",
+  "referenceId": "10c352af-530f-425d-b78b-9dbd0ceea693",
+  "status": "SUCCEEDED",
+  "currency": "THB",
+  "amount": 1000,
+  "source": "API",
+  "sourceId": "",
+  "transactionTime": "2025-12-10T19:36:57Z",
+  "paymentMethod": {
+    "paymentMethodType": "QR_PROMPT_PAY",
+    "card": null,
+    "cardInstallments": null,
+    "qrPromptPay": {},
+    "alipay": null,
+    "weChatPay": null,
+    "trueMoney": null,
+    "linePay": null,
+    "shopeePay": null,
+    "make": null,
+    "bangkokBankApp": null,
+    "kPlus": null,
+    "scbEasy": null,
+    "krungsriApp": null,
+    "krungthaiNext": null
+  },
+  "failureCode": "",
+  "customer": {
+    "primaryPhone": {
+      "countryCode": "",
+      "number": ""
+    },
+    "email": "",
+    "deliveryAddress": {
+      "contactName": "",
+      "phone": {
+        "countryCode": "",
+        "number": ""
+      },
+      "address": {
+        "streetAddress": "",
+        "city": "",
+        "country": "",
+        "postCode": ""
+      }
+    }
+  },
+  "createdAt": "2025-12-10T19:36:56.997401Z",
+  "updatedAt": "2025-12-10T19:37:08.458426Z"
+}
+---

@@ -20,7 +20,7 @@ async function main() {
         create: {
             name: 'GamesFlows (Main)',
             domain: 'gamesflows.com',
-            status: 'ACTIVE',
+            subscriptionStatus: 'ACTIVE',
             walletBalance: 1000000 // Give some budget
         }
     })
@@ -28,16 +28,19 @@ async function main() {
     const bcrypt = require('bcryptjs')
     const hashedPassword = await bcrypt.hash(adminPassword, 10)
 
+    const adminUsername = 'admin'
+
     await prisma.user.upsert({
-        where: { email: adminEmail },
+        where: { username: adminUsername },
         update: {
             role: 'ADMIN',
-            partnerId: mainPartner.id
         },
         create: {
+            username: adminUsername,
             email: adminEmail,
             password: hashedPassword,
-            name: 'Super Admin',
+            firstName: 'Super',
+            lastName: 'Admin',
             role: 'ADMIN',
             partnerId: mainPartner.id
         }

@@ -38,8 +38,14 @@ export const en = {
         viewAll: 'View All',
     },
     footer: {
+        careers: 'Careers',
+        about: 'About Us',
+        contact: 'Contact',
+        privacy: 'Privacy Policy',
+        terms: 'Terms of Service',
         rights: 'All rights reserved.',
     },
+    copyright: '© 2024 EvoPlayShop. All rights reserved.',
     agentLanding: {
         heroTitle: 'Created to Earn',
         heroSubtitle: 'The Best Topup System',

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Users, DollarSign, TrendingUp, CheckCircle, AlertTriangle, Calendar, Plus, QrCode, FileDown, Printer, ChevronRight, Package } from 'lucide-react'
+import { Users, DollarSign, TrendingUp, CheckCircle, AlertTriangle, Calendar, Plus, QrCode, FileDown, Printer, ChevronRight, Package, CreditCard } from 'lucide-react'
 
 interface Stats {
     totalPartners: number
@@ -16,6 +16,10 @@ interface Stats {
     salesDistribution: { name: string; revenue: number; percentage: number }[]
     subscriptionRevenue: number
     subscriptionCount: number
+    todaySubscriptionRevenue: number
+    newPartnersToday: number
+    totalPartnerTopup: number
+    totalPartnerTopupCount: number
 }
 
 export default function AdminDashboardClient() {
@@ -44,32 +48,8 @@ export default function AdminDashboardClient() {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Row 1: 5 Stats Cards */}
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <StatCard
-                    label="Partners ทั้งหมด"
-                    value={(stats.totalPartners || 0).toLocaleString()}
-                    subtext={`Active Partners`}
-                    icon={<Users size={24} />}
-                    iconBg="linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)"
-                    trend="up"
-                />
-                <StatCard
-                    label="ยอดขายรวม"
-                    value={`฿${(stats.totalRevenue || 0).toLocaleString()}`}
-                    subtext={`${stats.totalTxnCount || 0} ธุรกรรมสำเร็จ`}
-                    icon={<CheckCircle size={24} />}
-                    iconBg="linear-gradient(135deg, #10b981 0%, #059669 100%)"
-                    trend="up"
-                />
-                <StatCard
-                    label="รายได้ Subscription"
-                    value={`฿${(stats.subscriptionRevenue || 0).toLocaleString()}`}
-                    subtext={`${stats.subscriptionCount || 0} รายการ`}
-                    icon={<DollarSign size={24} />}
-                    iconBg="linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)"
-                    trend="up"
-                />
+            {/* Row 1: 3 Stats Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
                 <StatCard
                     label="กำไรสุทธิ"
                     value={`฿${(stats.netProfit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -84,6 +64,58 @@ export default function AdminDashboardClient() {
                     subtext={`${stats.todayTxnCount || 0} ธุรกรรมวันนี้`}
                     icon={<Calendar size={24} />}
                     iconBg="linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)"
+                    trend="up"
+                />
+                <StatCard
+                    label="Partners ทั้งหมด"
+                    value={(stats.totalPartners || 0).toLocaleString()}
+                    subtext={`Active Partners`}
+                    icon={<Users size={24} />}
+                    iconBg="linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)"
+                    trend="up"
+                />
+            </div>
+
+            {/* Row 2: Remaining 5 Stats Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px' }}>
+                <StatCard
+                    label="Partner ใหม่วันนี้"
+                    value={`+${(stats.newPartnersToday || 0)}`}
+                    subtext="ร้านค้า"
+                    icon={<Users size={24} />}
+                    iconBg="linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" // Violet
+                    trend="up"
+                />
+                <StatCard
+                    label="Subscription วันนี้"
+                    value={`฿${(stats.todaySubscriptionRevenue || 0).toLocaleString()}`}
+                    subtext="รายได้ค่าสมาชิก"
+                    icon={<DollarSign size={24} />}
+                    iconBg="linear-gradient(135deg, #a855f7 0%, #9333ea 100%)" // Purple
+                    trend="up"
+                />
+                <StatCard
+                    label="ยอดการเติมเกมทั้งหมด"
+                    value={`฿${(stats.totalRevenue || 0).toLocaleString()}`}
+                    subtext={`${stats.totalTxnCount || 0} ธุรกรรมสำเร็จ`}
+                    icon={<CheckCircle size={24} />}
+                    iconBg="linear-gradient(135deg, #10b981 0%, #059669 100%)"
+                    trend="up"
+                />
+                <StatCard
+                    label="รายได้ Subscription (รวม)"
+                    value={`฿${(stats.subscriptionRevenue || 0).toLocaleString()}`}
+                    subtext={`${stats.subscriptionCount || 0} รายการ`}
+                    icon={<DollarSign size={24} />}
+                    iconBg="linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)"
+                    trend="up"
+                />
+                <StatCard
+                    label="Partner เติมเครดิต"
+                    value={`฿${(stats.totalPartnerTopup || 0).toLocaleString()}`}
+                    subtext={`${stats.totalPartnerTopupCount || 0} รายการ`}
+                    icon={<CreditCard size={24} />}
+                    iconBg="linear-gradient(135deg, #ec4899 0%, #be185d 100%)" // Pink/Rose theme
                     trend="up"
                 />
             </div>
@@ -128,15 +160,43 @@ export default function AdminDashboardClient() {
                                                 height: `${revenueH}%`,
                                                 background: 'linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%)',
                                                 borderRadius: '6px 6px 0 0',
-                                                minHeight: '12px'
-                                            }} />
+                                                minHeight: '12px',
+                                                position: 'relative'
+                                            }}>
+                                                <span style={{
+                                                    position: 'absolute',
+                                                    top: '-18px',
+                                                    left: '50%',
+                                                    transform: 'translateX(-50%)',
+                                                    fontSize: '10px',
+                                                    fontWeight: 600,
+                                                    color: '#2563eb',
+                                                    whiteSpace: 'nowrap'
+                                                }}>
+                                                    {d.revenue > 0 ? d.revenue.toLocaleString() : ''}
+                                                </span>
+                                            </div>
                                             <div style={{
                                                 flex: 1,
                                                 height: `${profitH}%`,
                                                 background: 'linear-gradient(180deg, #93c5fd 0%, #bfdbfe 100%)',
                                                 borderRadius: '6px 6px 0 0',
-                                                minHeight: '8px'
-                                            }} />
+                                                minHeight: '8px',
+                                                position: 'relative'
+                                            }}>
+                                                <span style={{
+                                                    position: 'absolute',
+                                                    top: '-18px',
+                                                    left: '50%',
+                                                    transform: 'translateX(-50%)',
+                                                    fontSize: '10px',
+                                                    fontWeight: 600,
+                                                    color: '#60a5fa',
+                                                    whiteSpace: 'nowrap'
+                                                }}>
+                                                    {d.profit > 0 ? d.profit.toLocaleString() : ''}
+                                                </span>
+                                            </div>
                                         </div>
                                         <span style={{ fontSize: '13px', color: '#6b7280', fontWeight: 500 }}>
                                             {new Date(d.date).getDate()} {['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][new Date(d.date).getMonth()]}

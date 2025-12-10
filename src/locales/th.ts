@@ -43,6 +43,7 @@ export const th = {
         contact: 'ติดต่อเรา',
         privacy: 'นโยบายความเป็นส่วนตัว',
         terms: 'ข้อกำหนดการใช้งาน',
+        rights: 'สงวนลิขสิทธิ์.',
     },
     copyright: '© 2024 GamesFlows. สงวนลิขสิทธิ์.',
     agentLanding: {

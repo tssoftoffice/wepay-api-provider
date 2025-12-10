@@ -18,7 +18,7 @@ export default function PartnersListPage() {
             setError('')
             const res = await getPartners(searchTerm)
             if (res.success) {
-                setPartners(res.data)
+                setPartners(res.data || [])
             } else {
                 setError(res.error || 'Something went wrong')
             }

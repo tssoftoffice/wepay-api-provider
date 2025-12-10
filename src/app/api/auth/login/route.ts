@@ -28,6 +28,20 @@ export async function POST(request: Request) {
         const token = signToken({ userId: user.id, role: user.role })
         await setSession(token)
 
+        // Log User Activity
+        const ip = request.headers.get('x-forwarded-for') || 'unknown'
+        const userAgent = request.headers.get('user-agent') || 'unknown'
+
+        await prisma.userActivity.create({
+            data: {
+                userId: user.id,
+                partnerId: user.partnerId,
+                action: 'LOGIN',
+                ipAddress: ip,
+                userAgent: userAgent
+            }
+        })
+
         return NextResponse.json({ success: true, user: { id: user.id, username: user.username, role: user.role } })
 
     } catch (error: any) {
