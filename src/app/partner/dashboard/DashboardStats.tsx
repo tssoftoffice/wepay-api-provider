@@ -77,7 +77,7 @@ async function getStats(partnerId: string) {
         // Revenue Stats (Only Success)
         if (tx.status === 'SUCCESS' || tx.status === 'SUCCEEDED') {
             const revenue = Number(tx.sellPrice)
-            const cost = Number(tx.baseCost)
+            const cost = Number(tx.providerPrice) || 0 // Use Partner Cost
             const realProfit = revenue - cost
 
             totalRevenue += revenue

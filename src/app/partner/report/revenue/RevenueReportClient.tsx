@@ -12,6 +12,7 @@ interface Transaction {
     status: string
     sellPrice: any // Decimal
     baseCost: any // Decimal
+    providerPrice: any // Decimal (Partner Cost)
     targetId: string | null
     game: {
         name: string
@@ -37,10 +38,9 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
     // Calculate Summary Stats
     const totalRevenue = initialTransactions.reduce((sum, txn) => sum + Number(txn.sellPrice), 0)
 
-    // Profit = Sell Price - Base Cost (if baseCost exists, otherwise estimate 15% for safety fallback or 0)
-    // Assuming baseCost is populated correctly.
+    // Profit = Sell Price - Provider Cost (Partner's Cost)
     const totalProfit = initialTransactions.reduce((sum, txn) => {
-        const createCost = Number(txn.baseCost) || 0
+        const createCost = Number(txn.providerPrice) || 0
         const sell = Number(txn.sellPrice) || 0
         return sum + (sell - createCost)
     }, 0)
@@ -118,7 +118,7 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
                         </thead>
                         <tbody>
                             {initialTransactions.map((txn) => {
-                                const cost = Number(txn.baseCost) || 0
+                                const cost = Number(txn.providerPrice) || 0
                                 const sell = Number(txn.sellPrice) || 0
                                 const profit = sell - cost
 

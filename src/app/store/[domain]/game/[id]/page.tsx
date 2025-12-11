@@ -72,7 +72,8 @@ async function getGameData(domain: string, gameId: string) {
             ...requestedGame,
             name: requestedGame.name.split(' ')[0], // Use company name for the header
             baseCost: Number(requestedGame.baseCost),
-            servers: (requestedGame as any).servers ? JSON.parse((requestedGame as any).servers) : null
+            servers: (requestedGame as any).servers ? JSON.parse((requestedGame as any).servers) : null,
+            imageUrl: partner.gamePrices[0].imageUrl || (requestedGame as any).imageUrl // Prefer Partner Image
         }
     }
 }

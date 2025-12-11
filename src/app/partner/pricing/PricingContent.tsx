@@ -46,8 +46,11 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
 
     if (selectedCategory) {
         const games = groupedGames[selectedCategory] || []
-        // Get current image from the first game in the group (assuming they share the same image)
-        const currentImage = games.length > 0 ? (games[0] as any).imageUrl : null
+        // Get current image from the first game in the group
+        // Check if partner has a specific image for this game (using the first game to check)
+        const firstGame = games[0]
+        const partnerPrice = data.currentPrices.find((p: any) => p.gameId === firstGame.id)
+        const currentImage = partnerPrice?.imageUrl || (firstGame as any).imageUrl || null
 
         return (
             <div className={styles.container}>

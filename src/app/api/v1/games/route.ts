@@ -49,43 +49,58 @@ export async function GET(req: NextRequest) {
             name: game.name,
             description: game.description,
             price: price, // RRP
-            cost_price: costPrice, // Capital/Partner Cost
-            image_url: game.imageUrl,
+            cost_price: customPrice ? Number(customPrice.sellPrice) : costPrice, // Use their price as cost if set
+            image_url: customPrice?.imageUrl || game.imageUrl, // Prefer Partner Image
             servers: serverList
         }
     })
 
-    // Grouping Logic
-    const grouped: Record<string, any> = {}
+    // Grouping Logic - Level 1: By Game Group (e.g. DUNKCITY)
+    const groupedGames: Record<string, any> = {}
 
     items.forEach(item => {
         const parts = item.code.split('_')
-        // Default group if parsing fails
+
+        let prefix = 'other'
         let groupKey = 'OTHER'
-        let groupName = 'Other Games'
 
         if (parts.length >= 2) {
-            // e.g. gtopup_FREEFIRE_10 -> FREEFIRE
-            // e.g. mtopup_TRMV_100 -> TRMV
+            // e.g. gtopup_FREEFIRE_10
+            prefix = parts[0]
             groupKey = parts[1]
-            groupName = parts[1]
+        } else if (parts.length === 1) {
+            groupKey = parts[0]
         }
 
-        if (!grouped[groupKey]) {
-            grouped[groupKey] = {
+        if (!groupedGames[groupKey]) {
+            groupedGames[groupKey] = {
                 group: groupKey,
-                image: item.image_url, // Use first item's image as group image
+                image: item.image_url,
+                type: prefix, // Temp field for sorting
                 items: []
             }
         }
 
-        grouped[groupKey].items.push(item)
+        groupedGames[groupKey].items.push(item)
     })
 
-    // Convert map to array
-    const data = Object.values(grouped)
+    // Grouping Logic - Level 2: By Type (gtopup, mtopup, etc.)
+    const groupedByType: Record<string, any[]> = {}
+
+    Object.values(groupedGames).forEach((gameGroup: any) => {
+        const type = gameGroup.type || 'other'
+
+        if (!groupedByType[type]) {
+            groupedByType[type] = []
+        }
+
+        // Clean up temp field
+        const { type: _, ...cleanGroup } = gameGroup
+
+        groupedByType[type].push(cleanGroup)
+    })
 
     return NextResponse.json({
-        data: data
+        data: groupedByType
     })
 }

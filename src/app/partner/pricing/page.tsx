@@ -106,15 +106,32 @@ async function updateGameImage(formData: FormData) {
 
     if (!company || !imageUrl) return
 
-    // Update all games that match the company code
-    // Matches: mtopup_COMPANY_... or gtopup_COMPANY_...
-    await prisma.game.updateMany({
-        where: {
-            code: { contains: `_${company}_` }
-        },
-        // @ts-ignore
-        data: { imageUrl }
+    // Verify user partner again just in case
+    const userId = (session as any).userId
+    const user = await prisma.user.findUnique({ where: { id: userId }, include: { partner: true } })
+    if (!user?.partner) return
+
+    const games = await prisma.game.findMany({
+        where: { code: { contains: `_${company}_` } }
     })
+
+    for (const game of games) {
+        await prisma.partnerGamePrice.upsert({
+            where: {
+                partnerId_gameId: {
+                    partnerId: user.partner.id,
+                    gameId: game.id
+                }
+            },
+            update: { imageUrl },
+            create: {
+                partnerId: user.partner.id,
+                gameId: game.id,
+                imageUrl,
+                sellPrice: game.providerPrice // Default to provider price if creating new entry
+            }
+        })
+    }
 
     // Also try to match exact company name if it was legacy (though we deleted legacy)
     // or if the code format is strictly TYPE_COMPANY_PRICE

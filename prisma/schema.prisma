@@ -8,21 +8,20 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  username  String    @unique
-  password  String
-  email     String?
-  role      String
-  partnerId String?
-  firstName String?
-  lastName  String?
-  phone     String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  customer  Customer?
-  partner   Partner?  @relation(fields: [partnerId], references: [id])
+  id             String         @id @default(uuid())
+  username       String         @unique
+  password       String
+  email          String?
+  role           String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  partnerId      String?
+  firstName      String?
+  lastName       String?
+  phone          String?
   auditLogs      AuditLog[]
+  customer       Customer?
+  partner        Partner?       @relation(fields: [partnerId], references: [id])
   userActivities UserActivity[]
 }
 
@@ -40,7 +39,7 @@ model Partner {
   secretKey          String?
   createdAt          DateTime                  @default(now())
   updatedAt          DateTime                  @updatedAt
-
+  auditLogs          AuditLog[]
   customers          Customer[]
   gameTopups         GameTopupTransaction[]
   package            SubscriptionPackage?      @relation(fields: [packageId], references: [id])
@@ -48,7 +47,6 @@ model Partner {
   partnerTopups      PartnerTopupTransaction[]
   subscriptionTxns   SubscriptionTransaction[]
   users              User[]
-  auditLogs          AuditLog[]
   userActivities     UserActivity[]
 }
 
@@ -66,7 +64,6 @@ model Customer {
   partnerId     String
   walletBalance Decimal                @default(0)
   createdAt     DateTime               @default(now())
-
   partner       Partner                @relation(fields: [partnerId], references: [id])
   user          User                   @relation(fields: [userId], references: [id])
   gameTopups    GameTopupTransaction[]
@@ -74,19 +71,18 @@ model Customer {
 }
 
 model Game {
-  id       String                 @id @default(uuid())
-  name     String
-  code     String                 @unique
-  faceValue Decimal            @default(0)
-  providerPrice Decimal       @default(0)
-  baseCost Decimal
-  status   String                 @default("ACTIVE")
-  imageUrl String?
-  description String?
-  servers  String?
-
-  topups   GameTopupTransaction[]
-  prices   PartnerGamePrice[]
+  id            String                 @id @default(uuid())
+  name          String
+  code          String                 @unique
+  faceValue     Decimal                @default(0)
+  providerPrice Decimal                @default(0)
+  baseCost      Decimal
+  status        String                 @default("ACTIVE")
+  imageUrl      String?
+  description   String?
+  servers       String?
+  topups        GameTopupTransaction[]
+  prices        PartnerGamePrice[]
 }
 
 model PartnerGamePrice {
@@ -94,7 +90,7 @@ model PartnerGamePrice {
   partnerId String
   gameId    String
   sellPrice Decimal
-
+  imageUrl  String?
   game      Game    @relation(fields: [gameId], references: [id])
   partner   Partner @relation(fields: [partnerId], references: [id])
 
@@ -110,27 +106,25 @@ model TopupRequest {
   reason     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
   customer   Customer @relation(fields: [customerId], references: [id])
 }
 
 model GameTopupTransaction {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   customerId    String?
   partnerId     String
   gameId        String
   baseCost      Decimal
   providerPrice Decimal   @default(0)
   sellPrice     Decimal
-  status        String   @default("PENDING")
+  status        String    @default("PENDING")
   server        String?
   targetId      String?
   providerTxnId String?
-  createdAt     DateTime @default(now())
-
-  game          Game     @relation(fields: [gameId], references: [id])
-  partner       Partner  @relation(fields: [partnerId], references: [id])
+  createdAt     DateTime  @default(now())
   customer      Customer? @relation(fields: [customerId], references: [id])
+  game          Game      @relation(fields: [gameId], references: [id])
+  partner       Partner   @relation(fields: [partnerId], references: [id])
 }
 
 model PartnerTopupTransaction {
@@ -140,34 +134,30 @@ model PartnerTopupTransaction {
   status        String   @default("PENDING")
   providerTxnId String?
   createdAt     DateTime @default(now())
-
   partner       Partner  @relation(fields: [partnerId], references: [id])
 }
 
-
 model SubscriptionPlan {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal
-  duration    Int      @default(30) // Days
-  features    String?  // JSON string of features
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id           String                    @id @default(uuid())
+  name         String
+  description  String?
+  price        Decimal
+  duration     Int                       @default(30)
+  features     String?
+  isActive     Boolean                   @default(true)
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
   transactions SubscriptionTransaction[]
 }
 
 model SubscriptionTransaction {
-  id        String   @id @default(uuid())
+  id        String            @id @default(uuid())
   partnerId String
-  planId    String?
   amount    Decimal
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
-
-  partner   Partner  @relation(fields: [partnerId], references: [id])
+  status    String            @default("PENDING")
+  createdAt DateTime          @default(now())
+  planId    String?
+  partner   Partner           @relation(fields: [partnerId], references: [id])
   plan      SubscriptionPlan? @relation(fields: [planId], references: [id])
 }
 
@@ -186,7 +176,6 @@ model AuditLog {
   action    String
   details   String?
   createdAt DateTime @default(now())
-
   partner   Partner  @relation(fields: [partnerId], references: [id])
   user      User?    @relation(fields: [userId], references: [id])
 }
@@ -199,16 +188,15 @@ model UserActivity {
   ipAddress String?
   userAgent String?
   createdAt DateTime @default(now())
-
-  user      User     @relation(fields: [userId], references: [id])
   partner   Partner? @relation(fields: [partnerId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Notification {
   id        String   @id @default(uuid())
   title     String
   message   String
-  type      String   @default("INFO") // INFO, SUCCESS, WARNING, ERROR
+  type      String   @default("INFO")
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
