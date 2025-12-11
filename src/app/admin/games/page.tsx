@@ -313,7 +313,7 @@ export default function AdminGamesPage() {
                                                         <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{game.description}</td>
                                                         <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{game.code}</td>
                                                         <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13px', color: '#64748b' }}>{game.faceValue}</td>
-                                                        <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 600, color: '#2563eb' }}>฿{game.baseCost.toFixed(2)}</td>
+                                                        <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 600, color: '#2563eb' }}>฿{game.baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
                                                         <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                                                             <span style={{
                                                                 padding: '2px 8px',

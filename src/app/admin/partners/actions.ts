@@ -99,26 +99,54 @@ export async function getPartnerDetails(id: string) {
             }
         })
 
-        // Calculate detailed stats
-        const stats = await prisma.gameTopupTransaction.aggregate({
+
+        // Calculate detailed stats & Chart Data
+        const allStatsTxns = await prisma.gameTopupTransaction.findMany({
             where: { partnerId: id, status: 'SUCCESS' },
-            _sum: { sellPrice: true },
-            _max: { createdAt: true }
+            select: { createdAt: true, sellPrice: true, baseCost: true },
+            orderBy: { createdAt: 'asc' }
         })
 
+        let totalSalesVolume = 0
+        let totalProfit = 0
+        const dailyStats: Record<string, { date: string, sales: number, profit: number, count: number }> = {}
+
+        for (const txn of allStatsTxns) {
+            const sellPrice = txn.sellPrice.toNumber()
+            const baseCost = txn.baseCost.toNumber()
+            const profit = sellPrice - baseCost
+
+            totalSalesVolume += sellPrice
+            totalProfit += profit
+
+            // Group by Date (Thai Time +7)
+            const date = new Date(txn.createdAt.getTime() + (7 * 60 * 60 * 1000)).toISOString().split('T')[0]
+
+            if (!dailyStats[date]) {
+                dailyStats[date] = { date, sales: 0, profit: 0, count: 0 }
+            }
+            dailyStats[date].sales += sellPrice
+            dailyStats[date].profit += profit
+            dailyStats[date].count += 1
+        }
+
+        const chartData = Object.values(dailyStats).sort((a, b) => a.date.localeCompare(b.date))
+
         const totalTxns = await prisma.gameTopupTransaction.count({ where: { partnerId: id } })
-        const successTxns = await prisma.gameTopupTransaction.count({ where: { partnerId: id, status: 'SUCCESS' } })
-        const successRate = totalTxns > 0 ? (successTxns / totalTxns) * 100 : 0
+        const successRate = totalTxns > 0 ? (allStatsTxns.length / totalTxns) * 100 : 0
+        const lastActive = allStatsTxns.length > 0 ? allStatsTxns[allStatsTxns.length - 1].createdAt : null
 
         // Serialize decimals
         const serializedPartner = {
             ...partner,
             walletBalance: partner.walletBalance.toNumber(),
             stats: {
-                totalSalesVolume: stats._sum.sellPrice?.toNumber() || 0,
-                lastActive: stats._max.createdAt || null,
+                totalSalesVolume: totalSalesVolume,
+                totalProfit: totalProfit,
+                lastActive: lastActive,
                 successRate: Math.round(successRate)
             },
+            chartData, // New Field
             recentTransactions: recentTransactions.map(txn => ({
                 ...txn,
                 baseCost: txn.baseCost.toNumber(),
@@ -163,5 +191,46 @@ export async function updatePartner(id: string, data: { name: string, domain: st
     } catch (error) {
         console.error('Error updating partner:', error)
         return { success: false, error: 'Failed to update partner' }
+    }
+}
+
+// Reset Partner User Password
+export async function resetPartnerUserPassword(userId: string, newPassword: string) {
+    try {
+        console.log('Resetting password for user:', userId)
+
+        // Dynamic import to avoid circular dependencies if auth.ts imports prisma too (though here it seems safe, assume hashPassword is pure)
+        // If hashPassword is not exported, we might need to check lib/auth.ts again.
+        // Wait, I checked lib/auth.ts and it exports hashPassword.
+        const { hashPassword } = await import('@/lib/auth')
+
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { partnerId: true }
+        })
+
+        if (!user || !user.partnerId) {
+            return { success: false, error: 'User or Partner not found' }
+        }
+
+        const hashedPassword = await hashPassword(newPassword)
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedPassword }
+        })
+
+        await prisma.auditLog.create({
+            data: {
+                action: 'RESET_PASSWORD',
+                details: `Reset password for user ${userId}`,
+                partnerId: user.partnerId
+            }
+        })
+
+        return { success: true }
+    } catch (error) {
+        console.error('Error resetting password:', error)
+        return { success: false, error: 'Failed to reset password' }
     }
 }

@@ -11,8 +11,8 @@ interface Transaction {
     createdAt: Date
     status: string
     sellPrice: any // Decimal
-    baseCost: any // Decimal
-    providerPrice: any // Decimal (Partner Cost)
+    baseCost: any // Decimal (Partner Cost)
+    providerPrice: any // Decimal (WePay Cost)
     targetId: string | null
     game: {
         name: string
@@ -38,11 +38,11 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
     // Calculate Summary Stats
     const totalRevenue = initialTransactions.reduce((sum, txn) => sum + Number(txn.sellPrice), 0)
 
-    // Profit = Sell Price - Provider Cost (Partner's Cost)
+    // Profit = Sell Price - Base Cost (Partner's Cost)
     const totalProfit = initialTransactions.reduce((sum, txn) => {
-        const createCost = Number(txn.providerPrice) || 0
+        const cost = Number(txn.baseCost) || 0
         const sell = Number(txn.sellPrice) || 0
-        return sum + (sell - createCost)
+        return sum + (sell - cost)
     }, 0)
 
     const handleSearch = () => {
@@ -84,15 +84,15 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
 
             {/* Summary Cards */}
             <div className={styles.summaryGrid}>
-                <div className={styles.card}>
+                <div className={`${styles.card} ${styles.cardRevenue}`}>
                     <div className={styles.cardTitle}>{t.revenueReport.totalRevenue}</div>
-                    <div className={styles.cardValue}>฿{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div className={styles.cardValue}>฿{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</div>
                 </div>
-                <div className={styles.card}>
+                <div className={`${styles.card} ${styles.cardProfit}`}>
                     <div className={styles.cardTitle}>{t.revenueReport.totalProfit}</div>
-                    <div className={`${styles.cardValue} ${styles.profit}`}>฿{totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div className={styles.cardValue}>฿{totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</div>
                 </div>
-                <div className={styles.card}>
+                <div className={`${styles.card} ${styles.cardCount}`}>
                     <div className={styles.cardTitle}>{t.revenueReport.totalTxn}</div>
                     <div className={styles.cardValue}>{initialTransactions.length.toLocaleString()}</div>
                 </div>
@@ -118,7 +118,7 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
                         </thead>
                         <tbody>
                             {initialTransactions.map((txn) => {
-                                const cost = Number(txn.providerPrice) || 0
+                                const cost = Number(txn.baseCost) || 0
                                 const sell = Number(txn.sellPrice) || 0
                                 const profit = sell - cost
 
@@ -132,10 +132,10 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
                                         </td>
                                         <td>{txn.transactionId || txn.id.substring(0, 8)}</td>
                                         <td>{txn.game.name}</td>
-                                        <td>฿{cost.toLocaleString()}</td>
-                                        <td>฿{sell.toLocaleString()}</td>
+                                        <td>฿{cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
+                                        <td>฿{sell.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
                                         <td style={{ color: profit >= 0 ? '#10b981' : '#ef4444', fontWeight: 500 }}>
-                                            ฿{profit.toLocaleString()}
+                                            ฿{profit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                                         </td>
                                     </tr>
                                 )

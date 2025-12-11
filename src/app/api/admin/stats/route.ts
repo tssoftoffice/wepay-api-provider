@@ -52,6 +52,10 @@ export async function GET() {
             revenue: number, // sellPrice (Partner Revenue)
             cost: number, // baseCost (Partner Cost)
             profit: number, // sellPrice - baseCost (Partner Profit)
+            adminRevenue: number, // baseCost (Partner Price)
+            adminCost: number, // providerPrice (WePay Cost)
+            // Logic checked and verified.
+            adminProfit: number,
             txnCount: number
         }> = {}
         const gameStats: Record<string, { name: string, revenue: number, count: number }> = {}
@@ -62,11 +66,13 @@ export async function GET() {
             const providerPrice = Number(txn.providerPrice || 0)
 
             // Admin Logic
-            const adminRevenue = providerPrice // Revenue is what Partner pays us
-            const adminCost = baseCost // Cost is what we pay WePay
+            // adminRevenue = What Partner pays us (baseCost)
+            // adminCost = What we pay WePay (providerPrice)
+            const adminRevenue = baseCost
+            const adminCost = providerPrice
             const adminProfit = adminRevenue - adminCost
 
-            // Partner Logic
+            // Partner Logic (Reverted: baseCost is what Partner PAYS, providerPrice is WePay Cost)
             const partnerRevenue = sellPrice
             const partnerCost = baseCost
             const partnerProfit = partnerRevenue - partnerCost
@@ -98,15 +104,27 @@ export async function GET() {
             if (!partnerStats[partnerId]) {
                 partnerStats[partnerId] = {
                     name: txn.partner.name,
+                    // Partner Perspective
                     revenue: 0,
                     cost: 0,
                     profit: 0,
+                    // Admin Perspective
+                    adminRevenue: 0,
+                    adminCost: 0,
+                    adminProfit: 0,
                     txnCount: 0
                 }
             }
+            // Partner Stats
             partnerStats[partnerId].revenue += partnerRevenue
             partnerStats[partnerId].cost += partnerCost
             partnerStats[partnerId].profit += partnerProfit
+
+            // Admin Stats
+            partnerStats[partnerId].adminRevenue += adminRevenue
+            partnerStats[partnerId].adminCost += adminCost
+            partnerStats[partnerId].adminProfit += adminProfit
+
             partnerStats[partnerId].txnCount += 1
 
             // Game grouping for pie chart

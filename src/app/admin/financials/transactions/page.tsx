@@ -4,12 +4,18 @@ import React, { useState, useEffect } from 'react'
 import { Card, Button, DatePicker, Select, Tag, Table, Pagination } from 'antd'
 import { getTransactions, getPartnersAction } from '../actions'
 import { ArrowLeft } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
 
 export default function TransactionReportPage() {
+    const searchParams = useSearchParams()
+    const initialPartnerId = searchParams.get('partnerId') || 'ALL'
+    const initialType = searchParams.get('type') || 'ALL'
+    const initialStatus = searchParams.get('status') || 'ALL'
+
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any[]>([])
     const [partners, setPartners] = useState<any[]>([])
@@ -17,9 +23,9 @@ export default function TransactionReportPage() {
 
     // Filters
     const [filters, setFilters] = useState({
-        type: 'ALL',
-        status: 'ALL',
-        partnerId: 'ALL',
+        type: initialType,
+        status: initialStatus,
+        partnerId: initialPartnerId,
         startDate: null as string | null,
         endDate: null as string | null,
         sortBy: 'date' // 'date' | 'partner'
@@ -29,7 +35,17 @@ export default function TransactionReportPage() {
     useEffect(() => {
         const init = async () => {
             const pRes = await getPartnersAction() // Load default 50
-            if (pRes.success) setPartners(pRes.data)
+            if (pRes.success) {
+                let currentPartners = pRes.data || []
+                // If initialPartnerId is set but not in the list, fetch it specifically (optional optimization)
+                // For now, let's assume it's in the list or the user SEARCHES for it.
+                // Actually, if we link from Partner Details, we WANT it to show nicely.
+                // Let's manually add it if missing from the cache, but we need the name.
+                // We don't have the name from URL.
+                // Simplified: Just set partners. The filter ID will still work for data fetching.
+                // If the UI shows ID, that's acceptable fallback, but let's try to match.
+                setPartners(currentPartners)
+            }
         }
         init()
     }, [])
@@ -39,7 +55,7 @@ export default function TransactionReportPage() {
         // Simple manual debounce to avoid import lodash
         const timeoutId = setTimeout(async () => {
             const pRes = await getPartnersAction(val)
-            if (pRes.success) setPartners(pRes.data)
+            if (pRes.success) setPartners(pRes.data || [])
         }, 500)
     }
 
@@ -58,8 +74,8 @@ export default function TransactionReportPage() {
             })
 
             if (res.success) {
-                setData(res.data)
-                setPagination(prev => ({ ...prev, page, limit: currentLimit, total: res.pagination.total }))
+                setData(res.data || [])
+                setPagination(prev => ({ ...prev, page, limit: currentLimit, total: res.pagination?.total || 0 }))
             }
         } catch (error) {
             console.error(error)
@@ -117,21 +133,21 @@ export default function TransactionReportPage() {
         },
         {
             title: 'WePay Cost',
-            dataIndex: 'baseCost',
-            key: 'baseCost',
+            dataIndex: 'providerPrice',
+            key: 'providerPrice',
             align: 'right' as const,
             render: (val: number, record: any) => (
                 <span style={{ color: '#ef4444' }}>
-                    {val ? `฿${val.toLocaleString()}` : '-'}
+                    {val ? `฿${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}` : '-'}
                 </span>
             )
         },
         {
             title: 'Partner Price',
-            dataIndex: 'providerPrice',
-            key: 'providerPrice',
+            dataIndex: 'baseCost',
+            key: 'baseCost',
             align: 'right' as const,
-            render: (val: number) => `฿${val.toLocaleString()}`
+            render: (val: number) => `฿${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`
         },
         {
             title: 'Profit',
@@ -140,7 +156,7 @@ export default function TransactionReportPage() {
             align: 'right' as const,
             render: (val: number) => (
                 <span style={{ color: val > 0 ? '#10b981' : val < 0 ? '#ef4444' : '#cbd5e1', fontWeight: 600 }}>
-                    {val !== 0 ? `฿${val.toLocaleString()}` : '-'}
+                    {val !== 0 ? `฿${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}` : '-'}
                 </span>
             )
         },
@@ -189,7 +205,7 @@ export default function TransactionReportPage() {
                             onSearch={handlePartnerSearch}
                             style={{ width: 180 }}
                             onChange={(val) => setFilters(prev => ({ ...prev, partnerId: val }))}
-                            defaultValue="ALL"
+                            value={filters.partnerId}
                             notFoundContent={null}
                         >
                             <Option value="ALL">All Partners</Option>
@@ -201,7 +217,7 @@ export default function TransactionReportPage() {
                     <div>
                         <div style={{ marginBottom: '4px', fontSize: '12px', fontWeight: 600 }}>Type</div>
                         <Select
-                            defaultValue="ALL"
+                            value={filters.type}
                             style={{ width: 150 }}
                             onChange={(val) => setFilters(prev => ({ ...prev, type: val }))}
                         >
@@ -214,7 +230,7 @@ export default function TransactionReportPage() {
                     <div>
                         <div style={{ marginBottom: '4px', fontSize: '12px', fontWeight: 600 }}>Status</div>
                         <Select
-                            defaultValue="ALL"
+                            value={filters.status}
                             style={{ width: 120 }}
                             onChange={(val) => setFilters(prev => ({ ...prev, status: val }))}
                         >

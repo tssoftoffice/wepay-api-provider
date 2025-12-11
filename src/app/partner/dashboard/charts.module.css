@@ -1,29 +1,40 @@
 .chartsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 Columns by default */
+    gap: 24px;
+    margin-bottom: 2rem;
 }
 
 .chartCard {
     background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 14px 0px rgba(32, 40, 45, 0.08);
+    /* Soft Berry Shadow */
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.chartCard:hover {
+    box-shadow: 0px 5px 20px 0px rgba(32, 40, 45, 0.12);
 }
 
 .wide {
     grid-column: 1 / -1;
+    /* Full width for main chart */
 }
 
 .chartTitle {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
 }
 
-@media (max-width: 768px) {
+
+/* Responsive */
+@media (max-width: 1024px) {
     .chartsGrid {
         grid-template-columns: 1fr;
     }

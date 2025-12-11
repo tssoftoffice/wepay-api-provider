@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState, Suspense } from 'react'
+import React, { useState, Suspense, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/Card'
-import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import Link from 'next/link'
 import styles from './page.module.css'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useAuth } from '@/contexts/AuthContext'
+
+const colors = ['#f59e0b', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6']
 
 function LoginForm() {
     const router = useRouter()
@@ -20,6 +21,7 @@ function LoginForm() {
     })
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [primaryColor, setPrimaryColor] = useState(colors[0]) // Default Orange
 
     const { login } = useAuth()
 
@@ -75,48 +77,79 @@ function LoginForm() {
     }
 
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+            style={{
+                '--primary-color': primaryColor,
+                '--secondary-color': colors[(colors.indexOf(primaryColor) + 1) % colors.length]
+            } as React.CSSProperties}
+        >
+            <Link href="/" className={styles.backButton}>
+                ← หน้าหลัก
+            </Link>
+
+            {/* Color Sidebar */}
+            <div className={styles.sidebar}>
+                {colors.map((color) => (
+                    <div
+                        key={color}
+                        className={`${styles.colorDot} ${primaryColor === color ? styles.active : ''}`}
+                        style={{ background: color }}
+                        onClick={() => setPrimaryColor(color)}
+                    />
+                ))}
+            </div>
+
             <div className={styles.contentWrapper}>
                 {/* 3D Character */}
-                <div className={styles.characterWrapper}>
-                    <img src="/login_character.png" alt="Login Character" className={styles.character} />
-                </div>
+                {/* MMO Characters - 4 Corners */}
+                <img src="/mmo_char_1.png" alt="Character 1" className={`${styles.character} ${styles.char1}`} />
+                <img src="/mmo_char_2.png" alt="Character 2" className={`${styles.character} ${styles.char2}`} />
+                <img src="/mmo_char_3.png" alt="Character 3" className={`${styles.character} ${styles.char3}`} />
+                <img src="/mmo_char_4.png" alt="Character 4" className={`${styles.character} ${styles.char4}`} />
 
-                <Card className={styles.card}>
+                <div className={styles.card}>
                     <h1 className={styles.title}>{t.auth.loginTitle}</h1>
                     <p className={styles.subtitle}>{t.auth.loginSubtitle}</p>
 
                     {error && <div className={styles.error}>{error}</div>}
 
                     <form onSubmit={handleSubmit} className={styles.form}>
-                        <Input
-                            label={t.auth.username}
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            required
-                        />
-                        <Input
-                            label={t.auth.password}
-                            name="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
+                        <div className={styles.inputGroup}>
+                            <label className={styles.label}>{t.auth.username}</label>
+                            <input
+                                className={styles.input}
+                                name="username"
+                                value={formData.username}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your username"
+                            />
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <label className={styles.label}>{t.auth.password}</label>
+                            <input
+                                className={styles.input}
+                                name="password"
+                                type="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your password"
+                            />
+                        </div>
 
-                        <Button type="submit" disabled={loading} className={styles.submitButton}>
+                        <button type="submit" disabled={loading} className={styles.submitButton}>
                             {loading ? t.auth.loggingIn : t.auth.login}
-                        </Button>
+                        </button>
                     </form>
 
                     <div className={styles.footer}>
-                        <p>{t.auth.dontHaveAccount} <Link href="/register" className={styles.link}>{t.auth.register}</Link></p>
-                        <p className={styles.agentLink}>
-                            {t.auth.wantToBeAgent} <Link href="/register?role=PARTNER_OWNER" className={styles.link}>{t.auth.applyHere}</Link>
+                        <p className={styles.agentLink} style={{ fontSize: '0.95rem' }}>
+                            {t.auth.wantToBeAgent} <Link href="/register/agent" className={styles.link}>{t.auth.applyHere}</Link>
                         </p>
                     </div>
-                </Card>
+                </div>
             </div>
 
             <Modal
@@ -127,7 +160,7 @@ function LoginForm() {
                 <div style={{ textAlign: 'center', padding: '20px' }}>
                     <div style={{ fontSize: '48px', marginBottom: '10px' }}>✅</div>
                     <p>ยินดีต้อนรับกลับเข้าสู่ระบบ</p>
-                    <p style={{ fontSize: '0.9em', color: '#666' }}>กำลังเข้าสู่หน้าหลัก...</p>
+                    <p style={{ fontSize: '0.9em', color: '#cbd5e1' }}>กำลังเข้าสู่หน้าหลัก...</p>
                 </div>
             </Modal>
         </div>

@@ -114,8 +114,8 @@ model GameTopupTransaction {
   customerId    String?
   partnerId     String
   gameId        String
-  baseCost      Decimal
-  providerPrice Decimal   @default(0)
+  baseCost      Decimal   // Partner Price (What Partner pays System) -> Admin Revenue
+  providerPrice Decimal   @default(0) // WePay Cost (What System pays WePay) -> Admin Cost
   sellPrice     Decimal
   status        String    @default("PENDING")
   server        String?

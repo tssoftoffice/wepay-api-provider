@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { WePayClient } from '@/lib/wepay'
+import { getPricingRate } from '@/config/pricing'
 
 // Get all games with search support
 export async function getGames(search?: string) {
@@ -101,12 +102,12 @@ export async function syncGames() {
                         description = `<p><strong>${name}</strong></p><ul><li>Product Code: ${companyId}</li></ul>`
                     }
 
-                    // Logic: Adjusted to match user Report
-                    // WePay Cost = 9.475 (0.9475)
-                    // Our Price = 9.625 (0.9625) 
-                    // Profit = ~1.5%
-                    const baseCost = price * 0.9475
-                    const providerPrice = price * 0.9625
+                    // Logic: Dynamic Pricing from Config (Detailed Rates) (Step 2)
+                    // Get correct ratios for this specific game/category
+                    const { costRatio, priceRatio } = getPricingRate(category.type, code)
+
+                    const providerPrice = Number((price * costRatio).toFixed(4))
+                    const baseCost = Number((price * priceRatio).toFixed(4))
 
                     const existing = existingMap.get(code)
 
@@ -114,9 +115,10 @@ export async function syncGames() {
                         toUpdate.push({
                             code,
                             description,
-                            providerPrice: existing.providerPrice.toNumber() === 0 ? providerPrice : undefined,
-                            baseCost: existing.baseCost.toNumber() === 0 ? baseCost + 0.01 : undefined,
-                            faceValue: existing.faceValue.toNumber() === 0 ? price : undefined // Fix faceValue if 0
+                            providerPrice: providerPrice, // Always update to latest API calculation
+                            // baseCost was here
+                            baseCost: baseCost,
+                            faceValue: price // Always ensure faceValue is correct
                         })
                     } else {
                         toCreate.push({
@@ -150,13 +152,19 @@ export async function syncGames() {
         for (const item of toUpdate) {
             p++
             try {
+                const updateData: any = {
+                    description: item.description,
+                    providerPrice: item.providerPrice,
+                    faceValue: item.faceValue
+                }
+                // Only include baseCost in update if it's defined (we might have chosen not to update it in some logic, but here we passed it)
+                if (item.baseCost !== undefined) {
+                    updateData.baseCost = item.baseCost
+                }
+
                 await prisma.game.update({
                     where: { code: item.code },
-                    data: {
-                        description: item.description,
-                        providerPrice: item.providerPrice,
-                        faceValue: item.faceValue
-                    }
+                    data: updateData
                 })
             } catch (err) {
                 console.error(`Failed to update ${item.code}`, err)

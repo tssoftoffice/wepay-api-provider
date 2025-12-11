@@ -91,14 +91,31 @@ export function TopupContent() {
                 {error && <div className={styles.error}>{error}</div>}
 
                 <form onSubmit={handleTopup} className={styles.form}>
-                    <Input
-                        label={t.topup.amount}
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        required
-                        min="1"
-                    />
+                    <div>
+                        <label htmlFor="amount" style={{ display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+                            {t.topup.amount}
+                        </label>
+                        <input
+                            id="amount"
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            required
+                            min="1"
+                            placeholder="ระบุจำนวนเงิน (THB)"
+                            className={styles.input} /* We will rely on cascading or add this class */
+                            style={{
+                                width: '100%',
+                                background: 'rgba(255, 255, 255, 0.15)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                color: 'white',
+                                borderRadius: '12px',
+                                padding: '12px 16px',
+                                fontSize: '1.1rem',
+                                outline: 'none'
+                            }}
+                        />
+                    </div>
                     <Button type="submit" disabled={loading} className={styles.button}>
                         {loading ? t.topup.generating : t.topup.generateQr}
                     </Button>

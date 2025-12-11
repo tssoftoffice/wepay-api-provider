@@ -129,13 +129,13 @@ export function Navbar() {
                                 </>
                             ) : (
                                 <>
-                                    <Link href="/register?role=PARTNER_OWNER">
+                                    <Link href="/register/agent">
                                         <Button className={styles.agentBtn}>{t.navbar.registerAgent}</Button>
                                     </Link>
                                     <Link href="/login">
                                         <Button className={styles.loginBtn}>{t.navbar.login}</Button>
                                     </Link>
-                                    <Link href="/register">
+                                    <Link href="/register/agent">
                                         <Button variant="secondary" className={styles.registerBtn}>{t.navbar.registerMember}</Button>
                                     </Link>
                                 </>

@@ -19,7 +19,7 @@ export async function getFinancialStats() {
         gameTxns.forEach(tx => {
             const price = tx.providerPrice.toNumber()
             const cost = tx.baseCost.toNumber()
-            gameRevenue += (price - cost) // User wants Revenue to be Net (Price - Cost)
+            gameRevenue += (cost - price) // Revenue is baseCost (Partner Price) - providerPrice (WePay Cost)
             gameCost += cost
         })
 
@@ -111,7 +111,7 @@ export async function getRecentTransactions(limit = 20) {
                     amount: tx.providerPrice?.toNumber() || 0,
                     baseCost: tx.baseCost?.toNumber() || 0,
                     providerPrice: tx.providerPrice?.toNumber() || 0,
-                    profit: (tx.providerPrice?.toNumber() || 0) - (tx.baseCost?.toNumber() || 0),
+                    profit: (tx.baseCost?.toNumber() || 0) - (tx.providerPrice?.toNumber() || 0),
                     status: tx.status,
                     date: tx.createdAt
                 }
@@ -247,7 +247,7 @@ export async function getTransactions(params: any) {
             partner: tx.partner.name,
             baseCost: tx.baseCost.toNumber(),
             providerPrice: tx.providerPrice.toNumber(),
-            profit: tx.providerPrice.toNumber() - tx.baseCost.toNumber(),
+            profit: tx.baseCost.toNumber() - tx.providerPrice.toNumber(),
             status: tx.status,
             date: tx.createdAt
         }))

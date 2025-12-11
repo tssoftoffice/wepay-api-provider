@@ -98,7 +98,7 @@ export default function PartnersListPage() {
                                     <td>
                                         <div className={styles.wallet}>
                                             <Wallet size={14} className={styles.walletIcon} />
-                                            ฿{partner.walletBalance.toLocaleString()}
+                                            ฿{(partner.walletBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                                         </div>
                                     </td>
                                     <td>

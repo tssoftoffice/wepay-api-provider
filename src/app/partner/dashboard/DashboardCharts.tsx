@@ -15,7 +15,7 @@ interface ChartData {
     statusPie: { name: string, value: number, color: string }[]
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+const COLORS = ['#5e35b1', '#1e88e5', '#90caf9', '#ede7f6', '#d1c4e9']
 
 export function DashboardCharts() {
     const [data, setData] = useState<ChartData | null>(null)
@@ -52,7 +52,7 @@ export function DashboardCharts() {
             <div className={`${styles.chartCard} ${styles.wide}`}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <h3 className={styles.chartTitle}>แนวโน้มรายได้ (Revenue Trend)</h3>
-                    <div style={{ display: 'flex', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', background: '#f8fafc', padding: '4px', borderRadius: '8px' }}>
                         <button
                             onClick={() => setTimeframe('daily')}
                             style={{
@@ -60,11 +60,12 @@ export function DashboardCharts() {
                                 borderRadius: '6px',
                                 border: 'none',
                                 background: timeframe === 'daily' ? 'white' : 'transparent',
-                                color: timeframe === 'daily' ? '#0f172a' : '#64748b',
+                                color: timeframe === 'daily' ? '#5e35b1' : '#64748b',
                                 boxShadow: timeframe === 'daily' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                 cursor: 'pointer',
                                 fontSize: '0.85rem',
-                                fontWeight: 500
+                                fontWeight: 600,
+                                transition: 'all 0.2s'
                             }}
                         >
                             7 Days
@@ -76,11 +77,12 @@ export function DashboardCharts() {
                                 borderRadius: '6px',
                                 border: 'none',
                                 background: timeframe === 'monthly' ? 'white' : 'transparent',
-                                color: timeframe === 'monthly' ? '#0f172a' : '#64748b',
+                                color: timeframe === 'monthly' ? '#5e35b1' : '#64748b',
                                 boxShadow: timeframe === 'monthly' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                 cursor: 'pointer',
                                 fontSize: '0.85rem',
-                                fontWeight: 500
+                                fontWeight: 600,
+                                transition: 'all 0.2s'
                             }}
                         >
                             6 Months
@@ -92,8 +94,8 @@ export function DashboardCharts() {
                         <AreaChart data={currentRevenueData}>
                             <defs>
                                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#5e35b1" stopOpacity={0.6} />
+                                    <stop offset="95%" stopColor="#5e35b1" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
@@ -104,6 +106,7 @@ export function DashboardCharts() {
                                 axisLine={false}
                                 tick={{ fill: '#64748b' }}
                                 minTickGap={30}
+                                dy={10}
                             />
                             <YAxis
                                 fontSize={12}
@@ -114,16 +117,16 @@ export function DashboardCharts() {
                             />
                             <Tooltip
                                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                                formatter={(value: number) => [`฿${value.toLocaleString()}`, 'Revenue']}
+                                formatter={(value: number) => [<span style={{ color: '#5e35b1', fontWeight: 600 }}>฿{value.toLocaleString()}</span>, 'Revenue']}
                             />
                             <Area
                                 type="monotone"
                                 dataKey="value"
-                                stroke="#3b82f6"
+                                stroke="#5e35b1"
                                 strokeWidth={3}
                                 fillOpacity={1}
                                 fill="url(#colorRevenue)"
-                                animationDuration={500}
+                                animationDuration={800}
                             />
                         </AreaChart>
                     </ResponsiveContainer>
@@ -131,7 +134,7 @@ export function DashboardCharts() {
             </div>
 
             {/* Transaction Volume Bar Chart */}
-            <div className={styles.chartCard}>
+            <div className={styles.chartCard} style={{ overflow: 'hidden' }}>
                 <h3 className={styles.chartTitle}>จำนวนทำรายการ (Transactions)</h3>
                 <div style={{ width: '100%', height: 300 }}>
                     <ResponsiveContainer>
@@ -143,7 +146,8 @@ export function DashboardCharts() {
                                 cursor={{ fill: '#f8fafc' }}
                                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
                             />
-                            <Bar dataKey="value" fill="#6366f1" radius={[6, 6, 0, 0]} maxBarSize={50} />
+                            {/* Use Blue for Bars for contrast with Purple Revenue */}
+                            <Bar dataKey="value" fill="#1e88e5" radius={[6, 6, 0, 0]} maxBarSize={50} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -165,11 +169,11 @@ export function DashboardCharts() {
                                 dataKey="value"
                             >
                                 {statusPie.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                    <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
                                 ))}
                             </Pie>
                             <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />
-                            <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
@@ -191,11 +195,11 @@ export function DashboardCharts() {
                                 dataKey="value"
                             >
                                 {gamePie.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
                                 ))}
                             </Pie>
                             <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />
-                            <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>

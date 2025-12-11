@@ -14,34 +14,42 @@
 }
 
 .title {
-    font-size: 2.5rem;
-    font-weight: 800;
+    font-size: 2.25rem;
+    font-weight: 700;
     color: #1e293b;
-    margin-bottom: 0.25rem;
-    /* Gradient text */
-    background: linear-gradient(to right, #ea580c, #c2410c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
 }
 
 .subtitle {
-    color: #94a3b8;
-    font-size: 1.1rem;
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .error {
-    color: white;
+    color: #ef4444;
     padding: 2rem;
     text-align: center;
 }
 
 .sectionHeading {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #1e293b;
     margin-bottom: 1.5rem;
-    border-left: 4px solid #ea580c;
-    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sectionHeading::before {
+    content: "";
+    width: 6px;
+    height: 24px;
+    background: #5e35b1;
+    /* Purple Accent */
+    border-radius: 4px;
+    display: block;
 }
 
 .chartsSection {

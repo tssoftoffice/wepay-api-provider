@@ -20,7 +20,7 @@ export default function FinancialsPage() {
             ])
 
             if (statsRes.success) setStats(statsRes.data)
-            if (txRes.success) setTransactions(txRes.data)
+            if (txRes.success) setTransactions(txRes.data || [])
             setLoading(false)
         }
         loadData()
@@ -43,10 +43,10 @@ export default function FinancialsPage() {
                         <div>
                             <p style={{ margin: 0, opacity: 0.9, fontSize: '14px' }}>Total Net Profit (กำไรสุทธิ)</p>
                             <h2 style={{ fontSize: '32px', fontWeight: 'bold', margin: '8px 0' }}>
-                                ฿{stats?.totalProfit.toLocaleString()}
+                                ฿{stats?.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                             </h2>
                             <p style={{ fontSize: '12px', opacity: 0.8 }}>
-                                + {((stats?.game.profit || 0) + (stats?.subscription.profit || 0)).toLocaleString()} from Operations
+                                + {((stats?.game.profit || 0) + (stats?.subscription.profit || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} from Operations
                             </p>
                         </div>
                         <div style={{ padding: '10px', background: 'rgba(255,255,255,0.2)', borderRadius: '12px' }}>
@@ -61,15 +61,15 @@ export default function FinancialsPage() {
                         <div>
                             <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Total Revenue (รายรับรวม)</p>
                             <h2 style={{ fontSize: '28px', fontWeight: 'bold', margin: '8px 0', color: '#1e293b' }}>
-                                ฿{stats?.totalRevenue.toLocaleString()}
+                                ฿{stats?.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                             </h2>
                             <div style={{ display: 'flex', gap: '8px', fontSize: '12px' }}>
                                 {/* Game Revenue excluded from Total per user request */}
                                 <span style={{ color: '#3b82f6', background: '#eff6ff', padding: '2px 6px', borderRadius: '4px' }}>
-                                    Sub: {stats?.subscription.revenue.toLocaleString()}
+                                    Sub: {stats?.subscription.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                                 </span>
                                 <span style={{ color: '#0ea5e9', background: '#f0f9ff', padding: '2px 6px', borderRadius: '4px' }}>
-                                    Top-up: {stats?.topup.total.toLocaleString()}
+                                    Top-up: {stats?.topup.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                                 </span>
                             </div>
                         </div>
@@ -85,7 +85,7 @@ export default function FinancialsPage() {
                         <div>
                             <p style={{ margin: 0, color: '#64748b', fontSize: '14px' }}>Partner Top-ups (เงินเติมเข้าระบบ)</p>
                             <h2 style={{ fontSize: '28px', fontWeight: 'bold', margin: '8px 0', color: '#1e293b' }}>
-                                ฿{stats?.topup.total.toLocaleString()}
+                                ฿{stats?.topup.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
                             </h2>
                             <p style={{ fontSize: '12px', color: '#94a3b8' }}>
                                 {stats?.topup.count} transactions
@@ -105,16 +105,16 @@ export default function FinancialsPage() {
                     <div style={{ marginTop: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <span style={{ color: '#64748b' }}>Revenue (ยอดขายเกม)</span>
-                            <span style={{ fontWeight: 600 }}>฿{stats?.game.revenue.toLocaleString()}</span>
+                            <span style={{ fontWeight: 600 }}>฿{stats?.game.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <span style={{ color: '#64748b' }}>Cost (ต้นทุน WePay)</span>
-                            <span style={{ fontWeight: 600, color: '#ef4444' }}>฿{stats?.game.cost.toLocaleString()}</span>
+                            <span style={{ fontWeight: 600, color: '#ef4444' }}>฿{stats?.game.cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</span>
                         </div>
                         <div style={{ borderTop: '1px solid #e2e8f0', margin: '12px 0' }} />
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <span style={{ fontWeight: 600, color: '#1e293b' }}>Game Profit</span>
-                            <span style={{ fontWeight: 700, color: '#10b981' }}>฿{stats?.game.profit.toLocaleString()}</span>
+                            <span style={{ fontWeight: 700, color: '#10b981' }}>฿{stats?.game.profit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</span>
                         </div>
                     </div>
                 </Card>
@@ -123,16 +123,16 @@ export default function FinancialsPage() {
                     <div style={{ marginTop: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <span style={{ color: '#64748b' }}>Revenue (ค่ารายเดือน)</span>
-                            <span style={{ fontWeight: 600 }}>฿{stats?.subscription.revenue.toLocaleString()}</span>
+                            <span style={{ fontWeight: 600 }}>฿{stats?.subscription.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                             <span style={{ color: '#64748b' }}>Cost (ต้นทุนระบบ)</span>
-                            <span style={{ fontWeight: 600, color: '#ef4444' }}>฿{stats?.subscription.cost.toLocaleString()}</span>
+                            <span style={{ fontWeight: 600, color: '#ef4444' }}>฿{stats?.subscription.cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</span>
                         </div>
                         <div style={{ borderTop: '1px solid #e2e8f0', margin: '12px 0' }} />
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <span style={{ fontWeight: 600, color: '#1e293b' }}>Sub Profit</span>
-                            <span style={{ fontWeight: 700, color: '#10b981' }}>฿{stats?.subscription.profit.toLocaleString()}</span>
+                            <span style={{ fontWeight: 700, color: '#10b981' }}>฿{stats?.subscription.profit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</span>
                         </div>
                     </div>
                 </Card>
@@ -178,13 +178,13 @@ export default function FinancialsPage() {
                                     <td style={{ padding: '12px', color: '#334155' }}>{tx.detail}</td>
                                     <td style={{ padding: '12px', color: '#334155' }}>{tx.partner}</td>
                                     <td style={{ padding: '12px', textAlign: 'right', color: '#ef4444' }}>
-                                        {tx.baseCost ? `฿${tx.baseCost.toLocaleString()}` : '-'}
+                                        {tx.providerPrice ? `฿${tx.providerPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}` : '-'}
                                     </td>
                                     <td style={{ padding: '12px', textAlign: 'right', fontWeight: 500 }}>
-                                        {tx.providerPrice ? `฿${tx.providerPrice.toLocaleString()}` : `฿${tx.amount.toLocaleString()}`}
+                                        {tx.baseCost ? `฿${tx.baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}` : `฿${tx.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`}
                                     </td>
                                     <td style={{ padding: '12px', textAlign: 'right', color: tx.profit > 0 ? '#10b981' : tx.profit < 0 ? '#ef4444' : '#cbd5e1' }}>
-                                        {tx.profit !== 0 ? `฿${tx.profit.toLocaleString()}` : '-'}
+                                        {tx.profit !== 0 ? `฿${tx.profit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}` : '-'}
                                     </td>
                                     <td style={{ padding: '12px', textAlign: 'center' }}>
                                         <span style={{
