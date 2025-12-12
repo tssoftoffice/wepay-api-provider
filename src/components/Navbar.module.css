@@ -1,237 +1,190 @@
 .navbar {
-    background: white;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    font-family: var(--font-kanit), sans-serif;
-    width: 100%;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
 }
 
 .navContent {
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 0.75rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 70px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
 }
 
-/* Logo Styles */
+/* ===== LEFT GROUP ===== */
+.leftGroup {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Logo */
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
 }
 
 .logoIcon {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .logoText {
-    font-weight: 800;
-    font-size: 1.25rem;
-    color: #ea580c;
-    /* Orange color */
-    text-transform: uppercase;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: #ea580c;
+  text-transform: uppercase;
 }
 
-/* Navigation Links */
+/* Navigation */
 .navLinks {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .navLink {
-    text-decoration: none;
-    color: #4b5563;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: color 0.2s;
-    cursor: pointer;
-    white-space: nowrap;
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .navLink:hover {
-    color: #ea580c;
+  color: #ea580c;
 }
 
-/* Dropdown Styles */
+/* Dropdown */
 .dropdownContainer {
-    position: relative;
-    height: 100%;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .dropdownMenu {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #1f2937;
-    /* Dark background */
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    min-width: 280px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease-in-out;
-    margin-top: 1rem;
-    z-index: 1000;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #1f2937;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  min-width: 220px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  margin-top: 0.75rem;
+  z-index: 1000;
 }
 
-.dropdownRight {
-    left: auto;
-    right: 0;
-    transform: none;
-    min-width: 200px;
-}
-
-/* Arrow for dropdown */
 .dropdownMenu::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 0 6px 6px 6px;
-    border-style: solid;
-    border-color: transparent transparent #1f2937 transparent;
-}
-
-.dropdownRight::before {
-    left: auto;
-    right: 10px;
-    transform: none;
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 18px;
+  border-width: 0 6px 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent #1f2937 transparent;
 }
 
 .dropdownContainer:hover .dropdownMenu {
-    opacity: 1;
-    visibility: visible;
-    margin-top: 0.5rem;
+  opacity: 1;
+  visibility: visible;
 }
 
 .dropdownItem {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.375rem;
-    text-decoration: none;
-    transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
 }
 
 .dropdownItem:hover {
-    background-color: #374151;
+  background: #374151;
 }
 
 .itemIcon {
-    width: 32px;
-    height: 32px;
-    background-color: white;
-    border-radius: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.itemContent {
-    flex: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
 }
 
 .itemTitle {
-    color: white;
-    font-weight: 500;
-    font-size: 0.9rem;
-    margin-bottom: 0.1rem;
+  color: white;
+  font-size: 0.9rem;
 }
 
-.itemDesc {
-    color: #9ca3af;
-    font-size: 0.75rem;
-}
-
-/* Right Group (Lang + Auth) */
+/* ===== RIGHT GROUP ===== */
 .rightGroup {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .langSwitcher {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
 }
 
 .langBtn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #9ca3af;
-    font-weight: 500;
-    padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  font-weight: 500;
 }
 
 .activeLang {
-    color: #ea580c;
+  color: #ea580c;
 }
 
 .divider {
-    color: #d1d5db;
+  color: #d1d5db;
 }
 
 .authButtons {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .welcome {
-    font-size: 0.9rem;
-    color: #374151;
-    font-weight: 500;
-    margin-right: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
 }
 
 .agentBtn {
-    background-color: #111827;
-    color: white;
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+  background: #111827;
+  color: white;
 }
 
 .agentBtn:hover {
-    background-color: #374151;
+  background: #374151;
 }
 
 .loginBtn {
-    background-color: transparent;
-    color: #4b5563;
-    border: 1px solid #d1d5db;
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #d1d5db;
 }
 
 .loginBtn:hover {
-    background-color: #f3f4f6;
-}
-
-.registerBtn {
-    background-color: #ea580c;
-    color: white;
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
-}
-
-.registerBtn:hover {
-    background-color: #c2410c;
+  background: #f3f4f6;
 }

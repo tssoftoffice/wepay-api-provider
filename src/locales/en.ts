@@ -1,7 +1,6 @@
 export const en = {
     navbar: {
         home: 'Home',
-        topup: 'Topup',
         services: 'Services',
         contact: 'Contact',
         registerAgent: 'Register Agent',
@@ -56,6 +55,15 @@ export const en = {
         feature2Desc: 'Works 24/7',
         feature3Title: 'High Profit',
         feature3Desc: 'Sell More Earn More',
+        servicesTitle: 'Our Services',
+        service1Title: 'Game Topup API',
+        service1Desc: 'Full-service Game Topup API provider. Supports connection to game topup websites. Fast, stable, and ready for business.',
+        service2Title: 'Auto Topup System',
+        service2Desc: 'Real-time automated topup processing system. Works 24/7. Reduces steps and operational costs.',
+        service3Title: 'Structure for Web Owners',
+        service3Desc: 'Designed specifically for game topup website owners. Define sales models and pricing yourself. Ready to expand your business.',
+        service4Title: 'Security & Stability',
+        service4Desc: 'System checks for duplicate orders and accuracy. Prevents errors during usage. Confident in every topup order.',
         ctaTitle: 'Register Now',
         ctaSubtitle: 'Start Today',
         formTitle: 'Agent Registration',
