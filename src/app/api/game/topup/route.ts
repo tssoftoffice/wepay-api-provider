@@ -118,7 +118,8 @@ export async function POST(request: Request) {
                 type: type as any,
                 amount: Number(baseCost),
                 company: companyId,
-                ref1: playerId
+                ref1: playerId,
+                ref2: server || undefined
             })
 
             // Update with WePay Transaction ID

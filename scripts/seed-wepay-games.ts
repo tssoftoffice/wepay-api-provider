@@ -207,7 +207,8 @@ async function main() {
                             providerPrice,
                             baseCost,
                             status: 'ACTIVE',
-                            description: description
+                            description: description,
+                            servers: (company.gameservers && company.gameservers.length > 0) ? JSON.stringify(company.gameservers) : null
                         },
                         create: {
                             name: name,
@@ -215,7 +216,8 @@ async function main() {
                             providerPrice,
                             baseCost,
                             status: 'ACTIVE',
-                            description: description
+                            description: description,
+                            servers: (company.gameservers && company.gameservers.length > 0) ? JSON.stringify(company.gameservers) : null
                         }
                     })
                     count++
