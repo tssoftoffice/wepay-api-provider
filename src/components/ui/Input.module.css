@@ -16,6 +16,10 @@
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
     font-size: 0.875rem;
+    color: #1f2937;
+    /* Force dark text */
+    background-color: white;
+    /* Ensure white background */
 }
 
 .input:focus {

@@ -103,8 +103,9 @@ async function updateGameImage(formData: FormData) {
 
     const company = formData.get('company') as string
     const imageUrl = formData.get('imageUrl') as string
+    const exampleIdUrl = formData.get('exampleIdUrl') as string
 
-    if (!company || !imageUrl) return
+    if (!company || (!imageUrl && !exampleIdUrl)) return
 
     // Verify user partner again just in case
     const userId = (session as any).userId
@@ -123,11 +124,12 @@ async function updateGameImage(formData: FormData) {
                     gameId: game.id
                 }
             },
-            update: { imageUrl },
+            update: { imageUrl, exampleIdUrl },
             create: {
                 partnerId: user.partner.id,
                 gameId: game.id,
                 imageUrl,
+                exampleIdUrl,
                 sellPrice: game.providerPrice // Default to provider price if creating new entry
             }
         })

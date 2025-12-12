@@ -13,7 +13,7 @@
 .title {
     font-size: 1.8rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #5e35b1 0%, #1e88e5 100%);
+    background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -65,9 +65,9 @@
 
 .input:focus {
     outline: none;
-    border-color: #5e35b1;
+    border-color: #f97316;
     background: white;
-    box-shadow: 0 0 0 4px rgba(94, 53, 177, 0.1);
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
 }
 
 .searchBtn {
@@ -111,17 +111,17 @@
 
 /* Themed Cards with Decorative Circles */
 .cardRevenue {
-    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
     /* Blue */
 }
 
 .cardProfit {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
     /* Green */
 }
 
 .cardCount {
-    background: linear-gradient(135deg, #5e35b1 0%, #4527a0 100%);
+    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
     /* Purple */
 }
 
@@ -200,15 +200,15 @@
 }
 
 .table th {
-    background: #ede7f6;
+    background: #fff7ed;
     padding: 18px 24px;
     text-align: left;
     font-weight: 700;
-    color: #5e35b1;
+    color: #c2410c;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 2px solid #d1c4e9;
+    border-bottom: 2px solid #fdba74;
     white-space: nowrap;
 }
 

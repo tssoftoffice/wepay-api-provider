@@ -353,13 +353,14 @@
 }
 
 .otpModal {
-    background: #1e293b;
+    background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
     padding: 2rem;
     border-radius: 20px;
     width: 90%;
     max-width: 400px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(255, 94, 98, 0.3);
 }
 
 .otpTitle {
@@ -398,13 +399,14 @@
 
 .cancelButton {
     background: transparent;
-    color: #94a3b8;
-    border: 1px solid #475569;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .confirmButton {
-    background: var(--primary-color, #f59e0b);
-    color: white;
+    background: white;
+    color: #ea580c;
+    font-weight: 700;
 }
 
 /* Sidebar & Back Button */

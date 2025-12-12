@@ -19,7 +19,8 @@
     font-size: 3.5rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
-    background: linear-gradient(to right, #2563eb, #7c3aed);
+    background: linear-gradient(to right, #f97316, #ea580c);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -103,8 +104,8 @@
 .input:focus,
 .select:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
 .input::placeholder {
@@ -114,7 +115,7 @@
 .button {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(to right, #3b82f6, #2563eb);
+    background: linear-gradient(to right, #f97316, #ea580c);
     color: white;
     border: none;
     border-radius: 8px;
@@ -123,11 +124,11 @@
     cursor: pointer;
     transition: transform 0.1s, box-shadow 0.2s;
     margin-top: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.4);
 }
 
 .button:hover {
-    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.4);
     transform: translateY(-2px);
 }
 
@@ -170,7 +171,7 @@
 }
 
 .get {
-    background: #3b82f6;
+    background: #f97316;
 }
 
 .post {

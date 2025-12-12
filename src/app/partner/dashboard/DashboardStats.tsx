@@ -113,7 +113,7 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                 {/* 1. Purple Card: Wallet Balance (Main Asset) */}
                 <div className={`${styles.card} ${styles.cardPurple}`}>
                     <div className={styles.cardHeader}>
-                        <div className={styles.iconBox} style={{ background: '#5e35b1', color: 'white' }}>
+                        <div className={styles.iconBox} style={{ background: 'rgba(255, 255, 255, 0.2)', color: 'white' }}>
                             <Wallet size={20} />
                         </div>
                         <div style={{ marginLeft: 'auto', background: 'rgba(0,0,0,0.2)', padding: '4px 8px', borderRadius: 6, fontSize: '0.75rem' }}>
@@ -130,7 +130,7 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                 {/* 2. Blue Card: Net Profit (The Goal) */}
                 <div className={`${styles.card} ${styles.cardBlue}`}>
                     <div className={styles.cardHeader}>
-                        <div className={styles.iconBox} style={{ background: '#1565c0', color: 'white' }}>
+                        <div className={styles.iconBox} style={{ background: 'rgba(255, 255, 255, 0.2)', color: 'white' }}>
                             <Activity size={20} />
                         </div>
                     </div>
@@ -145,7 +145,7 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                 <div className={styles.sideColumn}>
                     {/* Top: Daily Revenue (Blue Gradient) */}
                     <div className={styles.sideCard}>
-                        <div className={styles.iconBox} style={{ background: '#0d47a1' }}>
+                        <div className={styles.iconBox} style={{ background: 'rgba(255, 255, 255, 0.2)' }}>
                             <DollarSign size={20} />
                         </div>
                         <div>
@@ -156,7 +156,7 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
 
                     {/* Bottom: Monthly Revenue (White) */}
                     <div className={`${styles.sideCard} ${styles.sideCardWhite}`} style={{ background: 'white', color: '#1e293b' }}>
-                        <div className={styles.iconBox} style={{ background: '#eff6ff', color: '#1e88e5' }}>
+                        <div className={styles.iconBox} style={{ background: '#fff7ed', color: '#f97316' }}>
                             <Calendar size={20} />
                         </div>
                         <div>
@@ -202,7 +202,7 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                         <div className={styles.cardTitle}>สถานะสมาชิก</div>
                     </div>
                     {partner?.subscriptionStatus !== 'ACTIVE' && (
-                        <a href="/partner/subscription" className={styles.link} style={{ color: '#3b82f6', marginTop: 4, display: 'block' }}>ต่ออายุ →</a>
+                        <a href="/partner/subscription" className={styles.link} style={{ color: '#f97316', marginTop: 4, display: 'block' }}>ต่ออายุ →</a>
                     )}
                 </div>
 

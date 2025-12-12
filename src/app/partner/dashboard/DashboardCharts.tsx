@@ -15,7 +15,7 @@ interface ChartData {
     statusPie: { name: string, value: number, color: string }[]
 }
 
-const COLORS = ['#5e35b1', '#1e88e5', '#90caf9', '#ede7f6', '#d1c4e9']
+const COLORS = ['#f97316', '#fb923c', '#fbbf24', '#fcd34d', '#fdba74']
 
 export function DashboardCharts() {
     const [data, setData] = useState<ChartData | null>(null)
@@ -60,7 +60,7 @@ export function DashboardCharts() {
                                 borderRadius: '6px',
                                 border: 'none',
                                 background: timeframe === 'daily' ? 'white' : 'transparent',
-                                color: timeframe === 'daily' ? '#5e35b1' : '#64748b',
+                                color: timeframe === 'daily' ? '#f97316' : '#64748b',
                                 boxShadow: timeframe === 'daily' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                 cursor: 'pointer',
                                 fontSize: '0.85rem',
@@ -77,7 +77,7 @@ export function DashboardCharts() {
                                 borderRadius: '6px',
                                 border: 'none',
                                 background: timeframe === 'monthly' ? 'white' : 'transparent',
-                                color: timeframe === 'monthly' ? '#5e35b1' : '#64748b',
+                                color: timeframe === 'monthly' ? '#f97316' : '#64748b',
                                 boxShadow: timeframe === 'monthly' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                 cursor: 'pointer',
                                 fontSize: '0.85rem',
@@ -94,8 +94,8 @@ export function DashboardCharts() {
                         <AreaChart data={currentRevenueData}>
                             <defs>
                                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#5e35b1" stopOpacity={0.6} />
-                                    <stop offset="95%" stopColor="#5e35b1" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.6} />
+                                    <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
@@ -117,12 +117,12 @@ export function DashboardCharts() {
                             />
                             <Tooltip
                                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                                formatter={(value: number) => [<span style={{ color: '#5e35b1', fontWeight: 600 }}>฿{value.toLocaleString()}</span>, 'Revenue']}
+                                formatter={(value: number) => [<span style={{ color: '#f97316', fontWeight: 600 }}>฿{value.toLocaleString()}</span>, 'Revenue']}
                             />
                             <Area
                                 type="monotone"
                                 dataKey="value"
-                                stroke="#5e35b1"
+                                stroke="#f97316"
                                 strokeWidth={3}
                                 fillOpacity={1}
                                 fill="url(#colorRevenue)"
@@ -146,8 +146,8 @@ export function DashboardCharts() {
                                 cursor={{ fill: '#f8fafc' }}
                                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
                             />
-                            {/* Use Blue for Bars for contrast with Purple Revenue */}
-                            <Bar dataKey="value" fill="#1e88e5" radius={[6, 6, 0, 0]} maxBarSize={50} />
+                            {/* Use Orange for Bars */}
+                            <Bar dataKey="value" fill="#fb923c" radius={[6, 6, 0, 0]} maxBarSize={50} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

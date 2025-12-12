@@ -51,6 +51,7 @@ export async function GET(req: NextRequest) {
             price: price, // RRP
             cost_price: customPrice ? Number(customPrice.sellPrice) : costPrice, // Use their price as cost if set
             image_url: customPrice?.imageUrl || game.imageUrl, // Prefer Partner Image
+            example_id_url: customPrice?.exampleIdUrl || game.exampleIdUrl, // Prefer Partner Image
             servers: serverList
         }
     })
@@ -72,10 +73,17 @@ export async function GET(req: NextRequest) {
             groupKey = parts[0]
         }
 
+
         if (!groupedGames[groupKey]) {
+            // Extract clean game name (remove price and currency)
+            // e.g. "Arena Breakout 189 THB" -> "Arena Breakout"
+            const gameName = item.name.replace(/\s+[0-9,.]+(\.\d+)?\s*(THB|Bath|บาท)$/i, '').trim()
+
             groupedGames[groupKey] = {
                 group: groupKey,
+                gameName: gameName, // Added as requested
                 image: item.image_url,
+                example_id_url: item.example_id_url,
                 type: prefix, // Temp field for sorting
                 items: []
             }

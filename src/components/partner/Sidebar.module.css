@@ -58,13 +58,13 @@
 }
 
 .active {
-    background-color: #2563eb;
+    background-color: #f97316;
     /* Blue */
     color: white;
 }
 
 .active:hover {
-    background-color: #1d4ed8;
+    background-color: #ea580c;
 }
 
 .icon {
@@ -122,8 +122,8 @@
 }
 
 .subActive {
-    color: #60a5fa;
+    color: #fb923c;
     /* Light Blue */
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(249, 115, 22, 0.1);
     font-weight: 600;
 }

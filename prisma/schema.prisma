@@ -79,6 +79,7 @@ model Game {
   baseCost      Decimal
   status        String                 @default("ACTIVE")
   imageUrl      String?
+  exampleIdUrl  String?
   description   String?
   servers       String?
   topups        GameTopupTransaction[]
@@ -91,6 +92,7 @@ model PartnerGamePrice {
   gameId    String
   sellPrice Decimal
   imageUrl  String?
+  exampleIdUrl String?
   game      Game    @relation(fields: [gameId], references: [id])
   partner   Partner @relation(fields: [partnerId], references: [id])
 

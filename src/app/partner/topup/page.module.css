@@ -9,14 +9,14 @@
 .card {
     width: 100%;
     max-width: 500px;
-    background: linear-gradient(135deg, #5e35b1 0%, #4527a0 100%);
-    /* Deep Purple Gradient */
+    background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+    /* Orange Gradient */
     border-radius: 16px;
     padding: 32px;
     color: white;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(94, 53, 177, 0.4);
+    box-shadow: 0 10px 25px rgba(255, 94, 98, 0.4);
     border: none;
 }
 
@@ -94,7 +94,7 @@
 
 .button {
     background: white;
-    color: #5e35b1;
+    color: #ea580c;
     font-weight: 700;
     font-size: 1.1rem;
     padding: 14px;
@@ -113,7 +113,7 @@
 
 .button:disabled {
     background: rgba(255, 255, 255, 0.5);
-    color: rgba(94, 53, 177, 0.5);
+    color: rgba(234, 88, 12, 0.5);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;

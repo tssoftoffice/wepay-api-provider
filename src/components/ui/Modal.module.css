@@ -15,14 +15,14 @@
 }
 
 .modal {
-    background: rgba(30, 41, 59, 0.7);
+    background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 24px;
     width: 90%;
     max-width: 440px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(255, 94, 98, 0.3);
     animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
     color: white;
@@ -63,12 +63,12 @@
 
 .closeBtn:hover {
     color: white;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .content {
     padding: 2rem 1.5rem;
-    color: #e2e8f0;
+    color: white;
     font-size: 1rem;
     text-align: center;
 }

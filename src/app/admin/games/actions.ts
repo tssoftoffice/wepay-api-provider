@@ -192,14 +192,15 @@ export async function syncGames() {
 }
 
 // Update image for a group of games
-export async function updateGroupImage(gameIds: string[], imageUrl: string) {
+export async function updateGroupImage(gameIds: string[], imageUrl: string, exampleIdUrl?: string) {
     try {
         await prisma.game.updateMany({
             where: {
                 id: { in: gameIds }
             },
             data: {
-                imageUrl
+                imageUrl,
+                exampleIdUrl
             }
         })
         revalidatePath('/admin/games')

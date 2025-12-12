@@ -42,14 +42,14 @@
 
 /* Purple Card (Total Earning / Wallet) */
 .cardPurple {
-    background: linear-gradient(135deg, #5e35b1 0%, #4527a0 100%);
+    background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
     color: white;
     grid-row: span 1;
 }
 
 /* Blue Card (Total Order / Net Profit) */
 .cardBlue {
-    background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
     color: white;
 }
 
@@ -98,9 +98,8 @@
 }
 
 .sideCard {
-    background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
-    /* Light Blue for side? Or just white? */
-    /* Berry side cards are usually Blue or White. Let's make Top Blue, Bottom White */
+    background: linear-gradient(135deg, #FBAB7E 0%, #F7CE68 100%);
+    /* Warm yellow-orange gradient */
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -110,7 +109,7 @@
     position: relative;
     overflow: hidden;
     min-height: 80px;
-    box-shadow: 0px 4px 10px rgba(30, 136, 229, 0.4);
+    box-shadow: 0px 4px 10px rgba(249, 115, 22, 0.4);
 }
 
 .sideCard::before {
@@ -193,9 +192,9 @@
 }
 
 .cardWhite .iconBox {
-    background: #eef2ff;
-    color: #6366f1;
-    /* Indigo icon for white cards */
+    background: #fff7ed;
+    color: #f97316;
+    /* Orange icon for white cards */
 }
 
 .link {

@@ -160,7 +160,7 @@ function LoginForm() {
                 <div style={{ textAlign: 'center', padding: '20px' }}>
                     <div style={{ fontSize: '48px', marginBottom: '10px' }}>✅</div>
                     <p>ยินดีต้อนรับกลับเข้าสู่ระบบ</p>
-                    <p style={{ fontSize: '0.9em', color: '#cbd5e1' }}>กำลังเข้าสู่หน้าหลัก...</p>
+                    <p style={{ fontSize: '0.9em', color: 'rgba(255, 255, 255, 0.8)' }}>กำลังเข้าสู่หน้าหลัก...</p>
                 </div>
             </Modal>
         </div>

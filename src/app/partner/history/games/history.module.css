@@ -13,7 +13,7 @@
 .title {
     font-size: 1.8rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #5e35b1 0%, #1e88e5 100%);
+    background: linear-gradient(90deg, #f97316 0%, #ea580c 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -62,17 +62,17 @@
 
 /* Distinct Header */
 .table th {
-    background: #ede7f6;
+    background: #fff7ed;
     /* Light Purple Background */
     padding: 18px 24px;
     text-align: left;
     font-weight: 700;
-    color: #5e35b1;
+    color: #c2410c;
     /* Deep Purple Text */
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 2px solid #d1c4e9;
+    border-bottom: 2px solid #fdba74;
     white-space: nowrap;
     position: relative;
     user-select: none;
@@ -178,10 +178,10 @@
 }
 
 .pageButton:hover:not(:disabled) {
-    background: #5e35b1;
-    border-color: #5e35b1;
+    background: #f97316;
+    border-color: #f97316;
     color: white;
-    box-shadow: 0 4px 10px rgba(94, 53, 177, 0.3);
+    box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
 }
 
 .pageButton:disabled {

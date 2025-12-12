@@ -31,7 +31,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     // Edit Group Image State
-    const [editingGroup, setEditingGroup] = useState<{ name: string, imageUrl: string } | null>(null)
+    const [editingGroup, setEditingGroup] = useState<{ name: string, imageUrl: string, exampleIdUrl: string } | null>(null)
     const [isImageModalOpen, setIsImageModalOpen] = useState(false)
 
     const [loading, setLoading] = useState(false)
@@ -88,9 +88,9 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
         setEditingGame(null)
     }
 
-    const handleEditImage = (e: React.MouseEvent, groupName: string, imageUrl: string) => {
+    const handleEditImage = (e: React.MouseEvent, groupName: string, imageUrl: string, exampleIdUrl: string) => {
         e.stopPropagation()
-        setEditingGroup({ name: groupName, imageUrl })
+        setEditingGroup({ name: groupName, imageUrl, exampleIdUrl })
         setIsImageModalOpen(true)
     }
 
@@ -140,6 +140,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                         const firstGame = items[0]
                         const partnerPrice = data.currentPrices.find((p: any) => p.gameId === firstGame.id)
                         const groupImage = partnerPrice?.imageUrl || firstGame.imageUrl
+                        const groupExampleIdUrl = partnerPrice?.exampleIdUrl || firstGame.exampleIdUrl
 
                         return (
                             <div key={groupName} style={{ background: 'white', borderRadius: 16, boxShadow: '0 2px 14px 0px rgba(32, 40, 45, 0.08)', overflow: 'hidden', border: '1px solid #f1f5f9' }}>
@@ -164,7 +165,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
 
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                         <button
-                                            onClick={(e) => handleEditImage(e, groupName, groupImage || '')}
+                                            onClick={(e) => handleEditImage(e, groupName, groupImage || '', groupExampleIdUrl || '')}
                                             style={{ padding: 8, borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.8 }}
                                             title="Edit Image"
                                         >
@@ -234,7 +235,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                         <input type="hidden" name="company" value={editingGroup.name} />
 
                         <div>
-                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: '#334155' }}>
+                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: 'white' }}>
                                 รูปภาพ (Image URL)
                             </label>
                             <div style={{ display: 'flex', gap: 12 }}>
@@ -248,7 +249,24 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                                     <img src={editingGroup.imageUrl} alt="" style={{ width: 44, height: 44, borderRadius: 8, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
                                 )}
                             </div>
-                            <p style={{ fontSize: 12, color: '#64748b', marginTop: 6 }}>
+                        </div>
+
+                        <div>
+                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: 'white' }}>
+                                รูปตัวอย่างการดู ID (Example ID URL)
+                            </label>
+                            <div style={{ display: 'flex', gap: 12 }}>
+                                <Input
+                                    name="exampleIdUrl"
+                                    defaultValue={editingGroup.exampleIdUrl}
+                                    placeholder="https://example.com/how-to-find-id.png"
+                                    style={{ flex: 1 }}
+                                />
+                                {editingGroup.exampleIdUrl && (
+                                    <img src={editingGroup.exampleIdUrl} alt="" style={{ width: 44, height: 44, borderRadius: 8, objectFit: 'cover', border: '1px solid #e2e8f0' }} />
+                                )}
+                            </div>
+                            <p style={{ fontSize: 12, color: 'rgba(255, 255, 255, 0.8)', marginTop: 6 }}>
                                 รูปภาพนี้จะถูกใช้กับเกมทั้งหมดในกลุ่ม {editingGroup.name}
                             </p>
                         </div>
@@ -272,16 +290,16 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                         <input type="hidden" name="gameId" value={editingGame.id} />
                         <input type="hidden" name="partnerId" value={data.partner.id} />
 
-                        <div style={{ background: '#f8fafc', padding: 16, borderRadius: 12 }}>
-                            <div style={{ fontSize: 13, color: '#64748b', marginBottom: 4 }}>Game Name</div>
-                            <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b' }}>{editingGame.name}</div>
-                            <div style={{ fontSize: 13, color: '#64748b', marginTop: 8, marginBottom: 4 }}>Base Cost (ต้นทุน)</div>
-                            <div style={{ fontSize: 16, fontWeight: 600, color: '#64748b' }}>฿{Number(editingGame.baseCost).toLocaleString()}</div>
+                        <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: 16, borderRadius: 12, border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+                            <div style={{ fontSize: 13, color: 'rgba(255, 255, 255, 0.8)', marginBottom: 4 }}>Game Name</div>
+                            <div style={{ fontSize: 16, fontWeight: 600, color: 'white' }}>{editingGame.name}</div>
+                            <div style={{ fontSize: 13, color: 'rgba(255, 255, 255, 0.8)', marginTop: 8, marginBottom: 4 }}>Base Cost (ต้นทุน)</div>
+                            <div style={{ fontSize: 16, fontWeight: 600, color: 'white' }}>฿{Number(editingGame.baseCost).toLocaleString()}</div>
                         </div>
 
                         <div>
-                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: '#334155' }}>
-                                ราคาขาย (Selling Price) <span style={{ color: '#ef4444' }}>*</span>
+                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: 'white' }}>
+                                ราคาขาย (Selling Price) <span style={{ color: '#fff' }}>*</span>
                             </label>
                             <Input
                                 name="sellPrice"
@@ -291,13 +309,13 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                                 required
                                 style={{ height: 48, fontSize: 16 }}
                             />
-                            <p style={{ fontSize: 12, color: '#64748b', marginTop: 6 }}>
+                            <p style={{ fontSize: 12, color: 'rgba(255, 255, 255, 0.8)', marginTop: 6 }}>
                                 ราคาที่ลูกค้าของคุณจะเห็น (ต้องมากกว่าต้นทุน)
                             </p>
                         </div>
 
                         <div>
-                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: '#334155' }}>
+                            <label style={{ display: 'block', marginBottom: 8, fontSize: 14, fontWeight: 600, color: 'white' }}>
                                 รายละเอียด (Description) - Optional
                             </label>
                             <textarea

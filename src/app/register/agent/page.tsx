@@ -303,7 +303,7 @@ export default function AgentRegisterPage() {
                 <div className={styles.otpOverlay}>
                     <div className={styles.otpModal}>
                         <h3 className={styles.otpTitle}>กรอกรหัส OTP</h3>
-                        <p style={{ marginBottom: '1rem', color: '#94a3b8' }}>รหัส OTP ถูกส่งไปยังอีเมลของคุณแล้ว (Test: 123456)</p>
+                        <p style={{ marginBottom: '1rem', color: 'rgba(255, 255, 255, 0.8)' }}>รหัส OTP ถูกส่งไปยังอีเมลของคุณแล้ว (Test: 123456)</p>
                         <input
                             className={styles.otpInput}
                             value={otp}
@@ -327,7 +327,7 @@ export default function AgentRegisterPage() {
                 <div style={{ textAlign: 'center', padding: '20px' }}>
                     <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
                     <p>ยินดีต้อนรับพาร์ทเนอร์คนใหม่!</p>
-                    <p style={{ fontSize: '0.9em', color: '#cbd5e1' }}>กำลังเข้าสู่ระบบ...</p>
+                    <p style={{ fontSize: '0.9em', color: 'rgba(255, 255, 255, 0.8)' }}>กำลังเข้าสู่ระบบ...</p>
                 </div>
             </Modal>
         </div>

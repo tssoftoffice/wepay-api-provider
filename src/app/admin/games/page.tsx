@@ -16,7 +16,7 @@ export default function AdminGamesPage() {
     const [expandedGroups, setExpandedGroups] = useState<string[]>([])
 
     // Group Editing State
-    const [editingGroup, setEditingGroup] = useState<{ name: string, ids: string[], imageUrl: string } | null>(null)
+    const [editingGroup, setEditingGroup] = useState<{ name: string, ids: string[], imageUrl: string, exampleIdUrl: string } | null>(null)
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false)
 
     // Helper to determine category
@@ -125,8 +125,9 @@ export default function AdminGamesPage() {
         e.stopPropagation() // Prevent accordion toggle
         // Find current image from first item
         const currentImage = items.find(i => i.imageUrl)?.imageUrl || ''
+        const currentExampleId = items.find(i => i.exampleIdUrl)?.exampleIdUrl || ''
         const ids = items.map(i => i.id)
-        setEditingGroup({ name: groupName, ids, imageUrl: currentImage })
+        setEditingGroup({ name: groupName, ids, imageUrl: currentImage, exampleIdUrl: currentExampleId })
         setIsGroupModalOpen(true)
     }
 
@@ -134,7 +135,7 @@ export default function AdminGamesPage() {
         e.preventDefault()
         if (!editingGroup) return
 
-        const res = await updateGroupImage(editingGroup.ids, editingGroup.imageUrl)
+        const res = await updateGroupImage(editingGroup.ids, editingGroup.imageUrl, editingGroup.exampleIdUrl)
 
         if (res.success) {
             setIsGroupModalOpen(false)
@@ -366,6 +367,20 @@ export default function AdminGamesPage() {
                                 />
                                 {editingGroup.imageUrl && (
                                     <img src={editingGroup.imageUrl} alt="Preview" style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
+                                )}
+                            </div>
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>รูปตัวอย่างการดู ID (Example ID URL)</label>
+                            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                                <Input
+                                    value={editingGroup.exampleIdUrl || ''}
+                                    onChange={(e: any) => setEditingGroup({ ...editingGroup, exampleIdUrl: e.target.value })}
+                                    placeholder="https://example.com/how-to-find-id.png"
+                                    style={{ flex: 1 }}
+                                />
+                                {editingGroup.exampleIdUrl && (
+                                    <img src={editingGroup.exampleIdUrl} alt="Preview" style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
                                 )}
                             </div>
                         </div>

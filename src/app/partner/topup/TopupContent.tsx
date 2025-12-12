@@ -126,8 +126,8 @@ export function TopupContent() {
                         {isSuccess ? (
                             <div style={{ textAlign: 'center', padding: '2rem' }}>
                                 <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
-                                <h3 style={{ color: '#10b981', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Payment Successful!</h3>
-                                <p style={{ color: '#6b7280' }}>Redirecting to dashboard...</p>
+                                <h3 style={{ color: 'white', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Payment Successful!</h3>
+                                <p style={{ color: 'rgba(255, 255, 255, 0.9)' }}>Redirecting to dashboard...</p>
                             </div>
                         ) : (
                             qrCode && (
@@ -141,18 +141,18 @@ export function TopupContent() {
                                         <img
                                             src={qrCode}
                                             alt="Payment QR Code"
-                                            style={{ width: '240px', height: '240px', objectFit: 'contain', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px' }}
+                                            style={{ width: '240px', height: '240px', objectFit: 'contain', border: '1px solid rgba(255, 255, 255, 0.3)', borderRadius: '12px', padding: '10px', background: 'white' }}
                                         />
                                     </div>
 
                                     <div style={{ textAlign: 'center' }}>
-                                        <div className={styles.qrRef}>
+                                        <div className={styles.qrRef} style={{ color: 'white' }}>
                                             REF: {transactionId}
                                         </div>
-                                        <p className={styles.instruction} style={{ fontSize: '1rem', fontWeight: 500, color: '#334155' }}>
+                                        <p className={styles.instruction} style={{ fontSize: '1rem', fontWeight: 500, color: 'white' }}>
                                             {t.topup.scanToPay}
                                         </p>
-                                        <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.5rem' }}>
+                                        <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)', marginTop: '0.5rem' }}>
                                             กรุณาชำระเงินภายใน 15 นาที
                                         </p>
                                     </div>
