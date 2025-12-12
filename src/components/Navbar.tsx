@@ -37,31 +37,6 @@ export function Navbar() {
                     {/* Navigation Links */}
                     <div className={styles.navLinks}>
                         <Link href="/" className={styles.navLink}>{t.navbar.home}</Link>
-                        <Link href="/customer/topup" className={styles.navLink}>{t.navbar.topup}</Link>
-
-                        {/* Services Dropdown */}
-                        <div className={styles.dropdownContainer}>
-                            <span className={styles.navLink}>{t.navbar.services} ▾</span>
-                            <div className={styles.dropdownMenu}>
-                                <Link href="/services/cashcard" className={styles.dropdownItem}>
-                                    <div className={styles.itemIcon}>💳</div>
-                                    <div className={styles.itemContent}>
-                                        <div className={styles.itemTitle}>{t.navbar.cashCard}</div>
-                                        <div className={styles.itemDesc}>{t.navbar.cashCardDesc}</div>
-                                    </div>
-                                </Link>
-                                <Link href="/services/topup" className={styles.dropdownItem}>
-                                    <div className={styles.itemIcon}>📱</div>
-                                    <div className={styles.itemContent}>
-                                        <div className={styles.itemTitle}>{t.navbar.mobileTopup}</div>
-                                        <div className={styles.itemDesc}>{t.navbar.mobileTopupDesc}</div>
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
-
-                        <Link href="/games" className={styles.navLink}>{t.navbar.gameTopup}</Link>
-                        <Link href="/shop" className={styles.navLink}>{t.navbar.shop}</Link>
 
                         {/* Contact Dropdown */}
                         <div className={styles.dropdownContainer}>
@@ -134,9 +109,6 @@ export function Navbar() {
                                     </Link>
                                     <Link href="/login">
                                         <Button className={styles.loginBtn}>{t.navbar.login}</Button>
-                                    </Link>
-                                    <Link href="/register/agent">
-                                        <Button variant="secondary" className={styles.registerBtn}>{t.navbar.registerMember}</Button>
                                     </Link>
                                 </>
                             )}
