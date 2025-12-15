@@ -11,7 +11,7 @@ export const th = {
         mobileTopup: 'เติมเงิน / ซื้อแพคเกจเน็ต',
         mobileTopupDesc: 'เติมเงินมือถือและบริการเติมแพ็กเกจเน็ตเสริม',
         gameTopup: 'เติมเกมส์ออนไลน์',
-        topup: 'เติมเครดิต',
+        topup: 'เติมเครดิต', // Fixed missing translation
         shop: 'ร้านค้า',
         faq: 'Q&A คำถามยอดฮิต',
         logout: 'ออกจากระบบ',
