@@ -11,6 +11,7 @@ export const en = {
         mobileTopup: 'Mobile Topup / Data Package',
         mobileTopupDesc: 'Mobile top-up and data package services',
         gameTopup: 'Game Top-up Online',
+        topup: 'Top-up Credit',
         shop: 'Shop',
         faq: 'Q&A FAQ',
         logout: 'Logout',
