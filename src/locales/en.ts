@@ -112,6 +112,7 @@ export const en = {
         history: 'History',
         subscriptionHistory: 'Subscription History',
         gameTopupHistory: 'Game Topup History',
+        creditTopupHistory: 'Credit Topup History',
         revenueReport: 'Revenue Report',
         exitToHome: 'Exit to Home',
     },
@@ -247,6 +248,15 @@ export const en = {
         status: 'Status',
         txnId: 'Transaction ID',
         noHistory: 'No game topup history found.'
+    },
+    partnerCreditHistory: {
+        title: 'Credit Topup History',
+        date: 'Date',
+        amount: 'Amount (฿)',
+        status: 'Status',
+        txnId: 'Transaction ID',
+        providerTxnId: 'Reference No.',
+        noHistory: 'No credit topup history found.',
     },
     revenueReport: {
         title: 'Revenue Report',
