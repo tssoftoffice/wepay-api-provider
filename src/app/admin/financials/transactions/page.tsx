@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { Card, Button, DatePicker, Select, Tag, Table, Pagination } from 'antd'
 import { getTransactions, getPartnersAction } from '../actions'
 import { ArrowLeft } from 'lucide-react'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 const { RangePicker } = DatePicker
 const { Option } = Select
 
-export default function TransactionReportPage() {
+function TransactionContent() {
     const searchParams = useSearchParams()
     const initialPartnerId = searchParams.get('partnerId') || 'ALL'
     const initialType = searchParams.get('type') || 'ALL'
@@ -37,13 +37,6 @@ export default function TransactionReportPage() {
             const pRes = await getPartnersAction() // Load default 50
             if (pRes.success) {
                 let currentPartners = pRes.data || []
-                // If initialPartnerId is set but not in the list, fetch it specifically (optional optimization)
-                // For now, let's assume it's in the list or the user SEARCHES for it.
-                // Actually, if we link from Partner Details, we WANT it to show nicely.
-                // Let's manually add it if missing from the cache, but we need the name.
-                // We don't have the name from URL.
-                // Simplified: Just set partners. The filter ID will still work for data fetching.
-                // If the UI shows ID, that's acceptable fallback, but let's try to match.
                 setPartners(currentPartners)
             }
         }
@@ -292,5 +285,13 @@ export default function TransactionReportPage() {
                 </div>
             </Card>
         </div>
+    )
+}
+
+export default function TransactionReportPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <TransactionContent />
+        </Suspense>
     )
 }
