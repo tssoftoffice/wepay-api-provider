@@ -5,7 +5,9 @@ import { hashPassword, signToken, setSession } from '@/lib/auth'
 export async function POST(request: Request) {
     try {
         const body = await request.json()
+        console.log('Register Body:', body) // Debug Log
         const { username, password, email, role, firstName, lastName, phone, ...additionalData } = body
+
 
         if (!username || !password || !role) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
