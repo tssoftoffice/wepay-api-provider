@@ -10,7 +10,11 @@ export async function POST(request: Request) {
 
 
         if (!username || !password || !role) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+            const missing = []
+            if (!username) missing.push('username')
+            if (!password) missing.push('password')
+            if (!role) missing.push('role')
+            return NextResponse.json({ error: `Missing required fields: ${missing.join(', ')}` }, { status: 400 })
         }
 
         const existingUser = await prisma.user.findUnique({

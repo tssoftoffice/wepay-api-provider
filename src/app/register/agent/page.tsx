@@ -110,7 +110,10 @@ export default function AgentRegisterPage() {
             })
 
             const data = await res.json()
-            if (!res.ok) throw new Error(data.error || 'Registration failed')
+            if (!res.ok) {
+                alert(data.error || 'Registration failed') // Force alert for visibility
+                throw new Error(data.error || 'Registration failed')
+            }
 
             setSuccessModal(true)
             setTimeout(() => {
