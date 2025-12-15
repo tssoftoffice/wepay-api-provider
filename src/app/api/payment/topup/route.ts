@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 import { createBeamCharge } from '@/lib/beam'
+import { getAppUrl } from '@/lib/url'
 
 export async function POST(request: Request) {
     try {
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
         const beamCharge = await createBeamCharge(
             amount,
             transaction.id,
-            `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/partner/topup`
+            `${getAppUrl()}/partner/topup`
         )
 
         if (!beamCharge) {
