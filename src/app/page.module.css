@@ -1,10 +1,12 @@
 /* Global Font Adjustments */
 .agentContainer {
   min-height: 100vh;
-  background-color: #ffffff; /* Clean white */
+  background-color: #ffffff;
+  /* Clean white */
   font-family: 'Kanit', sans-serif;
   overflow-x: hidden;
-  color: #1f2937; /* Dark Gray */
+  color: #1f2937;
+  /* Dark Gray */
 }
 
 /* Navbar */
@@ -13,7 +15,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 5%;
-  background: white; 
+  background: white;
   position: fixed;
   top: 0;
   width: 100%;
@@ -22,7 +24,8 @@
 }
 
 .logo {
-  color: #ea580c; /* Orange-600 */
+  color: #ea580c;
+  /* Orange-600 */
   font-weight: 800;
   font-size: 1.5rem;
   letter-spacing: -0.02em;
@@ -39,14 +42,16 @@
 
 .navLinks a {
   text-decoration: none;
-  color: #4b5563; /* Gray-600 */
+  color: #4b5563;
+  /* Gray-600 */
   font-weight: 500;
   font-size: 0.95rem;
   transition: color 0.2s;
 }
 
 .navLinks a:hover {
-  color: #ea580c; /* Orange-600 */
+  color: #ea580c;
+  /* Orange-600 */
 }
 
 /* Hero Section */
@@ -58,7 +63,8 @@
   gap: 4rem;
   align-items: center;
   padding: 8rem max(5%, calc((100% - 1280px) / 2)) 6rem;
-  background-color: #fff7ed; /* Orange-50 */
+  background-color: #fff7ed;
+  /* Orange-50 */
   background-image: radial-gradient(circle at 70% 30%, #ffedd5 0%, #fff7ed 60%);
   overflow: hidden;
   color: #1f2937;
@@ -75,14 +81,16 @@
 .heroContent h1 {
   font-size: clamp(2.5rem, 4vw, 4rem);
   font-weight: 800;
-  color: #ea580c; /* Orange-600 */
+  color: #ea580c;
+  /* Orange-600 */
   line-height: 1.15;
   margin-bottom: 1.5rem;
 }
 
 .heroContent p {
   font-size: 1.25rem;
-  color: #4b5563; /* Gray-600 */
+  color: #4b5563;
+  /* Gray-600 */
   margin-bottom: 2.5rem;
   line-height: 1.6;
   max-width: 90%;
@@ -108,7 +116,8 @@
 
 /* Primary CTA Button (Hero) */
 .ctaButton {
-  background-color: #ea580c; /* Orange-600 */
+  background-color: #ea580c;
+  /* Orange-600 */
   color: white;
   border: none;
   padding: 0.9rem 2.5rem;
@@ -123,7 +132,8 @@
 }
 
 .ctaButton:hover {
-  background-color: #c2410c; /* Orange-700 */
+  background-color: #c2410c;
+  /* Orange-700 */
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(234, 88, 12, 0.23);
 }
@@ -147,12 +157,13 @@
 /* Modern SaaS Card Style */
 /* Modern SaaS Card Style (Orange Theme) */
 .featureCard {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); /* Orange Gradient */
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  /* Orange Gradient */
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(234, 88, 12, 0.2);
   transition: all 0.3s ease;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -160,7 +171,8 @@
   min-height: 280px;
   cursor: pointer;
   position: relative;
-  color: white; /* White text */
+  color: white;
+  /* White text */
 }
 
 .featureCard:hover {
@@ -179,7 +191,7 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .cardImage {
@@ -198,7 +210,8 @@
 
 .cardContent p {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9); /* White with slight opacity */
+  color: rgba(255, 255, 255, 0.9);
+  /* White with slight opacity */
   line-height: 1.6;
 }
 
@@ -207,7 +220,8 @@
 .ctaSection {
   grid-column: 1 / -1;
   width: 100%;
-  background-color: #2f1c6a; /* Dark Navy/Purple from Brand */
+  background-color: #2f1c6a;
+  /* Dark Navy/Purple from Brand */
   padding: 6rem 5%;
   display: flex;
   flex-direction: column;
@@ -235,7 +249,8 @@
 }
 
 .ctaSectionButton {
-  background-color: #ea580c; /* Orange Button on Dark BG */
+  background-color: #ea580c;
+  /* Orange Button on Dark BG */
   color: white;
   padding: 1rem 3rem;
   border-radius: 50px;
@@ -243,7 +258,7 @@
   font-weight: 700;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .ctaSectionButton:hover {
@@ -259,15 +274,18 @@
   gap: 4rem;
   align-items: center;
   padding: 6rem 1rem;
-  background-color: white; /* Clean white */
+  background-color: white;
+  /* Clean white */
   max-width: 1280px;
   margin: 0 auto;
-  background-color: white; /* Clean white */
+  background-color: white;
+  /* Clean white */
 }
 
 .aboutContent h4 {
   text-transform: uppercase;
-  color: #ea580c; /* Orange-600 */
+  color: #ea580c;
+  /* Orange-600 */
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
@@ -291,7 +309,8 @@
 /* Pricing Sction (Hostinger Style) */
 .registerSection {
   padding: 6rem 1rem;
-  background: #fff7ed; /* Light Orange Tint */
+  background: #fff7ed;
+  /* Light Orange Tint */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -300,7 +319,8 @@
 .registerSection h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #c2410c; /* Dark Orange */
+  color: #c2410c;
+  /* Dark Orange */
   margin-bottom: 3rem;
   text-align: center;
 }
@@ -309,12 +329,14 @@
 .subscriptionCard {
   background: white;
   border-radius: 16px;
-  padding: 3rem 2.5rem; /* ~p-10 */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Stronger shadow for single card */
+  padding: 3rem 2.5rem;
+  /* ~p-10 */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  /* Stronger shadow for single card */
   max-width: 480px;
   width: 100%;
   text-align: center;
-  border: 1px solid rgba(0,0,0,0.03);
+  border: 1px solid rgba(0, 0, 0, 0.03);
   position: relative;
   transition: transform 0.3s ease;
 }
@@ -326,14 +348,16 @@
 .subscriptionCard h3 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #ea580c; /* Orange */
+  color: #ea580c;
+  /* Orange */
   margin-bottom: 0.5rem;
 }
 
 .priceTag {
   font-size: 3.5rem;
   font-weight: 800;
-  color: #ea580c; /* Brand Primary */
+  color: #ea580c;
+  /* Brand Primary */
   margin: 1.5rem 0;
   display: flex;
   align-items: baseline;
@@ -365,7 +389,8 @@
   padding: 0;
   margin: 0 0 2.5rem 0;
   text-align: left;
-  display: inline-block; /* To center the list block but keep items left aligned */
+  display: inline-block;
+  /* To center the list block but keep items left aligned */
 }
 
 .planFeatures li {
@@ -379,7 +404,8 @@
 
 .submitButton {
   width: 100%;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); /* Orange gradient */
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  /* Orange gradient */
   color: white;
   padding: 1rem;
   border-radius: 50px;
@@ -398,7 +424,8 @@
 }
 
 .checkIcon {
-  color: #16a34a; /* Green 600 - Good contrast with white/orange */
+  color: #16a34a;
+  /* Green 600 - Good contrast with white/orange */
   font-weight: bold;
   font-size: 1.2rem;
 }
@@ -423,7 +450,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #ea580c; /* Orange */
+  color: #ea580c;
+  /* Orange */
   font-weight: 800;
   font-size: 1.5rem;
   margin-bottom: 1rem;
@@ -479,10 +507,10 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .cardsSection {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 4rem 3%;
-    }
+  .cardsSection {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 4rem 3%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -492,13 +520,13 @@
     padding: 8rem 1rem 4rem;
     gap: 3rem;
   }
-  
+
   .cardsSection {
     padding: 2rem 5%;
     grid-template-columns: 1fr;
     margin-top: -2rem;
   }
-  
+
   .aboutSection {
     grid-template-columns: 1fr;
     text-align: center;
@@ -509,12 +537,12 @@
     grid-template-columns: 1fr;
     max-width: 400px;
   }
-  
+
   .footerGrid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .footerBottom {
     flex-direction: column;
     text-align: center;
@@ -527,6 +555,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -534,14 +563,23 @@
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .animateFadeInUp {
   animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0; /* Start hidden */
+  opacity: 0;
+  /* Start hidden */
 }
 
 .animateFloat {
@@ -549,18 +587,33 @@
 }
 
 /* Stagger Delays */
-.delay100 { animation-delay: 0.1s; }
-.delay200 { animation-delay: 0.2s; }
-.delay300 { animation-delay: 0.3s; }
-.delay400 { animation-delay: 0.4s; }
-.delay500 { animation-delay: 0.5s; }
+.delay100 {
+  animation-delay: 0.1s;
+}
+
+.delay200 {
+  animation-delay: 0.2s;
+}
+
+.delay300 {
+  animation-delay: 0.3s;
+}
+
+.delay400 {
+  animation-delay: 0.4s;
+}
+
+.delay500 {
+  animation-delay: 0.5s;
+}
 
 /* Services Section (Orange Theme - Matching Hero) */
 .servicesSection {
   background-color: #ffffff;
   padding: 6rem 1rem;
   color: #1f2937;
-  scroll-margin-top: 70px; /* Offset for sticky navbar */
+  scroll-margin-top: 70px;
+  /* Offset for sticky navbar */
 }
 
 .servicesHeader {
@@ -574,7 +627,8 @@
 .servicesHeader h2 {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #FB9B00; /* Custom Orange from Palette */
+  color: #FB9B00;
+  /* Custom Orange from Palette */
   margin-bottom: 1rem;
 }
 
@@ -588,7 +642,8 @@
 
 .serviceCard {
   background: white;
-  border: 1px solid #ffe4bc; /* Lighter Orange Border */
+  border: 1px solid #ffe4bc;
+  /* Lighter Orange Border */
   border-radius: 1rem;
   padding: 2rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -601,31 +656,36 @@
 
 .serviceCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(251, 155, 0, 0.15); /* #FB9B00 Shadow */
+  box-shadow: 0 10px 15px -3px rgba(251, 155, 0, 0.15);
+  /* #FB9B00 Shadow */
   border-color: #FB9B00;
 }
 
 .serviceIcon {
   width: 56px;
   height: 56px;
-  background: #fff5e6; /* Very light orange tint */
+  background: #fff5e6;
+  /* Very light orange tint */
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  color: #FB9B00; /* Custom Orange Icon */
+  color: #FB9B00;
+  /* Custom Orange Icon */
 }
 
 .serviceCard h3 {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #1f2937; /* Dark Gray */
+  color: #1f2937;
+  /* Dark Gray */
 }
 
 .serviceCard p {
-  color: #6b7280; /* Gray-500 */
+  color: #6b7280;
+  /* Gray-500 */
   line-height: 1.6;
   font-size: 0.95rem;
 }

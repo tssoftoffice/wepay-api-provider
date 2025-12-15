@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Users, DollarSign, TrendingUp, CheckCircle, AlertTriangle, Calendar, Plus, QrCode, FileDown, Printer, ChevronRight, Package, CreditCard } from 'lucide-react'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 interface Stats {
     totalPartners: number
@@ -123,95 +124,69 @@ export default function AdminDashboardClient() {
             {/* Row 2: Charts */}
             <div style={{ display: 'flex', gap: '20px' }}>
                 {/* Bar Chart */}
+                {/* Area Chart - Recharts */}
                 <div style={{
                     flex: 2,
                     background: 'white',
                     borderRadius: '16px',
                     padding: '24px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    minHeight: '400px',
+                    display: 'flex',
+                    flexDirection: 'column'
                 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-                        <div>
-                            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>สถิติการขาย</h3>
-                            <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>ข้อมูลย้อนหลัง 7 วัน</p>
-                        </div>
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#6b7280' }}>
-                                <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span> รายได้
-                            </span>
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#6b7280' }}>
-                                <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#93c5fd' }}></span> กำไร
-                            </span>
-                        </div>
+                    <div style={{ marginBottom: '24px' }}>
+                        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>สถิติการขาย</h3>
+                        <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>ข้อมูลย้อนหลัง 7 วัน</p>
                     </div>
 
-                    {/* Chart Area */}
-                    <div style={{ height: '280px', display: 'flex', alignItems: 'flex-end', gap: '16px', paddingTop: '20px', borderTop: '1px solid #f3f4f6' }}>
-                        {(stats.chartData || []).length > 0 ? (
-                            stats.chartData.slice(-7).map((d, i) => {
-                                const max = Math.max(...stats.chartData.slice(-7).map(x => x.revenue), 1)
-                                const revenueH = Math.max((d.revenue / max) * 100, 8)
-                                const profitH = Math.max((d.profit / max) * 100, 4)
-                                return (
-                                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                                        <div style={{ display: 'flex', gap: '4px', alignItems: 'flex-end', height: '220px', width: '100%' }}>
-                                            <div style={{
-                                                flex: 1,
-                                                height: `${revenueH}%`,
-                                                background: 'linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%)',
-                                                borderRadius: '6px 6px 0 0',
-                                                minHeight: '12px',
-                                                position: 'relative'
-                                            }}>
-                                                <span style={{
-                                                    position: 'absolute',
-                                                    top: '-18px',
-                                                    left: '50%',
-                                                    transform: 'translateX(-50%)',
-                                                    fontSize: '10px',
-                                                    fontWeight: 600,
-                                                    color: '#2563eb',
-                                                    whiteSpace: 'nowrap'
-                                                }}>
-                                                    {d.revenue > 0 ? d.revenue.toLocaleString() : ''}
-                                                </span>
-                                            </div>
-                                            <div style={{
-                                                flex: 1,
-                                                height: `${profitH}%`,
-                                                background: 'linear-gradient(180deg, #93c5fd 0%, #bfdbfe 100%)',
-                                                borderRadius: '6px 6px 0 0',
-                                                minHeight: '8px',
-                                                position: 'relative'
-                                            }}>
-                                                <span style={{
-                                                    position: 'absolute',
-                                                    top: '-18px',
-                                                    left: '50%',
-                                                    transform: 'translateX(-50%)',
-                                                    fontSize: '10px',
-                                                    fontWeight: 600,
-                                                    color: '#60a5fa',
-                                                    whiteSpace: 'nowrap'
-                                                }}>
-                                                    {d.profit > 0 ? d.profit.toLocaleString() : ''}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <span style={{ fontSize: '13px', color: '#6b7280', fontWeight: 500 }}>
-                                            {new Date(d.date).getDate()} {['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][new Date(d.date).getMonth()]}
-                                        </span>
-                                    </div>
-                                )
-                            })
-                        ) : (
-                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
-                                <div style={{ textAlign: 'center' }}>
-                                    <TrendingUp size={48} style={{ opacity: 0.3, marginBottom: '12px' }} />
-                                    <p>ยังไม่มีข้อมูลรายได้</p>
-                                </div>
-                            </div>
-                        )}
+                    <div style={{ flex: 1, width: '100%', minHeight: '300px' }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={stats.chartData}>
+                                <defs>
+                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+                                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                    </linearGradient>
+                                    <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                                <XAxis
+                                    dataKey="date"
+                                    tickFormatter={(str) => {
+                                        const date = new Date(str);
+                                        return `${date.getDate()} ${['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][date.getMonth()]}`;
+                                    }}
+                                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    dy={10}
+                                />
+                                <YAxis
+                                    tickFormatter={(value) => `฿${value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}`}
+                                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    dx={-10}
+                                />
+                                <Tooltip
+                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                                    formatter={(value: number, name: string) => [
+                                        `฿${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                                        name === 'revenue' ? 'รายได้' : 'กำไร'
+                                    ]}
+                                    labelFormatter={(label) => {
+                                        const date = new Date(label);
+                                        return `${date.getDate()} ${['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][date.getMonth()]} ${date.getFullYear() + 543}`;
+                                    }}
+                                />
+                                <Area type="monotone" dataKey="revenue" name="revenue" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={3} />
+                                <Area type="monotone" dataKey="profit" name="profit" stroke="#10b981" fillOpacity={1} fill="url(#colorProfit)" strokeWidth={3} />
+                            </AreaChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
 
