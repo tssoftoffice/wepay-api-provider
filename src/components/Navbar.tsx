@@ -169,7 +169,7 @@ export function Navbar() {
                                         </Button>
                                     </Link>
                                     <Link href="/login">
-                                        <Button className={styles.loginBtn}>
+                                        <Button variant="outline" className={styles.loginBtn}>
                                             {t.navbar.login}
                                         </Button>
                                     </Link>
