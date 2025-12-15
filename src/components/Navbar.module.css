@@ -183,6 +183,7 @@
 .loginBtn {
   background: transparent;
   border: 1px solid #d1d5db;
+  color: #374151;
 }
 
 .loginBtn:hover {
