@@ -21,7 +21,21 @@ async function getPricingData() {
     if (!user?.partner) return null
 
     const games = await prisma.game.findMany({
-        where: { status: 'ACTIVE' }
+        where: { status: 'ACTIVE' },
+        select: {
+            id: true,
+            name: true,
+            code: true,
+            faceValue: true,
+            providerPrice: true,
+            baseCost: true,
+            status: true,
+            imageUrl: true,
+            exampleIdUrl: true,
+            group: true,
+            servers: true, // Needed for topup, maybe not here?
+            // description: false // Excluded
+        }
     })
 
     const currentPrices = await prisma.partnerGamePrice.findMany({
@@ -139,7 +153,20 @@ async function updateGameImage(formData: FormData) {
     // or if the code format is strictly TYPE_COMPANY_PRICE
 
     revalidatePath('/partner/pricing')
+    revalidatePath('/partner/pricing')
     revalidatePath('/store') // Revalidate store pages too
+}
+
+async function getGameDetails(gameId: string) {
+    'use server'
+    const session = await getSession()
+    if (!session || (session as any).role !== 'PARTNER_OWNER') return ''
+
+    const game = await prisma.game.findUnique({
+        where: { id: gameId },
+        select: { description: true }
+    })
+    return game?.description || ''
 }
 
 export default async function PartnerPricingPage() {
@@ -147,5 +174,10 @@ export default async function PartnerPricingPage() {
 
     if (!data) return <div>Unauthorized</div>
 
-    return <PricingContent data={data} updatePriceAction={updatePrice} updateGameImageAction={updateGameImage} />
+    return <PricingContent
+        data={data as any}
+        updatePriceAction={updatePrice}
+        updateGameImageAction={updateGameImage}
+        getGameDetailsAction={getGameDetails}
+    />
 }

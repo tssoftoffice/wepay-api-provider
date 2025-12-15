@@ -17,9 +17,10 @@ interface PricingContentProps {
     }
     updatePriceAction: (formData: FormData) => Promise<void>
     updateGameImageAction: (formData: FormData) => Promise<void>
+    getGameDetailsAction: (gameId: string) => Promise<string>
 }
 
-export function PricingContent({ data, updatePriceAction, updateGameImageAction }: PricingContentProps) {
+export function PricingContent({ data, updatePriceAction, updateGameImageAction, getGameDetailsAction }: PricingContentProps) {
     const { t } = useLanguage()
 
     // State
@@ -68,14 +69,22 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
         )
     }
 
-    const handleEdit = (game: any) => {
+    const handleEdit = async (game: any) => {
         const price = data.currentPrices.find(p => p.gameId === game.id)
         const currentSellPrice = price ? Number(price.sellPrice) : Math.ceil(Number(game.baseCost) * 1.1)
+
+        // Fetch description if missing
+        let description = game.description || ''
+        if (!description) {
+            setLoading(true)
+            description = await getGameDetailsAction(game.id)
+            setLoading(false)
+        }
 
         setEditingGame({
             ...game,
             currentSellPrice,
-            currentDescription: game.description || ''
+            currentDescription: description
         })
         setIsModalOpen(true)
     }

@@ -81,6 +81,7 @@ model Game {
   imageUrl      String?
   exampleIdUrl  String?
   description   String?
+  group         String?
   servers       String?
   topups        GameTopupTransaction[]
   prices        PartnerGamePrice[]
