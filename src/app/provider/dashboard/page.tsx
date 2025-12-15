@@ -1,4 +1,5 @@
 import React from 'react'
+export const dynamic = 'force-dynamic'
 import prisma from '@/lib/prisma'
 import { Card } from '@/components/ui/Card'
 import styles from './page.module.css'
