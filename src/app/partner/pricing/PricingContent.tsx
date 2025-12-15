@@ -133,7 +133,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                         No games found
                     </div>
                 ) : (
-                    Object.entries(groupedGames).sort().map(([groupName, items]: [string, any[]]) => {
+                    Object.entries(groupedGames).sort().map(([groupName, items]: [string, any]) => {
                         const isExpanded = expandedGroups.includes(groupName)
 
                         // Find Group Image
@@ -191,7 +191,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction 
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {items.sort((a, b) => Number(a.baseCost) - Number(b.baseCost)).map((game) => {
+                                                {items.sort((a: any, b: any) => Number(a.baseCost) - Number(b.baseCost)).map((game: any) => {
                                                     const price = data.currentPrices.find(p => p.gameId === game.id)
                                                     const myPrice = price ? Number(price.sellPrice) : Math.ceil(Number(game.baseCost) * 1.1)
                                                     const profit = myPrice - Number(game.baseCost)
