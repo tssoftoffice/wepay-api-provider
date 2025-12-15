@@ -12,68 +12,73 @@ import { useLanguage } from '@/contexts/LanguageContext'
 export function TopupContent() {
     const { t } = useLanguage()
     const router = useRouter()
-    const [amount, setAmount] = useState('')
-    const [qrCode, setQrCode] = useState('')
-    const [transactionId, setTransactionId] = useState('')
+    const [amount, setAmount] = useState('') // Keep amount field as reference or suggestion
+    const [file, setFile] = useState<File | null>(null)
+    const [preview, setPreview] = useState<string>('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const [showModal, setShowModal] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
+    const [showModal, setShowModal] = useState(false) // Use modal for success only now
+    const [successData, setSuccessData] = useState<{ amount: number, transactionId: string } | null>(null)
 
-    useEffect(() => {
-        let interval: NodeJS.Timeout
-
-        if (showModal && transactionId && !isSuccess) {
-            interval = setInterval(async () => {
-                try {
-                    const res = await fetch(`/api/payment/topup/status?transactionId=${transactionId}`)
-                    const data = await res.json()
-
-                    if (data.status === 'SUCCESS' || data.status === 'SUCCEEDED') {
-                        clearInterval(interval)
-                        setIsSuccess(true)
-                        setTimeout(() => {
-                            router.push('/partner/dashboard')
-                            router.refresh()
-                        }, 3000)
-                    }
-                } catch (error) {
-                    console.error('Polling error:', error)
-                }
-            }, 3000)
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selected = e.target.files?.[0]
+        if (selected) {
+            setFile(selected)
+            const objectUrl = URL.createObjectURL(selected)
+            setPreview(objectUrl)
+            setError('')
         }
+    }
 
-        return () => {
-            if (interval) clearInterval(interval)
-        }
-    }, [showModal, transactionId, isSuccess, router])
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => resolve(reader.result as string)
+            reader.onerror = error => reject(error)
+        })
+    }
 
-    const handleTopup = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (!file) {
+            setError('กรุณาแนบสลิปโอนเงิน (Please upload slip)')
+            return
+        }
+
         setLoading(true)
         setError('')
-        setQrCode('')
-        setIsSuccess(false)
 
         try {
+            const base64 = await convertToBase64(file)
+
             const res = await fetch('/api/payment/topup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: parseFloat(amount) }),
+                body: JSON.stringify({
+                    amount: parseFloat(amount) || 0, // Optional
+                    slipImage: base64
+                }),
             })
 
             const data = await res.json()
 
             if (!res.ok) {
-                throw new Error(data.error || 'Topup failed')
+                throw new Error(data.error || 'Upload failed')
             }
 
-            if (data.success && data.qrImage) {
-                setQrCode(data.qrImage)
-                setTransactionId(data.transactionId)
+            if (data.success) {
+                setSuccessData(data)
                 setShowModal(true)
-            } else {
-                throw new Error('Failed to generate QR Code')
+                // Clear form
+                setFile(null)
+                setPreview('')
+                setAmount('')
+                // Redirect after delay
+                setTimeout(() => {
+                    router.push('/partner/dashboard')
+                    router.refresh()
+                }, 3000)
             }
 
         } catch (err: any) {
@@ -86,79 +91,74 @@ export function TopupContent() {
     return (
         <div className={styles.container}>
             <Card className={styles.card}>
-                <h1 className={styles.title}>{t.topup.title}</h1>
+                <h1 className={styles.title}>{t.topup.title} (แนบสลิป)</h1>
 
                 {error && <div className={styles.error}>{error}</div>}
 
-                <form onSubmit={handleTopup} className={styles.form}>
-                    <div>
-                        <label htmlFor="amount" style={{ display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
-                            {t.topup.amount}
-                        </label>
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    {/* Amount Input (Optional or for reference) */}
+                    {/* <div>
+                        <label className={styles.label}>ยอดที่โอน (ระบุหรือไม่ก็ได้)</label>
                         <input
-                            id="amount"
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
-                            required
-                            min="1"
-                            placeholder="ระบุจำนวนเงิน (THB)"
-                            className={styles.input} /* We will rely on cascading or add this class */
-                            style={{
-                                width: '100%',
-                                background: 'rgba(255, 255, 255, 0.15)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                color: 'white',
-                                borderRadius: '12px',
-                                padding: '12px 16px',
-                                fontSize: '1.1rem',
-                                outline: 'none'
-                            }}
+                            placeholder="จำนวนเงิน"
+                            className={styles.input}
+                            style={{ width: '100%', marginBottom: '16px', padding: '12px', borderRadius: '8px', border: '1px solid #ccc' }}
                         />
+                    </div> */}
+
+                    {/* File Upload Area */}
+                    <div style={{ marginBottom: '24px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
+                            แนบสลิปการโอนเงิน
+                        </label>
+                        <div
+                            style={{
+                                border: '2px dashed rgba(255,255,255,0.3)',
+                                borderRadius: '12px',
+                                padding: '32px',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+                                background: 'rgba(255,255,255,0.05)',
+                                position: 'relative'
+                            }}
+                            onClick={() => document.getElementById('slip-upload')?.click()}
+                        >
+                            {preview ? (
+                                <img src={preview} alt="Slip Preview" style={{ maxHeight: '300px', maxWidth: '100%', borderRadius: '8px' }} />
+                            ) : (
+                                <div style={{ color: 'rgba(255,255,255,0.6)' }}>
+                                    <p style={{ fontSize: '1.2rem', marginBottom: '8px' }}>คลิกเพื่อเลือกรูปภาพ</p>
+                                    <p style={{ fontSize: '0.9rem' }}>หรือลากไฟล์มาวางที่นี่</p>
+                                </div>
+                            )}
+                            <input
+                                id="slip-upload"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                style={{ display: 'none' }}
+                            />
+                        </div>
                     </div>
+
                     <Button type="submit" disabled={loading} className={styles.button}>
-                        {loading ? t.topup.generating : t.topup.generateQr}
+                        {loading ? 'กำลังตรวจสอบ...' : 'ยืนยันการเติมเงิน'}
                     </Button>
                 </form>
 
-                <Modal isOpen={showModal} onClose={() => !isSuccess && setShowModal(false)} title="">
+                <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="">
                     <div className={styles.qrContainer}>
-                        {isSuccess ? (
-                            <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
-                                <h3 style={{ color: 'white', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Payment Successful!</h3>
-                                <p style={{ color: 'rgba(255, 255, 255, 0.9)' }}>Redirecting to dashboard...</p>
-                            </div>
-                        ) : (
-                            qrCode && (
-                                <>
-                                    <div className={styles.qrHeader}>
-                                        <div className={styles.qrTitle}>ยอดชำระเงิน (Total)</div>
-                                        <div className={styles.qrAmount}>฿{Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-                                    </div>
-
-                                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                                        <img
-                                            src={qrCode}
-                                            alt="Payment QR Code"
-                                            style={{ width: '240px', height: '240px', objectFit: 'contain', border: '1px solid rgba(255, 255, 255, 0.3)', borderRadius: '12px', padding: '10px', background: 'white' }}
-                                        />
-                                    </div>
-
-                                    <div style={{ textAlign: 'center' }}>
-                                        <div className={styles.qrRef} style={{ color: 'white' }}>
-                                            REF: {transactionId}
-                                        </div>
-                                        <p className={styles.instruction} style={{ fontSize: '1rem', fontWeight: 500, color: 'white' }}>
-                                            {t.topup.scanToPay}
-                                        </p>
-                                        <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)', marginTop: '0.5rem' }}>
-                                            กรุณาชำระเงินภายใน 15 นาที
-                                        </p>
-                                    </div>
-                                </>
-                            )
-                        )}
+                        <div style={{ textAlign: 'center', padding: '2rem' }}>
+                            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+                            <h3 style={{ color: 'white', fontSize: '1.5rem', marginBottom: '0.5rem' }}>เติมเงินสำเร็จ!</h3>
+                            <p style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+                                ยอดเงิน {successData?.amount.toLocaleString()} บาท เข้ากระเป๋าเรียบร้อยแล้ว
+                            </p>
+                            <p style={{ color: 'rgba(255, 255, 255, 0.6)', marginTop: '8px', fontSize: '0.9rem' }}>กำลังกลับไปที่แดชบอร์ด...</p>
+                        </div>
                     </div>
                 </Modal>
             </Card>
