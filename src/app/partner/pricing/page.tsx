@@ -32,8 +32,7 @@ async function getPricingData() {
             status: true,
             imageUrl: true,
             exampleIdUrl: true,
-            group: true,
-            servers: true, // Needed for topup, maybe not here?
+            // servers: true, // Needed for topup, maybe not here?
             // description: false // Excluded
         }
     })
