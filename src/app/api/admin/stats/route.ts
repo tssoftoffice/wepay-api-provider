@@ -45,8 +45,8 @@ export async function GET() {
         let todayTxnCount = 0
         let todayAdminProfit = 0
 
-        // Calculate daily stats, Top Partners, and Game Distribution
-        const dailyStats: Record<string, { revenue: number, profit: number }> = {}
+        // Calculate monthly stats, Top Partners, and Game Distribution
+        const chartStats: Record<string, { revenue: number, profit: number }> = {}
         const partnerStats: Record<string, {
             name: string,
             revenue: number, // sellPrice (Partner Revenue)
@@ -91,13 +91,13 @@ export async function GET() {
                 todayAdminProfit += adminProfit
             }
 
-            // Daily grouping
-            const date = txnDateStr
-            if (!dailyStats[date]) {
-                dailyStats[date] = { revenue: 0, profit: 0 }
+            // Monthly grouping (YYYY-MM)
+            const monthStr = txnDateStr.substring(0, 7) // "2025-12"
+            if (!chartStats[monthStr]) {
+                chartStats[monthStr] = { revenue: 0, profit: 0 }
             }
-            dailyStats[date].revenue += sellPrice
-            dailyStats[date].profit += adminProfit
+            chartStats[monthStr].revenue += sellPrice
+            chartStats[monthStr].profit += adminProfit
 
             // Partner grouping
             const partnerId = txn.partnerId
@@ -139,15 +139,15 @@ export async function GET() {
         const netAdminProfit = totalAdminRevenue - totalCost
         const totalTxnCount = transactions.length
 
-        // Format dates for chart (last 7 days)
-        const chartData = Object.entries(dailyStats)
+        // Format dates for chart (last 12 months)
+        const chartData = Object.entries(chartStats)
             .map(([date, stats]) => ({
                 date,
                 revenue: stats.revenue,
                 profit: stats.profit
             }))
             .sort((a, b) => a.date.localeCompare(b.date))
-            .slice(-7)
+            .slice(-12)
 
         // Get Top 5 Partners
         const topPartners = Object.values(partnerStats)

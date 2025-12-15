@@ -136,8 +136,8 @@ export default function AdminDashboardClient() {
                     flexDirection: 'column'
                 }}>
                     <div style={{ marginBottom: '24px' }}>
-                        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>สถิติการขาย</h3>
-                        <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>ข้อมูลย้อนหลัง 7 วัน</p>
+                        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>สถิติการขายรายเดือน</h3>
+                        <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>ข้อมูลย้อนหลัง 12 เดือน</p>
                     </div>
 
                     <div style={{ flex: 1, width: '100%', minHeight: '300px' }}>
@@ -157,8 +157,12 @@ export default function AdminDashboardClient() {
                                 <XAxis
                                     dataKey="date"
                                     tickFormatter={(str) => {
-                                        const date = new Date(str);
-                                        return `${date.getDate()} ${['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][date.getMonth()]}`;
+                                        // str is "2025-12"
+                                        if (!str) return '';
+                                        const [year, month] = str.split('-').map(Number);
+                                        const thaiYear = (year + 543).toString().slice(-2);
+                                        const thaiMonth = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][month - 1];
+                                        return `${thaiMonth} ${thaiYear}`;
                                     }}
                                     tick={{ fontSize: 12, fill: '#6b7280' }}
                                     axisLine={false}
@@ -179,8 +183,11 @@ export default function AdminDashboardClient() {
                                         name === 'revenue' ? 'รายได้' : 'กำไร'
                                     ]}
                                     labelFormatter={(label) => {
-                                        const date = new Date(label);
-                                        return `${date.getDate()} ${['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][date.getMonth()]} ${date.getFullYear() + 543}`;
+                                        if (!label) return '';
+                                        const [year, month] = label.split('-').map(Number);
+                                        const thaiYear = year + 543;
+                                        const thaiMonth = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'][month - 1];
+                                        return `${thaiMonth} ${thaiYear}`;
                                     }}
                                 />
                                 <Area type="monotone" dataKey="revenue" name="revenue" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={3} />
