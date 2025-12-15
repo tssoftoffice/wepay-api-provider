@@ -96,18 +96,55 @@ export function TopupContent() {
                 {error && <div className={styles.error}>{error}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* Amount Input (Optional or for reference) */}
-                    {/* <div>
-                        <label className={styles.label}>ยอดที่โอน (ระบุหรือไม่ก็ได้)</label>
-                        <input
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            placeholder="จำนวนเงิน"
-                            className={styles.input}
-                            style={{ width: '100%', marginBottom: '16px', padding: '12px', borderRadius: '8px', border: '1px solid #ccc' }}
-                        />
-                    </div> */}
+                    {/* Bank Details Card */}
+                    <div style={{
+                        background: 'linear-gradient(135deg, #00A950 0%, #007638 100%)',
+                        borderRadius: '16px',
+                        padding: '20px',
+                        color: 'white',
+                        marginBottom: '24px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                            <div style={{
+                                width: '48px',
+                                height: '48px',
+                                background: 'white',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: '16px',
+                                overflow: 'hidden'
+                            }}>
+                                <img src="/kbank_logo.png?v=2" alt="KBANK" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '14px', opacity: 0.9 }}>ธนาคารกสิกรไทย (KBANK)</div>
+                                <div style={{ fontSize: '18px', fontWeight: 600 }}>บจก. ทีเอสซอฟท์</div>
+                            </div>
+                        </div>
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.15)',
+                            borderRadius: '12px',
+                            padding: '12px 16px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            cursor: 'pointer'
+                        }}
+                            onClick={() => {
+                                navigator.clipboard.writeText('2168765358');
+                            }}
+                        >
+                            <span style={{ fontSize: '20px', fontWeight: 'bold', letterSpacing: '1px' }}>
+                                216-8-76535-8
+                            </span>
+                            <span style={{ fontSize: '12px', background: 'rgba(0,0,0,0.2)', padding: '4px 8px', borderRadius: '4px' }}>
+                                คัดลอก
+                            </span>
+                        </div>
+                    </div>
 
                     {/* File Upload Area */}
                     <div style={{ marginBottom: '24px' }}>
@@ -122,7 +159,11 @@ export function TopupContent() {
                                 textAlign: 'center',
                                 cursor: 'pointer',
                                 background: 'rgba(255,255,255,0.05)',
-                                position: 'relative'
+                                position: 'relative',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                             }}
                             onClick={() => document.getElementById('slip-upload')?.click()}
                         >

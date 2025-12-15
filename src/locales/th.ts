@@ -112,6 +112,7 @@ export const th = {
         history: 'ประวัติ',
         subscriptionHistory: 'ประวัติการชำระเงิน',
         gameTopupHistory: 'ประวัติการเติมเกม',
+        creditTopupHistory: 'ประวัติการเติมเครดิต',
         revenueReport: 'รายงานรายได้',
         exitToHome: 'กลับหน้าหลัก',
     },
@@ -246,7 +247,16 @@ export const th = {
         amount: 'ราคา (฿)',
         status: 'สถานะ',
         txnId: 'หมายเลขทำรายการ',
-        noHistory: 'ยังไม่มีประวัติการเติมเกม'
+        noHistory: 'ยังไม่มีประวัติการเติมเกม',
+    },
+    partnerCreditHistory: {
+        title: 'ประวัติการเติมเครดิต',
+        date: 'วันที่ทำรายการ',
+        amount: 'ยอดเงิน (฿)',
+        status: 'สถานะ',
+        txnId: 'หมายเลขทำรายการ',
+        providerTxnId: 'Reference No.',
+        noHistory: 'ยังไม่มีประวัติการเติมเครดิต',
     },
     revenueReport: {
         title: 'รายงานรายได้',

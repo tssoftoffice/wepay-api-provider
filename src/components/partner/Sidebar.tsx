@@ -50,6 +50,7 @@ export function Sidebar() {
             ),
             children: [
                 { name: t.sidebar.gameTopupHistory, href: '/partner/history/games' },
+                { name: t.sidebar.creditTopupHistory, href: '/partner/history/topup' },
                 { name: t.sidebar.subscriptionHistory, href: '/partner/subscription/history' },
             ]
         },

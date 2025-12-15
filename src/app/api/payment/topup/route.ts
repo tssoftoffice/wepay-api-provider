@@ -59,21 +59,23 @@ export async function POST(request: Request) {
         const data = slipData.data || slipData // Fallback if structure varies
 
         // 2.1 Check Recipient Name
-        const receiverName = data.receiver?.displayName || data.receiver?.name || ''
-        if (!receiverName.includes('ทีเอสซอฟท์') && !receiverName.includes('Ts Soft')) { // Flexible check
-            // Strict check requested: "บจก.ทีเอสซอฟท์"
-            // But usually bank shortens names. Let's start with strict-ish.
-            if (!receiverName.includes('ทีเอสซอฟท์')) {
-                return NextResponse.json({
-                    error: `ชื่อบัญชีผู้รับเงินไม่ถูกต้อง (พบ: ${receiverName}, ต้องเป็น: บจก.ทีเอสซอฟท์)`
-                }, { status: 400 })
-            }
+        // API returns snake_case: receiver_name: "TSSOFT CO.,LTD."
+        const receiverName = data.receiver_name || data.receiver?.displayName || ''
+        // Check for "TSSOFT CO.,LTD." or "ทีเอสซอฟท์" or "Ts Soft"
+        const validNames = ['TSSOFT CO.,LTD.', 'ทีเอสซอฟท์', 'Ts Soft', 'บริษัท ทีเอสซอฟท์ จำกัด']
+        const isValidReceiver = validNames.some(name => receiverName.toUpperCase().includes(name.toUpperCase())) || receiverName.toUpperCase().includes('TSSOFT')
+
+        if (!isValidReceiver) {
+            return NextResponse.json({
+                error: 'ชื่อบัญชีผู้รับเงินไม่ถูกต้อง (ต้องเป็น: TSSOFT CO.,LTD.)'
+            }, { status: 400 })
         }
 
         // 2.2 Check Duplicate (TransRef)
-        const transRef = data.transRef || data.ref1 || ''
+        // API returns `ref`
+        const transRef = data.ref || data.transRef || ''
         if (!transRef) {
-            return NextResponse.json({ error: 'ไม่พบรหัสอ้างอิงในสลิป' }, { status: 400 })
+            return NextResponse.json({ error: 'ไม่พบรหัสอ้างอิงในสลิป (Reference No.)' }, { status: 400 })
         }
 
         const existingTxn = await prisma.partnerTopupTransaction.findFirst({
