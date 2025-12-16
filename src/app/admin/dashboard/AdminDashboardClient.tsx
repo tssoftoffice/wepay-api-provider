@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Users, DollarSign, TrendingUp, CheckCircle, AlertTriangle, Calendar, Plus, QrCode, FileDown, Printer, ChevronRight, Package, CreditCard } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import styles from './dashboard.module.css'
 
 interface Stats {
     totalPartners: number
@@ -48,9 +49,9 @@ export default function AdminDashboardClient() {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className={styles.container}>
             {/* Row 1: 3 Stats Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+            <div className={styles.statsRow1}>
                 <StatCard
                     label="กำไรสุทธิ"
                     value={`฿${(stats.netProfit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -78,7 +79,7 @@ export default function AdminDashboardClient() {
             </div>
 
             {/* Row 2: Remaining 5 Stats Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px' }}>
+            <div className={styles.statsRow2}>
                 <StatCard
                     label="Partner ใหม่วันนี้"
                     value={`+${(stats.newPartnersToday || 0)}`}
@@ -122,19 +123,10 @@ export default function AdminDashboardClient() {
             </div>
 
             {/* Row 2: Charts */}
-            <div style={{ display: 'flex', gap: '20px' }}>
+            <div className={styles.chartsRow}>
                 {/* Bar Chart */}
                 {/* Area Chart - Recharts */}
-                <div style={{
-                    flex: 2,
-                    background: 'white',
-                    borderRadius: '16px',
-                    padding: '24px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                    minHeight: '400px',
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
+                <div className={styles.areaChartCard}>
                     <div style={{ marginBottom: '24px' }}>
                         <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>สถิติการขายรายเดือน</h3>
                         <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>ข้อมูลย้อนหลัง 12 เดือน</p>
@@ -198,13 +190,7 @@ export default function AdminDashboardClient() {
                 </div>
 
                 {/* Donut Chart - Dynamic */}
-                <div style={{
-                    flex: 1,
-                    background: 'white',
-                    borderRadius: '16px',
-                    padding: '24px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                }}>
+                <div className={styles.donutChartCard}>
                     <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>สัดส่วนยอดขาย</h3>
                     <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>แยกตามเกม</p>
 
@@ -247,16 +233,9 @@ export default function AdminDashboardClient() {
             </div>
 
             {/* Row 3: Quick Actions & Table */}
-            <div style={{ display: 'flex', gap: '20px' }}>
+            <div className={styles.actionsTableRow}>
                 {/* Quick Actions */}
-                <div style={{
-                    width: '320px',
-                    background: 'white',
-                    borderRadius: '16px',
-                    padding: '24px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                    flexShrink: 0
-                }}>
+                <div className={styles.quickActionsCard}>
                     <h3 style={{ margin: '0 0 20px', fontSize: '18px', fontWeight: 600, color: '#111827' }}>การดำเนินการด่วน</h3>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -268,13 +247,7 @@ export default function AdminDashboardClient() {
                 </div>
 
                 {/* Recent Partners Table */}
-                <div style={{
-                    flex: 1,
-                    background: 'white',
-                    borderRadius: '16px',
-                    overflow: 'hidden',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                }}>
+                <div className={styles.tableCard}>
                     <div style={{ padding: '20px 24px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
                             <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#111827' }}>Partner ล่าสุด</h3>
@@ -285,71 +258,73 @@ export default function AdminDashboardClient() {
                         </button>
                     </div>
 
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{ background: '#f9fafb' }}>
-                                <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ร้านค้า</th>
-                                <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ธุรกรรม</th>
-                                <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ต้นทุนระบบ (WePay)</th>
-                                <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ราคาขายให้ Partner</th>
-                                <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>กำไรระบบ (Admin)</th>
-                                <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ราคาที่ Partner ขาย</th>
-                                <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>กำไร Partner</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {(stats.topPartners || []).length > 0 ? (
-                                stats.topPartners.slice(0, 5).map((p, i) => (
-                                    <tr key={i} style={{ borderTop: '1px solid #f3f4f6' }}>
-                                        <td style={{ padding: '14px 24px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <div style={{
-                                                    width: '32px',
-                                                    height: '32px',
-                                                    borderRadius: '8px',
-                                                    background: '#dbeafe',
-                                                    color: '#3b82f6',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    fontSize: '12px',
-                                                    fontWeight: 600
-                                                }}>
-                                                    {p.name.substring(0, 2).toUpperCase()}
+                    <div className={styles.tableWrapper}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                            <thead>
+                                <tr style={{ background: '#f9fafb' }}>
+                                    <th style={{ padding: '12px 24px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ร้านค้า</th>
+                                    <th style={{ padding: '12px 24px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ธุรกรรม</th>
+                                    <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ต้นทุนระบบ (WePay)</th>
+                                    <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ราคาขายให้ Partner</th>
+                                    <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>กำไรระบบ (Admin)</th>
+                                    <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>ราคาที่ Partner ขาย</th>
+                                    <th style={{ padding: '12px 14px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>กำไร Partner</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {(stats.topPartners || []).length > 0 ? (
+                                    stats.topPartners.slice(0, 5).map((p, i) => (
+                                        <tr key={i} style={{ borderTop: '1px solid #f3f4f6' }}>
+                                            <td style={{ padding: '14px 24px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{
+                                                        width: '32px',
+                                                        height: '32px',
+                                                        borderRadius: '8px',
+                                                        background: '#dbeafe',
+                                                        color: '#3b82f6',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontSize: '12px',
+                                                        fontWeight: 600
+                                                    }}>
+                                                        {p.name.substring(0, 2).toUpperCase()}
+                                                    </div>
+                                                    <span style={{ fontSize: '14px', color: '#111827', fontWeight: 500 }}>{p.name}</span>
                                                 </div>
-                                                <span style={{ fontSize: '14px', color: '#111827', fontWeight: 500 }}>{p.name}</span>
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '14px 14px', textAlign: 'right', color: '#6b7280' }}>
-                                            {p.txnCount.toLocaleString()}
-                                        </td>
-                                        <td style={{ padding: '14px 14px', textAlign: 'right', color: '#64748b', fontSize: '13px' }}>
-                                            ฿{(p.adminCost || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
-                                        </td>
-                                        <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 500, color: '#374151', fontSize: '13px' }}>
-                                            ฿{(p.adminRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
-                                        </td>
-                                        <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 600, color: '#10b981', fontSize: '13px' }}>
-                                            ฿{(p.adminProfit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
-                                        </td>
-                                        <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 500, color: '#374151', fontSize: '13px' }}>
-                                            ฿{(p.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
-                                        </td>
-                                        <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 600, color: '#059669', fontSize: '13px' }}>
-                                            ฿{(p.profit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                                            </td>
+                                            <td style={{ padding: '14px 14px', textAlign: 'right', color: '#6b7280' }}>
+                                                {p.txnCount.toLocaleString()}
+                                            </td>
+                                            <td style={{ padding: '14px 14px', textAlign: 'right', color: '#64748b', fontSize: '13px' }}>
+                                                ฿{(p.adminCost || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                                            </td>
+                                            <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 500, color: '#374151', fontSize: '13px' }}>
+                                                ฿{(p.adminRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                                            </td>
+                                            <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 600, color: '#10b981', fontSize: '13px' }}>
+                                                ฿{(p.adminProfit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                                            </td>
+                                            <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 500, color: '#374151', fontSize: '13px' }}>
+                                                ฿{(p.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                                            </td>
+                                            <td style={{ padding: '14px 14px', textAlign: 'right', fontWeight: 600, color: '#059669', fontSize: '13px' }}>
+                                                ฿{(p.profit || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#9ca3af' }}>
+                                            <Package size={40} style={{ opacity: 0.3, marginBottom: '12px' }} />
+                                            <p style={{ margin: 0 }}>ยังไม่มีข้อมูล Partner</p>
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#9ca3af' }}>
-                                        <Package size={40} style={{ opacity: 0.3, marginBottom: '12px' }} />
-                                        <p style={{ margin: 0 }}>ยังไม่มีข้อมูล Partner</p>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

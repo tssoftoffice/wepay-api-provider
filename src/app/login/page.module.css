@@ -412,12 +412,19 @@
     }
 
     .sidebar {
-        left: 50%;
-        right: auto;
-        top: auto;
-        bottom: 30px;
-        transform: translateX(-50%);
+        top: 1rem;
+        right: 1rem;
+        left: auto;
+        bottom: auto;
+        transform: none;
         flex-direction: row;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .colorDot {
+        width: 28px;
+        height: 28px;
     }
 
     .backButton {

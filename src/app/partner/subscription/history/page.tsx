@@ -58,49 +58,51 @@ export default function SubscriptionHistoryPage() {
                 ) : transactions.length === 0 ? (
                     <div className={styles.empty}>{t.subscriptionHistory.noHistory}</div>
                 ) : (
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>{t.subscriptionHistory.date}</th>
-                                <th>{t.subscriptionHistory.amount}</th>
-                                <th>{t.subscriptionHistory.status}</th>
-                                <th>{t.subscriptionHistory.validUntil}</th>
-                                <th>{t.subscriptionHistory.referenceId}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {transactions.map((txn) => {
-                                const isSuccess = ['SUCCESS', 'SUCCEEDED', 'PAID'].includes(txn.status)
-                                let validUntil = '-'
-                                if (isSuccess) {
-                                    validUntil = new Date(new Date(txn.createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()
-                                } else if (txn.status === 'PENDING') {
-                                    const expiryTime = new Date(new Date(txn.createdAt).getTime() + 15 * 60 * 1000)
-                                    if (expiryTime < new Date()) {
-                                        validUntil = 'Expired'
-                                    } else {
-                                        validUntil = expiryTime.toLocaleTimeString()
+                    <div className={styles.tableWrapper}>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>{t.subscriptionHistory.date}</th>
+                                    <th>{t.subscriptionHistory.amount}</th>
+                                    <th>{t.subscriptionHistory.status}</th>
+                                    <th>{t.subscriptionHistory.validUntil}</th>
+                                    <th>{t.subscriptionHistory.referenceId}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {transactions.map((txn) => {
+                                    const isSuccess = ['SUCCESS', 'SUCCEEDED', 'PAID'].includes(txn.status)
+                                    let validUntil = '-'
+                                    if (isSuccess) {
+                                        validUntil = new Date(new Date(txn.createdAt).getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()
+                                    } else if (txn.status === 'PENDING') {
+                                        const expiryTime = new Date(new Date(txn.createdAt).getTime() + 15 * 60 * 1000)
+                                        if (expiryTime < new Date()) {
+                                            validUntil = 'Expired'
+                                        } else {
+                                            validUntil = expiryTime.toLocaleTimeString()
+                                        }
                                     }
-                                }
 
-                                return (
-                                    <tr key={txn.id}>
-                                        <td>{new Date(txn.createdAt).toLocaleString()}</td>
-                                        <td>{txn.amount} THB</td>
-                                        <td>
-                                            <span className={`${styles.status} ${getStatusClass(txn.status)}`}>
-                                                {txn.status}
-                                            </span>
-                                        </td>
-                                        <td>{validUntil}</td>
-                                        <td style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                                            {txn.id}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
+                                    return (
+                                        <tr key={txn.id}>
+                                            <td>{new Date(txn.createdAt).toLocaleString()}</td>
+                                            <td>{txn.amount} THB</td>
+                                            <td>
+                                                <span className={`${styles.status} ${getStatusClass(txn.status)}`}>
+                                                    {txn.status}
+                                                </span>
+                                            </td>
+                                            <td>{validUntil}</td>
+                                            <td style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                                                {txn.id}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </Card>
         </div>

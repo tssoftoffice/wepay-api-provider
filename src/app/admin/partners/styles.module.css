@@ -72,13 +72,15 @@
     background: white;
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(148, 163, 184, 0.05);
-    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid #f1f5f9;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 800px;
 }
 
 .table th {

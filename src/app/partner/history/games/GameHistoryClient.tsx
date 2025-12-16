@@ -126,7 +126,9 @@ export function GameHistoryClient({ initialData = [] }: Props) {
                                             className={styles.txnId}
                                             title="Click to copy"
                                             onClick={() => {
-                                                navigator.clipboard.writeText(txn.id)
+                                                if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                                                    navigator.clipboard.writeText(txn.id)
+                                                }
                                                 // Optional: Toast notification
                                             }}
                                             style={{ cursor: 'pointer' }}

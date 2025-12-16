@@ -24,6 +24,7 @@ const kanit = Kanit({
 export const metadata: Metadata = {
   title: "EvoPlayShop - Game Topup",
   description: "Best rates for game topup. Automatic system 24/7.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({

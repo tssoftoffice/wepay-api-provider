@@ -115,12 +115,13 @@
 
 .endpointBox {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     background: #1e293b;
     padding: 1rem 1.5rem;
     border-radius: 8px;
     margin: 1.5rem 0;
-    gap: 1.5rem;
+    gap: 1rem;
     color: white;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
@@ -172,14 +173,20 @@
     line-height: 1.8;
 }
 
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
     background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
+    /* Border handled by wrapper or ensure border doesn't double */
 }
 
 .table th,

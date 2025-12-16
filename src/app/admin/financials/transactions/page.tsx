@@ -267,6 +267,7 @@ function TransactionContent() {
                     rowKey="id"
                     loading={loading}
                     pagination={false}
+                    scroll={{ x: 800 }}
                     onChange={(p, f, s: any) => {
                         if (s.order) {
                             if (s.field === 'partner') setFilters(prev => ({ ...prev, sortBy: 'partner' }))

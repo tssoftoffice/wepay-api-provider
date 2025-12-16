@@ -9,50 +9,9 @@
   /* Dark Gray */
 }
 
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 5%;
-  background: white;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 50;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
+/* Navbar Styles Removed - Migrated to components/Navbar */
 
-.logo {
-  color: #ea580c;
-  /* Orange-600 */
-  font-weight: 800;
-  font-size: 1.5rem;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
 
-.navLinks {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.navLinks a {
-  text-decoration: none;
-  color: #4b5563;
-  /* Gray-600 */
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: color 0.2s;
-}
-
-.navLinks a:hover {
-  color: #ea580c;
-  /* Orange-600 */
-}
 
 /* Hero Section */
 .hero {
@@ -507,6 +466,42 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  /* Show Mobile Button, Hide Desktop Links */
+  .mobileMenuBtn {
+    display: block;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    gap: 3rem;
+  }
+
+  .heroContent {
+    align-items: center;
+  }
+
+  .heroContent h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    text-align: center;
+  }
+
+  .heroContent p {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
   .cardsSection {
     grid-template-columns: repeat(2, 1fr);
     padding: 4rem 3%;
@@ -514,13 +509,6 @@
 }
 
 @media (max-width: 768px) {
-  .hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-    padding: 8rem 1rem 4rem;
-    gap: 3rem;
-  }
-
   .cardsSection {
     padding: 2rem 5%;
     grid-template-columns: 1fr;
@@ -546,6 +534,34 @@
   .footerBottom {
     flex-direction: column;
     text-align: center;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroContent h1 {
+    font-size: 2.5rem;
+  }
+
+  .heroContent p {
+    font-size: 1rem;
+  }
+
+  .ctaButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .registerSection h2 {
+    font-size: 2rem;
+  }
+
+  .servicesHeader h2 {
+    font-size: 2rem;
+  }
+
+  .agentFooter {
+    padding: 3rem 1.5rem;
   }
 }
 

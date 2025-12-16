@@ -293,52 +293,54 @@ export default function AdminGamesPage() {
                                     </div>
 
                                     {expandedGroups.includes(groupKey) && (
-                                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                            <thead>
-                                                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', color: '#64748b' }}>ITEM</th>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', color: '#64748b' }}>DESC</th>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', color: '#64748b' }}>CODE</th>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', color: '#64748b' }}>PRICE (FACE)</th>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', color: '#64748b' }}>COST</th>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>STATUS</th>
-                                                    <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>ACTION</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {groupItems.map((game: any) => (
-                                                    <tr key={game.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                                        <td style={{ padding: '12px 16px' }}>
-                                                            <span style={{ fontSize: '14px', color: '#334155' }}>{game.name}</span>
-                                                        </td>
-                                                        <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{game.description}</td>
-                                                        <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{game.code}</td>
-                                                        <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13px', color: '#64748b' }}>{game.faceValue}</td>
-                                                        <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 600, color: '#2563eb' }}>฿{game.baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
-                                                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                                                            <span style={{
-                                                                padding: '2px 8px',
-                                                                borderRadius: '12px',
-                                                                fontSize: '11px',
-                                                                fontWeight: 600,
-                                                                background: game.status === 'ACTIVE' ? '#dcfce7' : '#f1f5f9',
-                                                                color: game.status === 'ACTIVE' ? '#166534' : '#64748b'
-                                                            }}>
-                                                                {game.status}
-                                                            </span>
-                                                        </td>
-                                                        <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                                                            <button
-                                                                onClick={() => handleEdit(game)}
-                                                                style={{ padding: '6px', borderRadius: '6px', border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', color: '#475569' }}
-                                                            >
-                                                                <Edit2 size={14} />
-                                                            </button>
-                                                        </td>
+                                        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '700px' }}>
+                                                <thead>
+                                                    <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', color: '#64748b' }}>ITEM</th>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', color: '#64748b' }}>DESC</th>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', color: '#64748b' }}>CODE</th>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', color: '#64748b' }}>PRICE (FACE)</th>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '12px', color: '#64748b' }}>COST</th>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>STATUS</th>
+                                                        <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>ACTION</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {groupItems.map((game: any) => (
+                                                        <tr key={game.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                                            <td style={{ padding: '12px 16px' }}>
+                                                                <span style={{ fontSize: '14px', color: '#334155' }}>{game.name}</span>
+                                                            </td>
+                                                            <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{game.description}</td>
+                                                            <td style={{ padding: '12px 16px', fontSize: '13px', color: '#64748b' }}>{game.code}</td>
+                                                            <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: '13px', color: '#64748b' }}>{game.faceValue}</td>
+                                                            <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 600, color: '#2563eb' }}>฿{game.baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
+                                                            <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                                                                <span style={{
+                                                                    padding: '2px 8px',
+                                                                    borderRadius: '12px',
+                                                                    fontSize: '11px',
+                                                                    fontWeight: 600,
+                                                                    background: game.status === 'ACTIVE' ? '#dcfce7' : '#f1f5f9',
+                                                                    color: game.status === 'ACTIVE' ? '#166534' : '#64748b'
+                                                                }}>
+                                                                    {game.status}
+                                                                </span>
+                                                            </td>
+                                                            <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                                                                <button
+                                                                    onClick={() => handleEdit(game)}
+                                                                    style={{ padding: '6px', borderRadius: '6px', border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', color: '#475569' }}
+                                                                >
+                                                                    <Edit2 size={14} />
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     )}
                                 </div>
                             )
@@ -396,30 +398,31 @@ export default function AdminGamesPage() {
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="แก้ไขข้อมูลเกม">
                 {editingGame && (
                     <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <div style={{ display: 'flex', gap: '16px' }}>
-                            <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div>
                                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>Code</label>
-                                <Input value={editingGame.code} disabled style={{ background: '#f8fafc' }} />
+                                <Input value={editingGame.code} disabled style={{ background: '#f8fafc', width: '100%' }} />
                             </div>
-                            <div style={{ flex: 2 }}>
+                            <div>
                                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>Name</label>
-                                <Input value={editingGame.name} disabled style={{ background: '#f8fafc' }} />
+                                <Input value={editingGame.name} disabled style={{ background: '#f8fafc', width: '100%' }} />
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '16px' }}>
-                            <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div>
                                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>Provider Price</label>
-                                <Input value={editingGame.providerPrice} disabled style={{ background: '#f8fafc' }} />
+                                <Input value={editingGame.providerPrice} disabled style={{ background: '#f8fafc', width: '100%' }} />
                             </div>
-                            <div style={{ flex: 1 }}>
-                                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>Base Cost (ต้นทุนที่ขาย Partner)</label>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 500 }}>Base Cost</label>
                                 <Input
                                     type="number"
                                     step="0.01"
                                     value={editingGame.baseCost}
                                     onChange={(e: any) => setEditingGame({ ...editingGame, baseCost: e.target.value })}
                                     required
+                                    style={{ width: '100%' }}
                                 />
                             </div>
                         </div>

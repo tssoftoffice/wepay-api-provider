@@ -188,15 +188,15 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction,
 
                                 {/* Items Table */}
                                 {isExpanded && (
-                                    <div style={{ overflowX: 'auto' }}>
-                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+                                    <div className={styles.tableWrapper}>
+                                        <table className={styles.table}>
                                             <thead>
-                                                <tr style={{ background: '#f8fafc', color: '#64748b', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                                    <th style={{ padding: '12px 24px', textAlign: 'left', fontWeight: 600 }}>Game Name</th>
-                                                    <th style={{ padding: '12px 24px', textAlign: 'left', fontWeight: 600 }}>Code</th>
-                                                    <th style={{ padding: '12px 24px', textAlign: 'right', fontWeight: 600 }}>Cost (ต้นทุน)</th>
-                                                    <th style={{ padding: '12px 24px', textAlign: 'right', fontWeight: 600 }}>Selling Price (ราคาขาย)</th>
-                                                    <th style={{ padding: '12px 24px', textAlign: 'right', fontWeight: 600 }}>Action</th>
+                                                <tr>
+                                                    <th>Game Name</th>
+                                                    <th>Code</th>
+                                                    <th style={{ textAlign: 'right' }}>Cost (ต้นทุน)</th>
+                                                    <th style={{ textAlign: 'right' }}>Selling Price (ราคาขาย)</th>
+                                                    <th style={{ textAlign: 'right' }}>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -206,17 +206,17 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction,
                                                     const profit = myPrice - Number(game.baseCost)
 
                                                     return (
-                                                        <tr key={game.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                                                            <td style={{ padding: '16px 24px', fontWeight: 500, color: '#334155' }}>{game.name}</td>
-                                                            <td style={{ padding: '16px 24px', color: '#64748b', fontFamily: 'monospace' }}>{game.code}</td>
-                                                            <td style={{ padding: '16px 24px', textAlign: 'right', color: '#64748b' }}>฿{Number(game.baseCost).toLocaleString()}</td>
-                                                            <td style={{ padding: '16px 24px', textAlign: 'right', fontWeight: 600, color: '#1e293b' }}>
+                                                        <tr key={game.id}>
+                                                            <td style={{ fontWeight: 500, color: '#334155' }}>{game.name}</td>
+                                                            <td style={{ color: '#64748b', fontFamily: 'monospace' }}>{game.code}</td>
+                                                            <td style={{ textAlign: 'right', color: '#64748b' }}>฿{Number(game.baseCost).toLocaleString()}</td>
+                                                            <td style={{ textAlign: 'right', fontWeight: 600, color: '#1e293b' }}>
                                                                 ฿{myPrice.toLocaleString()}
                                                                 <div style={{ fontSize: 11, color: '#10b981', fontWeight: 500 }}>
                                                                     +฿{profit.toLocaleString()}
                                                                 </div>
                                                             </td>
-                                                            <td style={{ padding: '16px 24px', textAlign: 'right' }}>
+                                                            <td style={{ textAlign: 'right' }}>
                                                                 <button
                                                                     onClick={() => handleEdit(game)}
                                                                     style={{ padding: '8px 12px', borderRadius: 8, border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: '#475569', transition: 'all 0.2s' }}

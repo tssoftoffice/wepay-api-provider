@@ -175,36 +175,38 @@ console.log(response.data);`}
                     </div>
 
                     <h3 className={styles.subTitle}>Parameters (JSON Body)</h3>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>ชื่อตัวแปร</th>
-                                <th>ชนิดข้อมูล</th>
-                                <th>จำเป็น?</th>
-                                <th>คำอธิบาย</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>game_id</td>
-                                <td>String</td>
-                                <td>Yes</td>
-                                <td>ID ของเกมที่ได้จาก API /games</td>
-                            </tr>
-                            <tr>
-                                <td>player_id</td>
-                                <td>String</td>
-                                <td>Yes</td>
-                                <td>ID ผู้เล่น หรือ Username ในเกม</td>
-                            </tr>
-                            <tr>
-                                <td>server</td>
-                                <td>String</td>
-                                <td>No</td>
-                                <td>จำเป็นสำหรับบางเกม เช่น Genshin (ส่งค่า value จากรายการ servers)</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div className={styles.tableWrapper}>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>ชื่อตัวแปร</th>
+                                    <th>ชนิดข้อมูล</th>
+                                    <th>จำเป็น?</th>
+                                    <th>คำอธิบาย</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>game_id</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>ID ของเกมที่ได้จาก API /games</td>
+                                </tr>
+                                <tr>
+                                    <td>player_id</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>ID ผู้เล่น หรือ Username ในเกม</td>
+                                </tr>
+                                <tr>
+                                    <td>server</td>
+                                    <td>String</td>
+                                    <td>No</td>
+                                    <td>จำเป็นสำหรับบางเกม เช่น Genshin (ส่งค่า value จากรายการ servers)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <h3 className={styles.subTitle}>ตัวอย่าง Code การเติมเงิน</h3>
                     <pre className={styles.codeBlock}>

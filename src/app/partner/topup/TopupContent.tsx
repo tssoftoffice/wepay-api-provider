@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
+import { Copy } from 'lucide-react'
 import styles from './page.module.css'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -131,17 +132,34 @@ export function TopupContent() {
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            gap: '12px'
                         }}
                             onClick={() => {
-                                navigator.clipboard.writeText('2168765358');
+                                if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                                    navigator.clipboard.writeText('2168765358');
+                                }
                             }}
                         >
-                            <span style={{ fontSize: '20px', fontWeight: 'bold', letterSpacing: '1px' }}>
+                            <span style={{
+                                fontSize: 'clamp(16px, 5vw, 20px)',
+                                fontWeight: 'bold',
+                                letterSpacing: '1px',
+                                whiteSpace: 'nowrap',
+                                fontFamily: 'monospace'
+                            }}>
                                 216-8-76535-8
                             </span>
-                            <span style={{ fontSize: '12px', background: 'rgba(0,0,0,0.2)', padding: '4px 8px', borderRadius: '4px' }}>
-                                คัดลอก
+                            <span style={{
+                                background: 'rgba(0,0,0,0.2)',
+                                padding: '8px',
+                                borderRadius: '8px',
+                                flexShrink: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Copy size={18} />
                             </span>
                         </div>
                     </div>

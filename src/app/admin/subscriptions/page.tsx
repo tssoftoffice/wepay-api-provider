@@ -133,7 +133,7 @@ export default function SubscriptionsPage() {
                         placeholder="e.g. Starter Plan"
                     />
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         <Input
                             label="Price (THB)"
                             type="number"
@@ -141,6 +141,7 @@ export default function SubscriptionsPage() {
                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                             required
                             min="0"
+                            style={{ width: '100%' }}
                         />
                         <Input
                             label="Duration (Days)"
@@ -149,6 +150,7 @@ export default function SubscriptionsPage() {
                             onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                             required
                             min="1"
+                            style={{ width: '100%' }}
                         />
                     </div>
 

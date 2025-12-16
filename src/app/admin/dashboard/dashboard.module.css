@@ -1,0 +1,147 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Stats Grid - Row 1: 3 cards */
+.statsRow1 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Stats Grid - Row 2: 5 cards */
+.statsRow2 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+/* Charts Row */
+.chartsRow {
+    display: flex;
+    gap: 20px;
+}
+
+.areaChartCard {
+    flex: 2;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.donutChartCard {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Actions + Table Row */
+.actionsTableRow {
+    display: flex;
+    gap: 20px;
+}
+
+.quickActionsCard {
+    width: 320px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tableCard {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Stat Card */
+.statCard {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+    .container {
+        gap: 16px;
+    }
+
+    .statsRow1 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .statsRow2 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .chartsRow {
+        flex-direction: column;
+    }
+
+    .areaChartCard {
+        min-height: 300px;
+    }
+
+    .actionsTableRow {
+        flex-direction: column;
+    }
+
+    .quickActionsCard {
+        width: 100%;
+    }
+
+    .statCard {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .statsRow1 {
+        grid-template-columns: 1fr;
+    }
+
+    .statsRow2 {
+        grid-template-columns: 1fr;
+    }
+
+    .areaChartCard {
+        padding: 16px;
+        min-height: 250px;
+    }
+
+    .donutChartCard {
+        padding: 16px;
+    }
+
+    .quickActionsCard {
+        padding: 16px;
+    }
+
+    .statCard {
+        padding: 14px;
+    }
+}

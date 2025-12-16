@@ -37,19 +37,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Sidebar - Blue Gradient */}
             <aside style={{
-                position: sidebarOpen ? 'fixed' : 'relative',
+                position: 'fixed',
                 left: 0,
                 top: 0,
                 bottom: 0,
                 width: '260px',
                 background: 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)',
-                flexShrink: 0,
                 zIndex: 50,
                 display: 'flex',
                 flexDirection: 'column',
-                transform: sidebarOpen ? 'translateX(0)' : undefined,
+                transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+                transition: 'transform 0.3s ease-in-out',
                 boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
-            }} className={`lg:translate-x-0 ${sidebarOpen ? '' : '-translate-x-full lg:relative lg:flex'}`}>
+            }} className="lg:translate-x-0">
 
                 {/* Brand */}
                 <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
@@ -155,7 +155,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* Main Content */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+            <div className="lg:ml-[260px]" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
                 {/* Top Header */}
                 <header style={{
                     height: '64px',
@@ -169,8 +169,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 }}>
                     <button
                         onClick={() => setSidebarOpen(true)}
-                        style={{ display: 'none', padding: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
-                        className="lg:hidden block"
+                        style={{ padding: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
+                        className="lg:hidden"
                     >
                         <Menu size={24} color="#374151" />
                     </button>
@@ -184,8 +184,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div style={{ flex: 1 }}></div>
 
                     {/* Search */}
-                    <div style={{
-                        display: 'flex',
+                    <div className="hidden sm:flex" style={{
                         alignItems: 'center',
                         gap: '8px',
                         background: '#f3f4f6',
@@ -213,8 +212,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     {/* Action Button */}
                     <Link
                         href="/admin/partners/create"
+                        className="hidden sm:flex"
                         style={{
-                            display: 'flex',
                             alignItems: 'center',
                             gap: '8px',
                             padding: '10px 20px',

@@ -14,7 +14,12 @@ interface MenuItem {
     children?: { name: string; href: string }[]
 }
 
-export function Sidebar() {
+interface SidebarProps {
+    isOpen?: boolean
+    onClose?: () => void
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname()
     const { t } = useLanguage()
 
@@ -98,87 +103,117 @@ export function Sidebar() {
     }
 
     return (
-        <aside className={styles.sidebar}>
-            <div className={styles.logo}>
-                <span className={styles.logoText}>PARTNER</span>
-                <span className={styles.logoSub}>PANEL</span>
-            </div>
-
-            <nav className={styles.nav}>
-                {menuItems.map((item) => {
-                    if (item.children) {
-                        const isExpanded = expandedMenu === 'history' // Hardcoded for this specific item for now or logic fix
-                        return (
-                            <div key={item.name}>
-                                <div
-                                    className={styles.navItem}
-                                    onClick={() => toggleMenu('history')}
-                                    style={{ cursor: 'pointer', justifyContent: 'space-between' }}
-                                >
-                                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                                        <span className={styles.icon}>{item.icon}</span>
-                                        <span>{item.name}</span>
-                                    </div>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
-                                    >
-                                        <polyline points="6 9 12 15 18 9"></polyline>
-                                    </svg>
-                                </div>
-                                {isExpanded && (
-                                    <div className={styles.subMenu}>
-                                        {item.children.map((child) => (
-                                            <Link
-                                                key={child.href}
-                                                href={child.href}
-                                                className={`${styles.subNavItem} ${pathname === child.href ? styles.subActive : ''}`}
-                                            >
-                                                {child.name}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )
-                    }
-
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href!}
-                            className={`${styles.navItem} ${pathname === item.href ? styles.active : ''}`}
-                        >
-                            <span className={styles.icon}>{item.icon}</span>
-                            <span>{item.name}</span>
-                        </Link>
-                    )
-                })}
-            </nav>
-
-            <div className={styles.footer}>
+        <>
+            {/* Mobile Overlay */}
+            {isOpen && (
                 <div
-                    onClick={async () => {
-                        if (confirm(t.navbar.logoutConfirmMessage)) {
-                            await fetch('/api/auth/logout', { method: 'POST' })
-                            window.location.href = '/'
-                        }
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'rgba(0,0,0,0.5)',
+                        zIndex: 40
                     }}
-                    className={styles.logoutBtn}
-                    style={{ cursor: 'pointer' }}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    <span>{t.navbar.logout}</span>
+                    onClick={onClose}
+                    className="lg:hidden"
+                />
+            )}
+
+            <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
+                <div className={styles.logo}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <span className={styles.logoText}>PARTNER</span>
+                            <span className={styles.logoSub}>PANEL</span>
+                        </div>
+                        {/* Close button for mobile */}
+                        <div
+                            className="lg:hidden"
+                            onClick={onClose}
+                            style={{ cursor: 'pointer', color: 'white' }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </aside>
+
+                <nav className={styles.nav}>
+                    {menuItems.map((item) => {
+                        if (item.children) {
+                            const isExpanded = expandedMenu === 'history' // Hardcoded for this specific item for now or logic fix
+                            return (
+                                <div key={item.name}>
+                                    <div
+                                        className={styles.navItem}
+                                        onClick={() => toggleMenu('history')}
+                                        style={{ cursor: 'pointer', justifyContent: 'space-between' }}
+                                    >
+                                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                                            <span className={styles.icon}>{item.icon}</span>
+                                            <span>{item.name}</span>
+                                        </div>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                                        >
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    {isExpanded && (
+                                        <div className={styles.subMenu}>
+                                            {item.children.map((child) => (
+                                                <Link
+                                                    key={child.href}
+                                                    href={child.href}
+                                                    className={`${styles.subNavItem} ${pathname === child.href ? styles.subActive : ''}`}
+                                                    onClick={() => onClose?.()} // Close sidebar on selection
+                                                >
+                                                    {child.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                        }
+
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href!}
+                                className={`${styles.navItem} ${pathname === item.href ? styles.active : ''}`}
+                                onClick={() => onClose?.()} // Close sidebar on selection
+                            >
+                                <span className={styles.icon}>{item.icon}</span>
+                                <span>{item.name}</span>
+                            </Link>
+                        )
+                    })}
+                </nav>
+
+                <div className={styles.footer}>
+                    <div
+                        onClick={async () => {
+                            if (confirm(t.navbar.logoutConfirmMessage)) {
+                                await fetch('/api/auth/logout', { method: 'POST' })
+                                window.location.href = '/'
+                            }
+                        }}
+                        className={styles.logoutBtn}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        <span>{t.navbar.logout}</span>
+                    </div>
+                </div>
+            </aside>
+        </>
     )
 }

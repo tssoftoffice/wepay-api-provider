@@ -7,22 +7,17 @@ import { Button } from '@/components/ui/Button'
 import styles from './page.module.css'
 import { useLanguage } from '@/contexts/LanguageContext'
 
+import Navbar from '@/components/Navbar'
+
 export default function HomePage() {
     const router = useRouter()
     const { t } = useLanguage()
 
     return (
         <div className={styles.agentContainer}>
-            {/* Navbar Placeholder */}
-            <nav className={styles.navbar}>
-                <div className={styles.logo}>GamesFlows</div>
-                <div className={styles.navLinks}>
-                    <Link href="/">Home</Link>
-                    <Link href="#">Games</Link>
-                    <Link href="#">About</Link>
-                    <Link href="#">Contact</Link>
-                </div>
-            </nav>
+            <Navbar />
+
+            {/* Hero Section */}
 
             {/* Hero Section */}
             <section className={styles.hero}>
