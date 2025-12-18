@@ -109,6 +109,9 @@ function LoginForm() {
                 <img src="/mmo_char_4.png" alt="Character 4" className={`${styles.character} ${styles.char4}`} />
 
                 <div className={styles.card}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                        <img src="/logo.jpg" alt="GamesFlows Logo" style={{ width: '120px', height: 'auto', borderRadius: '50%' }} />
+                    </div>
                     <h1 className={styles.title}>{t.auth.loginTitle}</h1>
                     <p className={styles.subtitle}>{t.auth.loginSubtitle}</p>
 
@@ -142,7 +145,14 @@ function LoginForm() {
                         <button type="submit" disabled={loading} className={styles.submitButton}>
                             {loading ? t.auth.loggingIn : t.auth.login}
                         </button>
+
                     </form>
+
+                    <div style={{ marginTop: '20px', textAlign: 'center', position: 'relative', zIndex: 50 }}>
+                        <Link href="/forgot-password" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block', padding: '5px' }}>
+                            {t.auth.forgotPassword || 'ลืมรหัสผ่าน?'}
+                        </Link>
+                    </div>
 
                     <div className={styles.footer}>
                         <p className={styles.agentLink} style={{ fontSize: '0.95rem' }}>
@@ -163,7 +173,7 @@ function LoginForm() {
                     <p style={{ fontSize: '0.9em', color: 'rgba(255, 255, 255, 0.8)' }}>กำลังเข้าสู่หน้าหลัก...</p>
                 </div>
             </Modal>
-        </div>
+        </div >
     )
 }
 

@@ -54,18 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {/* Brand */}
                 <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{
-                            width: '44px',
-                            height: '44px',
-                            borderRadius: '12px',
-                            background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            boxShadow: '0 4px 12px rgba(59,130,246,0.4)'
-                        }}>
-                            <span style={{ color: 'white', fontSize: '20px', fontWeight: 'bold' }}>E</span>
-                        </div>
+                        <img src="/logo.jpg" alt="GamesFlows Admin" style={{ height: '40px', width: 'auto', borderRadius: '50%' }} />
                         <div>
                             <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>Gamesflows</p>
                             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', margin: 0 }}>Admin System</p>
