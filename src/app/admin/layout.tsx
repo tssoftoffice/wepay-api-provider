@@ -37,11 +37,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Sidebar - Blue Gradient */}
             <aside style={{
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                bottom: 0,
                 width: '260px',
                 background: 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)',
+                zIndex: 50,
+                display: 'flex',
+                flexDirection: 'column',
+                transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
                 transition: 'transform 0.3s ease-in-out',
                 boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
-            }} className={`fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            }} className="lg:translate-x-0">
 
                 {/* Brand */}
                 <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
@@ -147,7 +155,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* Main Content */}
-            <div className="" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+            <div className="lg:ml-[260px]" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
                 {/* Top Header */}
                 <header style={{
                     height: '64px',
