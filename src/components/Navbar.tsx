@@ -12,9 +12,9 @@ export default function Navbar() {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                <div className={styles.logo}>
-                    GamesFlows
-                </div>
+                <Link href="/" className={styles.logo}>
+                    <img src="/logo.jpg" alt="GamesFlows" style={{ height: '40px', width: 'auto' }} />
+                </Link>
 
                 {/* Desktop Menu */}
                 <div className={styles.desktopMenu}>

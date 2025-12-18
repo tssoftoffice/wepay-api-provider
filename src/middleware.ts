@@ -19,7 +19,10 @@ export default function middleware(request: NextRequest) {
         pathname.startsWith('/register') ||
         pathname.startsWith('/api/auth') ||
         pathname.startsWith('/store') ||
-        pathname.startsWith('/api/store')
+        pathname.startsWith('/api/store') ||
+        pathname.startsWith('/forgot-password') ||
+        pathname.startsWith('/reset-password') ||
+        pathname.includes('.') // Allow files with extensions (images, css, etc) just in case
 
     // 2. If it's NOT a public path AND there is no token
     if (!isPublicPath && !token) {

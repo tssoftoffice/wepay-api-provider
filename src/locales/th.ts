@@ -102,6 +102,7 @@ export const th = {
         role: 'สถานะ',
         customer: 'ลูกค้าทั่วไป',
         partner: 'พาร์ทเนอร์ (เจ้าของร้าน)',
+        forgotPassword: 'ลืมรหัสผ่าน?',
     },
     sidebar: {
         partnerPanel: 'พาร์ทเนอร์',

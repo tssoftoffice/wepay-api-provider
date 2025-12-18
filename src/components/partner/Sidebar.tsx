@@ -122,8 +122,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <div className={styles.logo}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
-                            <span className={styles.logoText}>PARTNER</span>
-                            <span className={styles.logoSub}>PANEL</span>
+                            <img src="/logo.jpg" alt="Partner Panel" style={{ height: '40px', width: 'auto', borderRadius: '50%' }} />
                         </div>
                         {/* Close button for mobile */}
                         <div

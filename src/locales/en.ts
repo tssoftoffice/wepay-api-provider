@@ -102,6 +102,7 @@ export const en = {
         role: 'Role',
         customer: 'Customer',
         partner: 'Partner (Store Owner)',
+        forgotPassword: 'Forgot Password?',
     },
     sidebar: {
         partnerPanel: 'Partner Panel',
