@@ -13,8 +13,9 @@ export default function Navbar() {
         <nav className={styles.navbar}>
             <div className={styles.container}>
                 <Link href="/" className={styles.logo}>
-                    <img src="/logo.jpg" alt="GamesFlows" style={{ height: '40px', width: 'auto' }} />
+                    <img src="/logo.jpg" alt="GamesFlows" style={{ height: '90px', width: 'auto' }} />
                 </Link>
+                <span>GamesFlows</span>
 
                 {/* Desktop Menu */}
                 <div className={styles.desktopMenu}>

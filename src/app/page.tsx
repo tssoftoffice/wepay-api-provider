@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
@@ -8,8 +8,31 @@ import styles from './page.module.css'
 
 import Navbar from '@/components/Navbar'
 
+interface Plan {
+    id: string
+    name: string
+    price: number
+    duration: number
+    features: string
+    isActive: boolean
+}
+
 export default function HomePage() {
     const router = useRouter()
+    const [plans, setPlans] = useState<Plan[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetch('/api/plans')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setPlans(data)
+                }
+            })
+            .catch(err => console.error('Failed to fetch plans', err))
+            .finally(() => setLoading(false))
+    }, [])
 
     return (
         <div className={styles.agentContainer}>
@@ -37,7 +60,7 @@ export default function HomePage() {
                         <img src="/feature_rocket_orange.png" alt="Start Immediately" className={styles.cardImage} />
                     </div>
                     <div className={styles.cardContent}>
-                        <h3>เปิดร้านเติมเกมได้ทันที ไม่ต้องพัฒนาระบบเอง</h3>
+                        <h3>เปิดร้านเติมเกมได้ทันที ไม่ต้องพัฒนาระบบหลังบ้านเอง</h3>
                         <p>พร้อมใช้งานสำหรับผู้เริ่มต้นและเจ้าของร้านออนไลน์</p>
                     </div>
                 </div>
@@ -72,6 +95,10 @@ export default function HomePage() {
 
             {/* Services Section (New) */}
             <section id="services" className={styles.servicesSection}>
+                {/* Decoration Images */}
+                <img src="/char_boss.png" alt="" className={`${styles.decorationImage} ${styles.decorationLeft}`} />
+                <img src="/mmo_warrior.png" alt="" className={`${styles.decorationImage} ${styles.decorationRight}`} />
+
                 <div className={styles.servicesHeader}>
                     <h2>บริการของเรา</h2>
                 </div>
@@ -128,35 +155,43 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Register/Pricing Section (Single Plan - Restored) */}
+            {/* Pricing Section (Dynamic) */}
             <section id="register-section" className={styles.registerSection}>
                 <h2>แพ็กเกจเจ้าของร้าน</h2>
 
-                <div className={`${styles.subscriptionCard} ${styles.animateFadeInUp}`}>
-                    <h3>Starter Plan</h3>
-                    <div className={styles.priceTag}>
-                        1,199 <span className={styles.currency}>THB</span> <span className={styles.period}>/ เดือน</span>
+                {loading ? (
+                    <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>กำลังโหลดข้อมูลแพ็กเกจ...</div>
+                ) : plans.length > 0 ? (
+                    <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', justifyContent: 'center', width: '100%', maxWidth: '1200px' }}>
+                        {plans.map((plan) => (
+                            <div key={plan.id} className={`${styles.subscriptionCard} ${styles.animateFadeInUp}`}>
+                                <h3>{plan.name}</h3>
+                                <div className={styles.priceTag}>
+                                    {Number(plan.price).toLocaleString()} <span className={styles.currency}>THB</span> <span className={styles.period}>/ {plan.duration} วัน</span>
+                                </div>
+                                <p className={styles.subCardDesc}>เริ่มต้นเป็นเจ้าของธุรกิจร้านเติมเกมได้ง่ายๆ</p>
+
+                                {plan.features && (
+                                    <ul className={styles.planFeatures}>
+                                        {plan.features.split('\n').filter(Boolean).map((feature: string, idx: number) => (
+                                            <li key={idx}><span className={styles.checkIcon}>✓</span> {feature}</li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                <Button
+                                    className={styles.submitButton}
+                                    onClick={() => router.push('/register/agent')}
+                                >
+                                    สมัครสมาชิกเลย
+                                </Button>
+                            </div>
+                        ))}
                     </div>
-                    <p className={styles.subCardDesc}>เริ่มต้นเป็นเจ้าของธุรกิจร้านเติมเกมได้ง่ายๆ</p>
-
-                    <ul className={styles.planFeatures}>
-                        <li><span className={styles.checkIcon}>✓</span> ระบบเติมเกมอัตโนมัติ 24 ชม.</li>
-                        <li><span className={styles.checkIcon}>✓</span> กำไรสูง ไม่ต้องสต็อกสินค้า</li>
-                        <li><span className={styles.checkIcon}>✓</span> มีทีมงานซัพพอร์ตตลอดเวลา</li>
-                        <li><span className={styles.checkIcon}>✓</span> แดชบอร์ดจัดการร้านค้า</li>
-                        <li><span className={styles.checkIcon}>✓</span> รองรับทุกเกมฮิต</li>
-                    </ul>
-
-                    <Button
-                        className={styles.submitButton}
-                        onClick={() => router.push('/register/agent')}
-                    >
-                        สมัครสมาชิกเลย
-                    </Button>
-                </div>
+                ) : (
+                    <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>ไม่พบแพ็กเกจที่เปิดใช้งาน</div>
+                )}
             </section>
-
-
 
         </div>
     )

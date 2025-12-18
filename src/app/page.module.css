@@ -4,9 +4,8 @@
   background-color: #ffffff;
   /* Clean white */
   font-family: 'Kanit', sans-serif;
-  overflow-x: hidden;
-  color: #1f2937;
   /* Dark Gray */
+  overflow-x: hidden;
 }
 
 /* Navbar Styles Removed - Migrated to components/Navbar */
@@ -625,11 +624,60 @@
 
 /* Services Section (Orange Theme - Matching Hero) */
 .servicesSection {
-  background-color: #ffffff;
+  background-color: #fff7ed;
+  /* Orange-50 */
+  background-image: radial-gradient(circle at 70% 30%, #ffedd5 0%, #fff7ed 60%);
   padding: 6rem 1rem;
   color: #1f2937;
   scroll-margin-top: 70px;
   /* Offset for sticky navbar */
+  position: relative;
+  overflow: hidden; /* Prevent horizontal scroll if images stick out too much, though we want them visible. Maybe clip? */
+}
+
+.decorationImage {
+  position: absolute;
+  top: 0%;
+  transform: translateY(0);
+  height: 300px;
+  width: auto;
+  z-index: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+  transition: all 0.5s ease-in-out;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+.decorationLeft {
+  left: -50px;
+}
+
+.decorationRight {
+  right: -50px;
+  animation-delay: 1s; /* Offset float animation */
+}
+
+@media (min-width: 1440px) {
+  .decorationLeft {
+    left: 2%;
+  }
+  .decorationRight {
+    right: 2%;
+  }
+}
+
+@media (max-width: 1050px) {
+  .decorationImage {
+    height: 250px;
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 768px) {
+  .decorationImage {
+    display: none;
+  }
 }
 
 .servicesHeader {

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, LogOut, Menu, Bell, Search, Users, Gamepad2, CreditCard } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import styles from './adminLayout.module.css'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -14,69 +15,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const menuItems = [
         { name: 'หน้าหลัก', href: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'Games', href: '/admin/games', icon: Gamepad2 },
-        { name: 'Financials', href: '/admin/financials', icon: LayoutDashboard }, // Using LayoutDashboard for now, or DollarSign if imported
+        { name: 'Financials', href: '/admin/financials', icon: LayoutDashboard },
         { name: 'Start & Plans', href: '/admin/subscriptions', icon: CreditCard },
         { name: 'Partners', href: '/admin/partners', icon: Users },
     ]
 
     return (
-        <div style={{
-            position: 'fixed',
-            inset: 0,
-            display: 'flex',
-            fontFamily: 'Kanit, sans-serif',
-            background: '#f0f5ff'
-        }}>
+        <div className={styles.layoutContainer}>
             {/* Mobile Backdrop */}
             {sidebarOpen && (
                 <div
-                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40 }}
+                    className={styles.mobileBackdrop}
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
 
-            {/* Sidebar - Blue Gradient */}
-            <aside style={{
-                position: 'fixed',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: '260px',
-                background: 'linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%)',
-                zIndex: 50,
-                display: 'flex',
-                flexDirection: 'column',
-                transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-                transition: 'transform 0.3s ease-in-out',
-                boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
-            }} className="lg:translate-x-0">
-
+            {/* Sidebar */}
+            <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarVisible : styles.sidebarHidden}`}>
                 {/* Brand */}
-                <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <img src="/logo.jpg" alt="GamesFlows Admin" style={{ height: '40px', width: 'auto', borderRadius: '50%' }} />
+                <div className={styles.sidebarHeader}>
+                    <div className={styles.brand}>
+                        <img src="/logo.jpg" alt="GamesFlows Admin" className={styles.brandLogo} />
                         <div>
-                            <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>Gamesflows</p>
-                            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', margin: 0 }}>Admin System</p>
+                            <p className={styles.brandText}>Gamesflows</p>
+                            <p className={styles.brandSubDetails}>Admin System</p>
                         </div>
                     </div>
                 </div>
 
                 {/* User Profile Card */}
-                <div style={{ padding: '16px', margin: '16px', background: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white',
-                            fontWeight: 'bold',
-                            fontSize: '14px'
-                        }}>
+                <div className={styles.profileCard}>
+                    <div className={styles.profileContent}>
+                        <div className={styles.avatar}>
                             AD
                         </div>
                         <div style={{ flex: 1 }}>
@@ -87,8 +57,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
 
                 {/* Navigation */}
-                <nav style={{ flex: 1, padding: '0 16px', overflowY: 'auto' }}>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', padding: '0 12px', marginBottom: '8px' }}>
+                <nav className={styles.nav}>
+                    <p className={styles.menuTitle}>
                         เมนูหลัก
                     </p>
                     {menuItems.map((item) => {
@@ -97,20 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px',
-                                    padding: '12px 16px',
-                                    borderRadius: '10px',
-                                    marginBottom: '4px',
-                                    textDecoration: 'none',
-                                    background: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
-                                    color: 'white',
-                                    fontSize: '14px',
-                                    fontWeight: isActive ? 600 : 400,
-                                    transition: 'all 0.2s'
-                                }}
+                                className={`${styles.navLink} ${isActive ? styles.navLinkActive : styles.navLinkInactive}`}
                             >
                                 <item.icon size={20} style={{ opacity: isActive ? 1 : 0.7 }} />
                                 {item.name}
@@ -120,22 +77,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </nav>
 
                 {/* Logout */}
-                <div style={{ padding: '16px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <div className={styles.logoutSection}>
                     <button
                         onClick={() => logout()}
-                        style={{
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            padding: '12px 16px',
-                            borderRadius: '10px',
-                            background: 'rgba(239,68,68,0.2)',
-                            border: 'none',
-                            color: '#fca5a5',
-                            fontSize: '14px',
-                            cursor: 'pointer'
-                        }}
+                        className={styles.logoutButton}
                     >
                         <LogOut size={20} />
                         ออกจากระบบ
@@ -144,18 +89,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
 
             {/* Main Content */}
-            <div className="lg:ml-[260px]" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+            <div className={styles.mainContent}>
                 {/* Top Header */}
-                <header style={{
-                    height: '64px',
-                    background: 'white',
-                    borderBottom: '1px solid #e5e7eb',
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '0 24px',
-                    gap: '16px',
-                    flexShrink: 0
-                }}>
+                <header className={styles.header}>
                     <button
                         onClick={() => setSidebarOpen(true)}
                         style={{ padding: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
@@ -173,25 +109,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div style={{ flex: 1 }}></div>
 
                     {/* Search */}
-                    <div className="hidden sm:flex" style={{
-                        alignItems: 'center',
-                        gap: '8px',
-                        background: '#f3f4f6',
-                        padding: '8px 16px',
-                        borderRadius: '8px',
-                        width: '240px'
-                    }}>
+                    <div className={styles.searchBar}>
                         <Search size={18} color="#9ca3af" />
                         <input
                             placeholder="ค้นหา..."
-                            style={{
-                                border: 'none',
-                                background: 'none',
-                                outline: 'none',
-                                flex: 1,
-                                fontSize: '14px',
-                                color: '#374151'
-                            }}
+                            className={styles.searchInput}
                         />
                     </div>
 
@@ -201,28 +123,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     {/* Action Button */}
                     <Link
                         href="/admin/partners/create"
-                        className="hidden sm:flex"
-                        style={{
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '10px 20px',
-                            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '10px',
-                            fontSize: '14px',
-                            fontWeight: 500,
-                            cursor: 'pointer',
-                            boxShadow: '0 4px 12px rgba(59,130,246,0.3)',
-                            textDecoration: 'none'
-                        }}
+                        className={styles.actionButton}
                     >
                         + เพิ่ม Partner
                     </Link>
                 </header>
 
                 {/* Content */}
-                <main style={{ flex: 1, overflow: 'auto', padding: '24px', background: '#f0f5ff' }}>
+                <main className={styles.pageContent}>
                     {children}
                 </main>
             </div>
