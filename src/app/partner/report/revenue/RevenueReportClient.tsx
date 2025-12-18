@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './report.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 
 interface Transaction {
     id: string
@@ -29,7 +29,7 @@ interface Props {
 
 export function RevenueReportClient({ initialTransactions, initialDateRange }: Props) {
     const router = useRouter()
-    const { t } = useLanguage()
+
 
     const [startDate, setStartDate] = useState(initialDateRange.start)
     const [endDate, setEndDate] = useState(initialDateRange.end)
@@ -56,7 +56,7 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
             {/* Filters */}
             <div className={styles.filters}>
                 <div className={styles.formGroup}>
-                    <label className={styles.label}>{t.revenueReport.startDate}</label>
+                    <label className={styles.label}>วันที่เริ่มต้น</label>
                     <input
                         type="date"
                         className={styles.input}
@@ -65,7 +65,7 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
                     />
                 </div>
                 <div className={styles.formGroup}>
-                    <label className={styles.label}>{t.revenueReport.endDate}</label>
+                    <label className={styles.label}>วันที่สิ้นสุด</label>
                     <input
                         type="date"
                         className={styles.input}
@@ -78,22 +78,22 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
                     onClick={handleSearch}
                     disabled={isSearching}
                 >
-                    {isSearching ? t.revenueReport.search + '...' : t.revenueReport.search}
+                    {isSearching ? 'ค้นหา...' : 'ค้นหา'}
                 </button>
             </div>
 
             {/* Summary Cards */}
             <div className={styles.summaryGrid}>
                 <div className={`${styles.card} ${styles.cardRevenue}`}>
-                    <div className={styles.cardTitle}>{t.revenueReport.totalRevenue}</div>
+                    <div className={styles.cardTitle}>ยอดขายรวม</div>
                     <div className={styles.cardValue}>฿{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</div>
                 </div>
                 <div className={`${styles.card} ${styles.cardProfit}`}>
-                    <div className={styles.cardTitle}>{t.revenueReport.totalProfit}</div>
+                    <div className={styles.cardTitle}>กำไรสุทธิ</div>
                     <div className={styles.cardValue}>฿{totalProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</div>
                 </div>
                 <div className={`${styles.card} ${styles.cardCount}`}>
-                    <div className={styles.cardTitle}>{t.revenueReport.totalTxn}</div>
+                    <div className={styles.cardTitle}>จำนวนรายการ</div>
                     <div className={styles.cardValue}>{initialTransactions.length.toLocaleString()}</div>
                 </div>
             </div>
@@ -102,18 +102,18 @@ export function RevenueReportClient({ initialTransactions, initialDateRange }: P
             <div className={styles.tableWrapper}>
                 {initialTransactions.length === 0 ? (
                     <div className={styles.emptyState}>
-                        <p>{t.revenueReport.noData}</p>
+                        <p>ไม่พบข้อมูล</p>
                     </div>
                 ) : (
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>{t.revenueReport.date}</th>
-                                <th>{t.revenueReport.orderId}</th>
-                                <th>{t.gameTopupHistory.game}</th>
-                                <th>{t.revenueReport.cost}</th>
-                                <th>{t.revenueReport.sales}</th>
-                                <th>{t.revenueReport.profit}</th>
+                                <th>วันที่</th>
+                                <th>เลขที่รายการ</th>
+                                <th>เกม</th>
+                                <th>ต้นทุน</th>
+                                <th>ราคาขาย</th>
+                                <th>กำไร</th>
                             </tr>
                         </thead>
                         <tbody>

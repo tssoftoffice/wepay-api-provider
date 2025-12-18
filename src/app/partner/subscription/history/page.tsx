@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/Card'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './page.module.css'
 
 interface Transaction {
@@ -13,7 +13,7 @@ interface Transaction {
 }
 
 export default function SubscriptionHistoryPage() {
-    const { t } = useLanguage()
+
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -50,23 +50,23 @@ export default function SubscriptionHistoryPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>{t.subscriptionHistory.title}</h1>
+            <h1 className={styles.title}>ประวัติการชำระเงิน</h1>
 
             <Card className={styles.card}>
                 {loading ? (
                     <div className={styles.empty}>Loading...</div>
                 ) : transactions.length === 0 ? (
-                    <div className={styles.empty}>{t.subscriptionHistory.noHistory}</div>
+                    <div className={styles.empty}>ไม่พบประวัติ</div>
                 ) : (
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
                             <thead>
                                 <tr>
-                                    <th>{t.subscriptionHistory.date}</th>
-                                    <th>{t.subscriptionHistory.amount}</th>
-                                    <th>{t.subscriptionHistory.status}</th>
-                                    <th>{t.subscriptionHistory.validUntil}</th>
-                                    <th>{t.subscriptionHistory.referenceId}</th>
+                                    <th>วันที่</th>
+                                    <th>จำนวนเงิน</th>
+                                    <th>สถานะ</th>
+                                    <th>ใช้ได้ถึง</th>
+                                    <th>เลขที่อ้างอิง</th>
                                 </tr>
                             </thead>
                             <tbody>

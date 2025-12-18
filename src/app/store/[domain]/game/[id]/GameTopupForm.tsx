@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import Swal from 'sweetalert2'
 import styles from './page.module.css'
 
@@ -27,7 +27,7 @@ interface GameTopupFormProps {
 }
 
 export function GameTopupForm({ gameId, gameName, gamePrices, domain, servers }: GameTopupFormProps) {
-    const { t } = useLanguage()
+
     const [playerId, setPlayerId] = useState('')
     const [selectedServer, setSelectedServer] = useState('')
     const [selectedPackage, setSelectedPackage] = useState<string | null>(null)
@@ -44,7 +44,7 @@ export function GameTopupForm({ gameId, gameName, gamePrices, domain, servers }:
         if (servers && !selectedServer) {
             Swal.fire({
                 icon: 'warning',
-                title: t.errors.selectServer,
+                title: 'กรุณาเลือกเซิร์ฟเวอร์',
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'OK'
             })
@@ -69,11 +69,11 @@ export function GameTopupForm({ gameId, gameName, gamePrices, domain, servers }:
             const data = await res.json()
 
             if (!res.ok) {
-                let errorMessage = data.error || t.errors.topupFailed
+                let errorMessage = data.error || 'ทำรายการไม่สำเร็จกรุณาลองใหม่อีกครั้ง'
 
                 // Map known errors
-                if (errorMessage.includes('Insufficient customer balance')) errorMessage = t.errors.insufficientBalance
-                if (errorMessage.includes('Item not available')) errorMessage = t.errors.unknown
+                if (errorMessage.includes('Insufficient customer balance')) errorMessage = 'ยอดเงินในกระเป๋าไม่เพียงพอ'
+                if (errorMessage.includes('Item not available')) errorMessage = 'ขออภัย สินค้านี้ปิดปรับปรุงชั่วคราว'
 
                 throw new Error(errorMessage)
             }
@@ -81,8 +81,8 @@ export function GameTopupForm({ gameId, gameName, gamePrices, domain, servers }:
             // Success
             await Swal.fire({
                 icon: 'success',
-                title: t.errors.success,
-                text: t.errors.successMessage,
+                title: 'ทำรายการสำเร็จ',
+                text: 'ระบบกำลังดำเนินการเติมเกมให้คุณ',
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'OK'
             })
@@ -94,7 +94,7 @@ export function GameTopupForm({ gameId, gameName, gamePrices, domain, servers }:
         } catch (err: any) {
             Swal.fire({
                 icon: 'error',
-                title: t.errors.topupFailed,
+                title: 'ทำรายการไม่สำเร็จ',
                 text: err.message,
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'OK'

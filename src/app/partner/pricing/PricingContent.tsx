@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import styles from './page.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import { Search, Edit2, ChevronDown, ChevronRight, Gamepad2, X, Save } from 'lucide-react'
 import { Modal } from '@/components/ui/Modal'
 
@@ -21,7 +21,7 @@ interface PricingContentProps {
 }
 
 export function PricingContent({ data, updatePriceAction, updateGameImageAction, getGameDetailsAction }: PricingContentProps) {
-    const { t } = useLanguage()
+
 
     // State
     const [searchTerm, setSearchTerm] = useState('')
@@ -117,7 +117,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction,
             {/* Header */}
             <div style={{ marginBottom: 32 }}>
                 <h1 className={styles.title} style={{ fontSize: '1.8rem', color: '#1e293b', marginBottom: 8, fontWeight: 700 }}>
-                    {t.pricing?.title || 'Game Management'}
+                    จัดการเกม
                 </h1>
                 <p style={{ color: '#64748b' }}>จัดการราคาสินค้าและรายละเอียดเกม</p>
             </div>

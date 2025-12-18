@@ -3,10 +3,10 @@
 import React from 'react'
 import styles from './page.module.css'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 
 export default function GamesPage() {
-    const { t } = useLanguage()
+
 
     const games = [
         'Free Fire', 'ROV', 'Mobile Legends', 'Valorant', 'PUBG Mobile',
@@ -20,7 +20,7 @@ export default function GamesPage() {
         <div className={styles.container}>
             <main className={styles.main}>
                 <header className={styles.header}>
-                    <h1 className={styles.title}>{t.sections.gameTopup}</h1>
+                    <h1 className={styles.title}>เติมเกมออนไลน์</h1>
                 </header>
 
                 <div className={styles.grid}>

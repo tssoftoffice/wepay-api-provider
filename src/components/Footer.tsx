@@ -2,11 +2,10 @@
 
 import React from 'react'
 import styles from './Footer.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'
 
 export function Footer() {
-    const { t } = useLanguage()
+
 
     return (
         <footer className={styles.agentFooter}>

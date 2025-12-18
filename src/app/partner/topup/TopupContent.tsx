@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { Copy } from 'lucide-react'
 import styles from './page.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 
 export function TopupContent() {
-    const { t } = useLanguage()
+
     const router = useRouter()
     const [amount, setAmount] = useState('') // Keep amount field as reference or suggestion
     const [file, setFile] = useState<File | null>(null)
@@ -92,7 +92,7 @@ export function TopupContent() {
     return (
         <div className={styles.container}>
             <Card className={styles.card}>
-                <h1 className={styles.title}>{t.topup.title} (แนบสลิป)</h1>
+                <h1 className={styles.title}>เติมเครดิต (แนบสลิป)</h1>
 
                 {error && <div className={styles.error}>{error}</div>}
 

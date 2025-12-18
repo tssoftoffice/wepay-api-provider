@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './TemplateDefault.module.css'
 
 interface TemplateProps {
@@ -11,7 +11,7 @@ interface TemplateProps {
 }
 
 export function TemplateDefault({ partner, domain }: TemplateProps) {
-    const { t } = useLanguage()
+
 
     return (
         <div className={styles.container}>
@@ -24,7 +24,7 @@ export function TemplateDefault({ partner, domain }: TemplateProps) {
                 )}
                 <h1 className={styles.storeName}>{partner.name}</h1>
                 <p className={styles.storeDesc}>
-                    {t.templates.welcomeMessage.replace('{storeName}', partner.name)}
+                    {`ยินดีต้อนรับสู่ ${partner.name} เราให้บริการเติมเกมที่ดีที่สุด ส่งทันที และปลอดภัย`}
                 </p>
             </header>
 
@@ -33,7 +33,7 @@ export function TemplateDefault({ partner, domain }: TemplateProps) {
                 <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.sectionIcon}>🎮</span>
-                        {t.templates.gameTopup}
+                        บริการเติมชั่วโมงเกม
                     </h2>
                 </div>
 
@@ -61,7 +61,7 @@ export function TemplateDefault({ partner, domain }: TemplateProps) {
                 <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.sectionIcon}>📱</span>
-                        {t.templates.otherServices}
+                        บริการอื่นๆ
                     </h2>
                 </div>
 
@@ -69,22 +69,22 @@ export function TemplateDefault({ partner, domain }: TemplateProps) {
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>📱</div>
                         <div className={styles.serviceInfo}>
-                            <h4>{t.templates.mobileTopup}</h4>
-                            <p>{t.templates.mobileTopupDesc}</p>
+                            <h4>เติมเงินมือถือ</h4>
+                            <p>รองรับทุกเครือข่าย AIS, DTAC, TRUE</p>
                         </div>
                     </div>
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>💳</div>
                         <div className={styles.serviceInfo}>
-                            <h4>{t.templates.billPayment}</h4>
-                            <p>{t.templates.billPaymentDesc}</p>
+                            <h4>ชำระบิล</h4>
+                            <p>ค่าน้ำ ค่าไฟ อินเทอร์เน็ต และอื่นๆ</p>
                         </div>
                     </div>
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>🎁</div>
                         <div className={styles.serviceInfo}>
-                            <h4>{t.templates.giftCards}</h4>
-                            <p>{t.templates.giftCardsDesc}</p>
+                            <h4>บัตรของขวัญ</h4>
+                            <p>Google Play, iTunes, Netflix, etc.</p>
                         </div>
                     </div>
                 </div>

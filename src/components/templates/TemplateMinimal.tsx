@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './TemplateMinimal.module.css'
 
 interface TemplateProps {
@@ -11,7 +11,7 @@ interface TemplateProps {
 }
 
 export function TemplateMinimal({ partner, domain }: TemplateProps) {
-    const { t } = useLanguage()
+
     const games = partner.games || []
 
     return (
@@ -28,10 +28,10 @@ export function TemplateMinimal({ partner, domain }: TemplateProps) {
                     </div>
                     <h1 className={styles.storeName}>{partner.name}</h1>
                     <p className={styles.welcomeMsg}>
-                        {t.templates.welcome} {partner.name} {t.templates.slogan}
+                        ยินดีต้อนรับสู่ {partner.name} บริการเติมเกม 24 ชม.
                     </p>
                     <Link href={`/store/${domain}/games`}>
-                        <button className={styles.shopNowBtn}>{t.hero.shopNow}</button>
+                        <button className={styles.shopNowBtn}>ซื้อสินค้าเลย</button>
                     </Link>
                 </div>
             </header>
@@ -40,19 +40,19 @@ export function TemplateMinimal({ partner, domain }: TemplateProps) {
             <section className={styles.highlights}>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>⚡</span>
-                    <span>{t.highlights.auto}</span>
+                    <span>ระบบอัตโนมัติ</span>
                 </div>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>💰</span>
-                    <span>{t.highlights.bestPrice}</span>
+                    <span>ราคาประหยัด</span>
                 </div>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>🛡️</span>
-                    <span>{t.highlights.secure}</span>
+                    <span>ปลอดภัยหายห่วง</span>
                 </div>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>🎧</span>
-                    <span>{t.highlights.support}</span>
+                    <span>ช่วยเหลือทันใจ</span>
                 </div>
             </section>
 
@@ -60,7 +60,7 @@ export function TemplateMinimal({ partner, domain }: TemplateProps) {
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                     <div className={styles.sectionIcon}>🎮</div>
-                    <h2 className={styles.sectionTitle}>{t.templates.gameTopup}</h2>
+                    <h2 className={styles.sectionTitle}>บริการเติมเกมออนไลน์</h2>
                 </div>
 
                 <div className={styles.grid}>
@@ -72,7 +72,7 @@ export function TemplateMinimal({ partner, domain }: TemplateProps) {
                             <div className={styles.cardContent}>
                                 <div className={styles.cardTitle}>{game.name}</div>
                                 <div className={styles.cardPrice}>
-                                    {t.templates.startAt} ฿{Number(game.minPrice).toLocaleString()}
+                                    เริ่มต้นเพียง ฿{Number(game.minPrice).toLocaleString()}
                                 </div>
                             </div>
                         </Link>
@@ -84,28 +84,28 @@ export function TemplateMinimal({ partner, domain }: TemplateProps) {
             <div className={styles.section}>
                 <div className={styles.sectionHeader}>
                     <div className={styles.sectionIcon}>✨</div>
-                    <h2 className={styles.sectionTitle}>{t.templates.otherServices}</h2>
+                    <h2 className={styles.sectionTitle}>บริการอื่นๆ</h2>
                 </div>
 
                 <div className={styles.grid}>
                     <Link href="#" className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>📱</div>
                         <div className={styles.serviceInfo}>
-                            <h3>{t.templates.mobileTopup}</h3>
+                            <h3>เติมเงินมือถือ</h3>
                             <p>AIS, DTAC, TrueMove</p>
                         </div>
                     </Link>
                     <Link href="#" className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>💳</div>
                         <div className={styles.serviceInfo}>
-                            <h3>{t.templates.billPayment}</h3>
+                            <h3>ชำระบิล</h3>
                             <p>Water, Electric, Internet</p>
                         </div>
                     </Link>
                     <Link href="#" className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>🎁</div>
                         <div className={styles.serviceInfo}>
-                            <h3>{t.templates.giftCards}</h3>
+                            <h3>บัตรของขวัญ</h3>
                             <p>Netflix, Spotify, Apple</p>
                         </div>
                     </Link>

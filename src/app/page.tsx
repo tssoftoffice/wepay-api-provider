@@ -5,27 +5,23 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import styles from './page.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
 
 import Navbar from '@/components/Navbar'
 
 export default function HomePage() {
     const router = useRouter()
-    const { t } = useLanguage()
 
     return (
         <div className={styles.agentContainer}>
             <Navbar />
 
             {/* Hero Section */}
-
-            {/* Hero Section */}
             <section className={styles.hero}>
                 <div className={styles.heroContent}>
-                    <h1 className={styles.animateFadeInUp}>{t.agentLanding.heroTitle}</h1>
-                    <p className={`${styles.animateFadeInUp} ${styles.delay100}`}>{t.agentLanding.heroSubtitle}</p>
+                    <h1 className={styles.animateFadeInUp}>API เติมเกมระดับมืออาชีพ เสถียร ปลอดภัย รองรับการเติบโตของธุรกิจคุณ</h1>
+                    <p className={`${styles.animateFadeInUp} ${styles.delay100}`}>เราให้บริการ API เติมเกมแบบครบวงจรสำหรับผู้ที่ต้องการเปิดเว็บไซต์เติมเกมของตัวเองโดยไม่ต้องดูแลระบบหลังบ้านที่ซับซ้อน</p>
                     <Link href="/register/agent" className={`${styles.ctaButton} ${styles.animateFadeInUp} ${styles.delay200}`}>
-                        {t.agentLanding.heroBtn}
+                        สมัครตัวแทนเลย
                     </Link>
                 </div>
                 <div className={`${styles.heroImage} ${styles.animateFadeInUp} ${styles.delay300}`}>
@@ -41,8 +37,8 @@ export default function HomePage() {
                         <img src="/feature_rocket_orange.png" alt="Start Immediately" className={styles.cardImage} />
                     </div>
                     <div className={styles.cardContent}>
-                        <h3>{t.agentLanding.feature1Title}</h3>
-                        <p>{t.agentLanding.feature1Desc}</p>
+                        <h3>เปิดร้านเติมเกมได้ทันที ไม่ต้องพัฒนาระบบเอง</h3>
+                        <p>พร้อมใช้งานสำหรับผู้เริ่มต้นและเจ้าของร้านออนไลน์</p>
                     </div>
                 </div>
 
@@ -52,8 +48,8 @@ export default function HomePage() {
                         <img src="/feature_auto_orange.png" alt="Auto System" className={styles.cardImage} />
                     </div>
                     <div className={styles.cardContent}>
-                        <h3>{t.agentLanding.feature2Title}</h3>
-                        <p>{t.agentLanding.feature2Desc}</p>
+                        <h3>ระบบเติมเกมอัตโนมัติ 100%</h3>
+                        <p>ทำงานตลอด 24 ชั่วโมง เชื่อมต่อ API โดยตรง</p>
                     </div>
                 </div>
 
@@ -63,8 +59,8 @@ export default function HomePage() {
                         <img src="/feature_profit_orange.png" alt="High Profit" className={styles.cardImage} />
                     </div>
                     <div className={styles.cardContent}>
-                        <h3>{t.agentLanding.feature3Title}</h3>
-                        <p>{t.agentLanding.feature3Desc}</p>
+                        <h3>บริหารกำไรได้เองแบบมืออาชีพ</h3>
+                        <p>ตั้งราคาเอง คุมต้นทุน และขยายธุรกิจได้อิสระ</p>
                     </div>
                 </div>
 
@@ -77,7 +73,7 @@ export default function HomePage() {
             {/* Services Section (New) */}
             <section id="services" className={styles.servicesSection}>
                 <div className={styles.servicesHeader}>
-                    <h2>{t.agentLanding.servicesTitle}</h2>
+                    <h2>บริการของเรา</h2>
                 </div>
                 <div className={styles.servicesGrid}>
                     {/* Service 1: API */}
@@ -85,8 +81,8 @@ export default function HomePage() {
                         <div className={styles.serviceIcon}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
                         </div>
-                        <h3>{t.agentLanding.service1Title}</h3>
-                        <p>{t.agentLanding.service1Desc}</p>
+                        <h3>บริการ API เติมเกม</h3>
+                        <p>ให้บริการระบบ API เติมเกมแบบครบวงจร รองรับการเชื่อมต่อเว็บไซต์เติมเกม รวดเร็ว เสถียร และพร้อมใช้งานเชิงธุรกิจ</p>
                     </div>
 
                     {/* Service 2: Auto */}
@@ -94,8 +90,8 @@ export default function HomePage() {
                         <div className={styles.serviceIcon}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
                         </div>
-                        <h3>{t.agentLanding.service2Title}</h3>
-                        <p>{t.agentLanding.service2Desc}</p>
+                        <h3>ระบบเติมเกมอัตโนมัติ</h3>
+                        <p>ระบบประมวลผลคำสั่งเติมเกมแบบเรียลไทม์ ทำงานอัตโนมัติ 24 ชั่วโมง ช่วยลดขั้นตอนและต้นทุนการดำเนินงาน</p>
                     </div>
 
                     {/* Service 3: Structure */}
@@ -103,8 +99,8 @@ export default function HomePage() {
                         <div className={styles.serviceIcon}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
                         </div>
-                        <h3>{t.agentLanding.service3Title}</h3>
-                        <p>{t.agentLanding.service3Desc}</p>
+                        <h3>โครงสร้างสำหรับเจ้าของเว็บ</h3>
+                        <p>ออกแบบมาเพื่อเจ้าของเว็บไซต์เติมเกมโดยเฉพาะ กำหนดรูปแบบการขายและราคาด้วยตัวเอง พร้อมต่อยอดและขยายธุรกิจในอนาคต</p>
                     </div>
 
                     {/* Service 4: Security */}
@@ -112,8 +108,8 @@ export default function HomePage() {
                         <div className={styles.serviceIcon}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                         </div>
-                        <h3>{t.agentLanding.service4Title}</h3>
-                        <p>{t.agentLanding.service4Desc}</p>
+                        <h3>ความปลอดภัยและความเสถียร</h3>
+                        <p>ระบบมีการตรวจสอบคำสั่งซ้ำและความถูกต้อง ป้องกันข้อผิดพลาดระหว่างการใช้งาน มั่นใจได้ในทุกคำสั่งเติมเกม</p>
                     </div>
                 </div>
             </section>
@@ -122,8 +118,8 @@ export default function HomePage() {
             <section className={styles.aboutSection}>
                 <div className={`${styles.aboutContent} ${styles.animateFadeInUp}`}>
                     <h4>About GamesFlows</h4>
-                    <h2>{t.agentLanding.aboutTitle}</h2>
-                    <p>{t.agentLanding.aboutDesc}</p>
+                    <h2>GamesFlows คืออะไร?</h2>
+                    <p>GamesFlows คือแพลตฟอร์มเติมเกมที่ทันสมัยที่สุด เรามุ่งมั่นที่จะให้บริการที่รวดเร็ว ปลอดภัย และคุ้มค่าที่สุดสำหรับเกมเมอร์ทุกคน ด้วยระบบอัตโนมัติที่ทำงานตลอด 24 ชั่วโมง คุณจึงมั่นใจได้ว่าธุรกิจของคุณจะดำเนินไปได้อย่างราบรื่นไม่มีสะดุด มาร่วมเป็นส่วนหนึ่งกับเราและเติบโตไปด้วยกัน</p>
                 </div>
                 <div className={styles.aboutImage}>
                     <div className={`${styles.placeholderImage} ${styles.animateFadeInUp} ${styles.delay200}`}>

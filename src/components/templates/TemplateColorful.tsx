@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './TemplateColorful.module.css'
 
 interface TemplateProps {
@@ -11,7 +11,7 @@ interface TemplateProps {
 }
 
 export function TemplateColorful({ partner, domain }: TemplateProps) {
-    const { t } = useLanguage()
+
 
     return (
         <div className={styles.container}>
@@ -24,7 +24,7 @@ export function TemplateColorful({ partner, domain }: TemplateProps) {
                 )}
                 <h1 className={styles.storeName}>{partner.name}</h1>
                 <p className={styles.storeDesc}>
-                    {t.templates.welcomeMessage.replace('{storeName}', partner.name)}
+                    {`ยินดีต้อนรับสู่ ${partner.name} เราให้บริการเติมเกมที่ดีที่สุด ส่งทันที และปลอดภัย`}
                 </p>
             </header>
 
@@ -33,7 +33,7 @@ export function TemplateColorful({ partner, domain }: TemplateProps) {
                 <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.sectionIcon}>🎮</span>
-                        {t.templates.gameTopup}
+                        บริการเติมเกมออนไลน์
                     </h2>
                 </div>
 

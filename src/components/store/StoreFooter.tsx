@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './StoreFooter.module.css'
 
 interface StoreFooterProps {
@@ -13,7 +13,7 @@ interface StoreFooterProps {
 }
 
 export function StoreFooter({ partner }: StoreFooterProps) {
-    const { t } = useLanguage()
+
     const currentYear = new Date().getFullYear()
 
     return (
@@ -23,31 +23,31 @@ export function StoreFooter({ partner }: StoreFooterProps) {
                     <div className={styles.brandSection}>
                         <h3>{partner.name}</h3>
                         <p className={styles.description}>
-                            {t.templates.welcomeMessage.replace('{storeName}', partner.name)}
+                            {`ยินดีต้อนรับสู่ ${partner.name} เราให้บริการเติมเกมที่ดีที่สุด ส่งทันที และปลอดภัย`}
                         </p>
                     </div>
 
                     <div className={styles.linksSection}>
                         <div className={styles.linkGroup}>
-                            <h4>{t.navbar.services}</h4>
+                            <h4>บริการของเรา</h4>
                             <div className={styles.links}>
                                 <Link href={`/store/${partner.domain}/games`} className={styles.link}>
-                                    {t.navbar.gameTopup}
+                                    เติมเกมส์ออนไลน์
                                 </Link>
                                 <Link href={`/store/${partner.domain}/customer/topup`} className={styles.link}>
-                                    {t.navbar.topup}
+                                    เติมเครดิต
                                 </Link>
                             </div>
                         </div>
 
                         <div className={styles.linkGroup}>
-                            <h4>{t.navbar.contact}</h4>
+                            <h4>ติดต่อเรา</h4>
                             <div className={styles.links}>
                                 <Link href={`/store/${partner.domain}/contact`} className={styles.link}>
-                                    {t.navbar.contact}
+                                    ติดต่อเรา
                                 </Link>
                                 <Link href={`/store/${partner.domain}/faq`} className={styles.link}>
-                                    {t.navbar.faq}
+                                    Q&A คำถามยอดฮิต
                                 </Link>
                             </div>
                         </div>

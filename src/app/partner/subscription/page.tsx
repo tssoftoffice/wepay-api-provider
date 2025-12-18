@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './page.module.css'
 import { getActivePlans } from './actions'
 
 export default function SubscriptionPage() {
-    const { t } = useLanguage()
+
     const [loading, setLoading] = useState(false)
     const [plans, setPlans] = useState<any[]>([])
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
@@ -87,7 +87,7 @@ export default function SubscriptionPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>{t.subscription.title}</h1>
+            <h1 className={styles.title}>สมัครสมาชิก / ต่ออายุ</h1>
 
             <div style={{ display: 'grid', gap: '20px' }}>
                 {plans.length === 0 ? (
@@ -132,7 +132,7 @@ export default function SubscriptionPage() {
                                         disabled={loading}
                                         className={styles.renewButton}
                                     >
-                                        {loading ? t.subscription.processing : `${t.subscription.renew} (${parseInt(plan.price)} THB)`}
+                                        {loading ? 'กำลังดำเนินการ...' : `ต่ออายุ (${parseInt(plan.price)} บาท)`}
                                     </Button>
                                 </div>
                             )}
@@ -146,14 +146,14 @@ export default function SubscriptionPage() {
                     {isSuccess ? (
                         <div style={{ textAlign: 'center', padding: '2rem' }}>
                             <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
-                            <h3 style={{ color: '#10b981', fontSize: '1.5rem', marginBottom: '0.5rem' }}>{t.subscription.paymentSuccess}</h3>
-                            <p style={{ color: '#6b7280' }}>{t.subscription.redirecting}</p>
+                            <h3 style={{ color: '#10b981', fontSize: '1.5rem', marginBottom: '0.5rem' }}>ชำระเงินสำเร็จ</h3>
+                            <p style={{ color: '#6b7280' }}>กำลังกลับหน้าหลัก...</p>
                         </div>
                     ) : (
                         qrCode && (
                             <>
                                 <div className={styles.qrHeader}>
-                                    <div className={styles.qrTitle}>{t.subscription.totalPayment}</div>
+                                    <div className={styles.qrTitle}>ยอดชำระทั้งหมด</div>
                                     <div className={styles.qrAmount}>
                                         ฿{selectedPlanDetails ? Number(selectedPlanDetails.price).toLocaleString(undefined, { minimumFractionDigits: 2 }) : '0.00'}
                                     </div>
@@ -169,13 +169,13 @@ export default function SubscriptionPage() {
 
                                 <div style={{ textAlign: 'center' }}>
                                     <div className={styles.qrRef}>
-                                        {t.subscription.ref} {transactionId}
+                                        รหัสอ้างอิง {transactionId}
                                     </div>
                                     <p className={styles.instruction} style={{ fontSize: '1rem', fontWeight: 500, color: '#334155' }}>
-                                        {t.subscription.scanInstruction}
+                                        สแกนเพื่อชำระเงิน
                                     </p>
                                     <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.5rem' }}>
-                                        {t.subscription.timeLimit}
+                                        กรุณาชำระเงินภายในเวลาที่กำหนด
                                     </p>
                                 </div>
                             </>

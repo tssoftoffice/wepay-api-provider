@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './TemplateModern.module.css'
 
 interface TemplateProps {
@@ -11,7 +11,7 @@ interface TemplateProps {
 }
 
 export function TemplateModern({ partner, domain }: TemplateProps) {
-    const { t } = useLanguage()
+
 
     return (
         <div className={styles.container}>
@@ -24,12 +24,12 @@ export function TemplateModern({ partner, domain }: TemplateProps) {
                         <div className={styles.partnerLogoPlaceholder}>{partner.name.charAt(0)}</div>
                     )}
                     <h1>{partner.name}</h1>
-                    <h2>{t.templates.gameTopupStation}</h2>
+                    <h2>สถานีเติมเกมออนไลน์</h2>
                     <p className={styles.heroSubtitle}>
-                        {t.templates.fastSecureReliable}
+                        รวดเร็ว • ปลอดภัย • เชื่อถือได้
                     </p>
                     <Link href="#games">
-                        <button className={styles.shopNowBtn}>{t.templates.topupNow}</button>
+                        <button className={styles.shopNowBtn}>เติมเงินเลย</button>
                     </Link>
                 </div>
             </header>
@@ -38,26 +38,26 @@ export function TemplateModern({ partner, domain }: TemplateProps) {
             <section className={styles.highlights}>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>⚡</span>
-                    <span>{t.templates.autoSystem}</span>
+                    <span>ระบบทำรายการอัตโนมัติ</span>
                 </div>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>💰</span>
-                    <span>{t.templates.bestPrice}</span>
+                    <span>ราคาคุ้มค่าที่สุด</span>
                 </div>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>🛡️</span>
-                    <span>{t.templates.secure100}</span>
+                    <span>ปลอดภัย 100%</span>
                 </div>
                 <div className={styles.highlightItem}>
                     <span className={styles.icon}>🎧</span>
-                    <span>{t.templates.support247}</span>
+                    <span>บริการลูกค้า 24/7</span>
                 </div>
             </section>
 
             {/* Game Grid */}
             <main className={styles.main} id="games">
                 <div className={styles.sectionHeader}>
-                    <h3>{t.templates.gameTopup}</h3>
+                    <h3>บริการเติมเกมออนไลน์</h3>
                 </div>
 
                 <div className={styles.gameGrid}>

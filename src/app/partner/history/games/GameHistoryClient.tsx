@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import styles from './history.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import { getGameTransactions } from './actions'
 import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export function GameHistoryClient({ initialData = [] }: Props) {
-    const { t } = useLanguage()
+
 
     // State
     const [data, setData] = useState<Transaction[]>(initialData)
@@ -81,22 +81,22 @@ export function GameHistoryClient({ initialData = [] }: Props) {
                         <tr>
                             <th onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {t.gameTopupHistory.date} {renderSortIcon('createdAt')}
+                                    วันที่ {renderSortIcon('createdAt')}
                                 </div>
                             </th>
-                            <th>{t.gameTopupHistory.txnId}</th>
-                            <th>{t.gameTopupHistory.game}</th>
-                            <th>{t.gameTopupHistory.target}</th>
+                            <th>เลขที่รายการ</th>
+                            <th>เกม</th>
+                            <th>เป้าหมาย</th>
                             <th>Cost</th>
                             <th onClick={() => handleSort('sellPrice')} style={{ cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {t.gameTopupHistory.amount} {renderSortIcon('sellPrice')}
+                                    จำนวนเงิน {renderSortIcon('sellPrice')}
                                 </div>
                             </th>
                             <th>Profit</th>
                             <th onClick={() => handleSort('status')} style={{ cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {t.gameTopupHistory.status} {renderSortIcon('status')}
+                                    สถานะ {renderSortIcon('status')}
                                 </div>
                             </th>
                         </tr>
@@ -109,7 +109,7 @@ export function GameHistoryClient({ initialData = [] }: Props) {
                         ) : data.length === 0 ? (
                             <tr>
                                 <td colSpan={8} className={styles.emptyState}>
-                                    {t.gameTopupHistory.noHistory}
+                                    ไม่พบประวัติการเติมเกม
                                 </td>
                             </tr>
                         ) : (

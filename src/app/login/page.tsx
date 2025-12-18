@@ -7,14 +7,13 @@ import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import Link from 'next/link'
 import styles from './page.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import { useAuth } from '@/contexts/AuthContext'
 
 const colors = ['#f59e0b', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6']
 
 function LoginForm() {
     const router = useRouter()
-    const { t } = useLanguage()
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -112,14 +111,14 @@ function LoginForm() {
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
                         <img src="/logo.jpg" alt="GamesFlows Logo" style={{ width: '120px', height: 'auto', borderRadius: '50%' }} />
                     </div>
-                    <h1 className={styles.title}>{t.auth.loginTitle}</h1>
-                    <p className={styles.subtitle}>{t.auth.loginSubtitle}</p>
+                    <h1 className={styles.title}>เข้าสู่ระบบ</h1>
+                    <p className={styles.subtitle}>ยินดีต้อนรับกลับ! กรุณาเข้าสู่ระบบ</p>
 
                     {error && <div className={styles.error}>{error}</div>}
 
                     <form onSubmit={handleSubmit} className={styles.form}>
                         <div className={styles.inputGroup}>
-                            <label className={styles.label}>{t.auth.username}</label>
+                            <label className={styles.label}>ชื่อผู้ใช้</label>
                             <input
                                 className={styles.input}
                                 name="username"
@@ -130,7 +129,7 @@ function LoginForm() {
                             />
                         </div>
                         <div className={styles.inputGroup}>
-                            <label className={styles.label}>{t.auth.password}</label>
+                            <label className={styles.label}>รหัสผ่าน</label>
                             <input
                                 className={styles.input}
                                 name="password"
@@ -143,20 +142,20 @@ function LoginForm() {
                         </div>
 
                         <button type="submit" disabled={loading} className={styles.submitButton}>
-                            {loading ? t.auth.loggingIn : t.auth.login}
+                            {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
                         </button>
 
                     </form>
 
                     <div style={{ marginTop: '20px', textAlign: 'center', position: 'relative', zIndex: 50 }}>
                         <Link href="/forgot-password" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, display: 'inline-block', padding: '5px' }}>
-                            {t.auth.forgotPassword || 'ลืมรหัสผ่าน?'}
+                            {'ลืมรหัสผ่าน?'}
                         </Link>
                     </div>
 
                     <div className={styles.footer}>
                         <p className={styles.agentLink} style={{ fontSize: '0.95rem' }}>
-                            {t.auth.wantToBeAgent} <Link href="/register/agent" className={styles.link}>{t.auth.applyHere}</Link>
+                            อยากเป็นตัวแทนจำหน่าย? <Link href="/register/agent" className={styles.link}>สมัครที่นี่</Link>
                         </p>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import styles from '../games/history.module.css'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import { getTopupTransactions } from './actions'
 import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function TopupHistoryClient({ initialData = [] }: Props) {
-    const { t } = useLanguage()
+
 
     // State
     const [data, setData] = useState<Transaction[]>(initialData)
@@ -76,19 +76,19 @@ export function TopupHistoryClient({ initialData = [] }: Props) {
                         <tr>
                             <th onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {t.partnerCreditHistory.date} {renderSortIcon('createdAt')}
+                                    วันที่ {renderSortIcon('createdAt')}
                                 </div>
                             </th>
-                            <th>{t.partnerCreditHistory.txnId}</th>
-                            <th>{t.partnerCreditHistory.providerTxnId}</th>
+                            <th>เลขที่รายการ</th>
+                            <th>เลขอ้างอิงผู้ให้บริการ</th>
                             <th onClick={() => handleSort('amount')} style={{ cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {t.partnerCreditHistory.amount} {renderSortIcon('amount')}
+                                    จำนวนเงิน {renderSortIcon('amount')}
                                 </div>
                             </th>
                             <th onClick={() => handleSort('status')} style={{ cursor: 'pointer' }}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    {t.partnerCreditHistory.status} {renderSortIcon('status')}
+                                    สถานะ {renderSortIcon('status')}
                                 </div>
                             </th>
                         </tr>
@@ -101,7 +101,7 @@ export function TopupHistoryClient({ initialData = [] }: Props) {
                         ) : data.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className={styles.emptyState}>
-                                    {t.partnerCreditHistory.noHistory}
+                                    ไม่พบประวัติการเติมเครดิต
                                 </td>
                             </tr>
                         ) : (

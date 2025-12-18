@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './page.module.css'
 import { Copy, Check, Save } from 'lucide-react'
 
 export default function PartnerSettingsPage() {
-    const { t } = useLanguage()
+
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
@@ -112,7 +112,7 @@ export default function PartnerSettingsPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>{t.settings.title}</h1>
+            <h1 className={styles.title}>ตั้งค่าร้านค้า</h1>
 
             <Card className={styles.card}>
                 {message && (

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './TemplateDark.module.css'
 
 interface TemplateProps {
@@ -11,7 +11,7 @@ interface TemplateProps {
 }
 
 export function TemplateDark({ partner, domain }: TemplateProps) {
-    const { t } = useLanguage()
+
 
     return (
         <div className={styles.container}>
@@ -25,7 +25,7 @@ export function TemplateDark({ partner, domain }: TemplateProps) {
                     )}
                     <h1 className={styles.storeName}>{partner.name}</h1>
                     <p className={styles.storeDesc}>
-                        {t.templates.welcomeMessage.replace('{storeName}', partner.name)}
+                        {`ยินดีต้อนรับสู่ ${partner.name} เราให้บริการเติมเกมที่ดีที่สุด ส่งทันที และปลอดภัย`}
                     </p>
                 </div>
             </header>
@@ -35,7 +35,7 @@ export function TemplateDark({ partner, domain }: TemplateProps) {
                 <div className={styles.sectionHeader}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.sectionIcon}>🎮</span>
-                        {t.templates.gameTopup}
+                        บริการเติมเกมออนไลน์
                     </h2>
                 </div>
 
@@ -51,7 +51,7 @@ export function TemplateDark({ partner, domain }: TemplateProps) {
                             </div>
                             <div className={styles.cardContent}>
                                 <div className={styles.cardTitle}>{game.name}</div>
-                                <div className={styles.cardPrice}>{t.templates.startFrom.replace('{price}', game.minPrice)}</div>
+                                <div className={styles.cardPrice}>เริ่มต้น {game.minPrice} บาท</div>
                             </div>
                         </Link>
                     ))}

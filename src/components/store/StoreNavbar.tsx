@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useLanguage } from '@/contexts/LanguageContext'
+
 import styles from './StoreNavbar.module.css'
 
 interface StoreNavbarProps {
@@ -19,7 +19,6 @@ interface StoreNavbarProps {
 }
 
 export function StoreNavbar({ partner, customer }: StoreNavbarProps) {
-    const { t, language, setLanguage } = useLanguage()
     const pathname = usePathname()
 
     const isActive = (path: string) => pathname === path
@@ -44,52 +43,38 @@ export function StoreNavbar({ partner, customer }: StoreNavbarProps) {
                             href={`/store/${partner.domain}`}
                             className={`${styles.navLink} ${isActive(`/store/${partner.domain}`) ? styles.activeLink : ''}`}
                         >
-                            {t.navbar.home}
+                            หน้าหลัก
                         </Link>
                         <Link
                             href={`/store/${partner.domain}/cashcard`}
                             className={`${styles.navLink} ${isActive(`/store/${partner.domain}/cashcard`) ? styles.activeLink : ''}`}
                         >
-                            {t.navbar.cashCard}
+                            บัตรเงินสด
                         </Link>
                         <Link
                             href={`/store/${partner.domain}/mobile`}
                             className={`${styles.navLink} ${isActive(`/store/${partner.domain}/mobile`) ? styles.activeLink : ''}`}
                         >
-                            {t.navbar.mobileTopup}
+                            เติมเงิน / ซื้อแพคเกจเน็ต
                         </Link>
                         <Link
                             href={`/store/${partner.domain}/customer/topup`}
                             className={`${styles.navLink} ${isActive(`/store/${partner.domain}/customer/topup`) ? styles.activeLink : ''}`}
                         >
-                            {t.navbar.topup}
+                            เติมเครดิต
                         </Link>
                         <Link
                             href={`/store/${partner.domain}/contact`}
                             className={`${styles.navLink} ${isActive(`/store/${partner.domain}/contact`) ? styles.activeLink : ''}`}
                         >
-                            {t.navbar.contact}
+                            ติดต่อเรา
                         </Link>
                     </div>
                 </div>
 
                 <div className={styles.rightSection}>
                     {/* Language Switcher */}
-                    <div className={styles.langSwitcher}>
-                        <button
-                            onClick={() => setLanguage('th')}
-                            className={`${styles.langBtn} ${language === 'th' ? styles.activeLang : ''}`}
-                        >
-                            TH
-                        </button>
-                        <span className={styles.divider}>|</span>
-                        <button
-                            onClick={() => setLanguage('en')}
-                            className={`${styles.langBtn} ${language === 'en' ? styles.activeLang : ''}`}
-                        >
-                            EN
-                        </button>
-                    </div>
+
 
                     {/* Auth Buttons or User Info */}
                     {customer ? (
@@ -109,10 +94,10 @@ export function StoreNavbar({ partner, customer }: StoreNavbarProps) {
                     ) : (
                         <div className={styles.authButtons}>
                             <Link href={`/store/${partner.domain}/customer/login`}>
-                                <button className={styles.loginBtn}>{t.navbar.login}</button>
+                                <button className={styles.loginBtn}>เข้าสู่ระบบ</button>
                             </Link>
                             <Link href={`/store/${partner.domain}/customer/register`}>
-                                <button className={styles.registerBtn}>{t.navbar.registerMember}</button>
+                                <button className={styles.registerBtn}>สมัครสมาชิก</button>
                             </Link>
                         </div>
                     )}
