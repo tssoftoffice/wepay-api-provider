@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState, use } from 'react'
-import { getPartnerDetails, updatePartner, resetPartnerUserPassword } from '../actions'
-import { ArrowLeft, User, Building2, Wallet, CheckCircle, Clock, CreditCard, ExternalLink, Settings, Save, Key, Lock } from 'lucide-react'
+import { getPartnerDetails, updatePartner, resetPartnerUserPassword, adjustPartnerBalance } from '../actions'
+import { ArrowLeft, User, Building2, Wallet, CheckCircle, Clock, CreditCard, ExternalLink, Settings, Save, Key, Lock, Pencil } from 'lucide-react'
+import { Modal } from '@/components/ui/Modal'
+import { Button } from '@/components/ui/Button'
 
 // ... (Rest of imports)
 
@@ -126,7 +128,12 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
     const { id } = use(params)
     const [partner, setPartner] = useState<any>(null)
     const [loading, setLoading] = useState(true)
+
     const [activeTab, setActiveTab] = useState('overview')
+    const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false)
+    const [adjustAmount, setAdjustAmount] = useState('')
+    const [adjustNote, setAdjustNote] = useState('')
+    const [adjustLoading, setAdjustLoading] = useState(false)
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -163,6 +170,26 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                 <div className={styles.walletCard}>
                     <div style={{ fontSize: 12, opacity: 0.8 }}>ยอดเงินในกระเป๋า</div>
                     <div style={{ fontSize: 24, fontWeight: 'bold' }}>฿{partner.walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</div>
+                    <button
+                        onClick={() => setIsAdjustModalOpen(true)}
+                        style={{
+                            marginTop: 8,
+                            width: '100%',
+                            padding: '6px',
+                            background: 'rgba(255,255,255,0.2)',
+                            border: 'none',
+                            color: 'white',
+                            borderRadius: 4,
+                            cursor: 'pointer',
+                            fontSize: 12,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 4
+                        }}
+                    >
+                        <Pencil size={12} /> ปรับยอดเงิน
+                    </button>
                 </div>
             </div>
 
@@ -405,6 +432,79 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                 )
             }
 
+
+
+            <Modal
+                isOpen={isAdjustModalOpen}
+                onClose={() => setIsAdjustModalOpen(false)}
+                title="ปรับยอดเงินในกระเป๋า (Adjust Wallet Balance)"
+                footer={
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                        <Button variant="outline" onClick={() => setIsAdjustModalOpen(false)}>ยกเลิก</Button>
+                        <Button
+                            onClick={async () => {
+                                if (!adjustAmount || Number(adjustAmount) === 0) return alert('กรุณาระบุจำนวนเงิน')
+                                if (!adjustNote) return alert('กรุณาระบุหมายเหตุ')
+
+                                setAdjustLoading(true)
+                                const res = await adjustPartnerBalance(id, Number(adjustAmount), adjustNote)
+                                setAdjustLoading(false)
+
+                                if (res.success) {
+                                    alert('ปรับยอดเงินเรียบร้อยแล้ว')
+                                    setIsAdjustModalOpen(false)
+                                    setAdjustAmount('')
+                                    setAdjustNote('')
+                                    window.location.reload()
+                                } else {
+                                    alert('เกิดข้อผิดพลาด: ' + res.error)
+                                }
+                            }}
+                            disabled={adjustLoading}
+                        >
+                            {adjustLoading ? 'กำลังบันทึก...' : 'ยืนยัน'}
+                        </Button>
+                    </div>
+                }
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div>
+                        <label style={{ display: 'block', fontSize: 13, marginBottom: 6, fontWeight: 500 }}>จำนวนเงิน (บาท)</label>
+                        <input
+                            type="number"
+                            value={adjustAmount}
+                            onChange={e => setAdjustAmount(e.target.value)}
+                            placeholder="เช่น 100 หรือ -50"
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                borderRadius: 6,
+                                border: '1px solid #cbd5e1',
+                                fontSize: 14
+                            }}
+                        />
+                        <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                            * ใส่จำนวนบวกเพื่อเพิ่มเงิน, จำนวนลบเพื่อหักเงิน
+                        </div>
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', fontSize: 13, marginBottom: 6, fontWeight: 500 }}>หมายเหตุ (Reason)</label>
+                        <input
+                            type="text"
+                            value={adjustNote}
+                            onChange={e => setAdjustNote(e.target.value)}
+                            placeholder="ระบุสาเหตุการปรับยอด"
+                            style={{
+                                width: '100%',
+                                padding: '10px',
+                                borderRadius: 6,
+                                border: '1px solid #cbd5e1',
+                                fontSize: 14
+                            }}
+                        />
+                    </div>
+                </div>
+            </Modal>
         </div >
     )
 }

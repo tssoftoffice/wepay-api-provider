@@ -34,6 +34,15 @@ export async function POST(request: Request) {
             }
         })
 
+        // Notify Admin
+        await prisma.notification.create({
+            data: {
+                title: 'New Topup Request',
+                message: `Customer ${user.username} requested topup of ${amount} THB`,
+                type: 'TOPUP_REQUEST'
+            }
+        })
+
         return NextResponse.json({ success: true, requestId: topupRequest.id })
 
     } catch (error: any) {

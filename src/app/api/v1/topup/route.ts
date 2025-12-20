@@ -90,9 +90,9 @@ export async function POST(req: NextRequest) {
             })
 
             const wepayRes = await WePayClient.makePayment({
-                destRef: Date.now().toString(), // Short unique ID
+                destRef: transaction.id, // Use Transaction ID as Reference
                 type: parts[0] as any,
-                amount: wePayAmount, // Use faceValue for WePay (integer denomination)
+                amount: wePayAmount,
                 company: company,
                 ref1: player_id,
                 ref2: server || undefined

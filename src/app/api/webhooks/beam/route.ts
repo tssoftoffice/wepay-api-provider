@@ -12,6 +12,65 @@ export async function POST(request: Request) {
         const logPath = path.join(process.cwd(), 'webhook.log')
         await fs.appendFile(logPath, JSON.stringify(body, null, 2) + '\n---\n')
 
+        // === HANDLE WEPAY CALLBACK ===
+        // WePay usually sends: dest_ref, status (00000=success), transaction_id, etc.
+        // We assume 'dest_ref' is our GameTopupTransaction.id
+        if (body.dest_ref) {
+            const { dest_ref, status: wepayStatus, ref1, ref2 } = body
+
+            // Check WePay Status (00000 = Success)
+            const isWePaySuccess = wepayStatus === '00000'
+
+            const gameTxn = await prisma.gameTopupTransaction.findUnique({
+                where: { id: dest_ref },
+                include: { partner: true, game: true }
+            })
+
+            if (gameTxn) {
+                // If incoming is Success and we are already Success, ignore.
+                if (gameTxn.status === 'SUCCESS' && isWePaySuccess) {
+                    return NextResponse.json({ message: 'Already processed (Success)' })
+                }
+                // If we are already Failed, ignore everything
+                if (gameTxn.status === 'FAILED') {
+                    return NextResponse.json({ message: 'Already processed (Failed)' })
+                }
+
+                // Allow transition: PENDING -> SUCCESS/FAILED
+                // Allow transition: SUCCESS -> FAILED (Correction/Refund)
+
+                const newStatus = isWePaySuccess ? 'SUCCESS' : 'FAILED'
+
+                await prisma.gameTopupTransaction.update({
+                    where: { id: dest_ref },
+                    data: {
+                        status: newStatus,
+                        providerTxnId: body.transaction_id || gameTxn.providerTxnId
+                    }
+                })
+
+                if (isWePaySuccess) {
+                    console.log(`Game topup success for ${gameTxn.targetId} (Txn: ${dest_ref})`)
+                    // Note: Wallet was already deducted in v1/topup/route.ts.
+                    // If we want to refund on failure, we should add logic here.
+                } else {
+                    console.log(`Game topup failed for ${gameTxn.targetId} (Txn: ${dest_ref}). WePay Status: ${wepayStatus}`)
+                    // Logic for REFUND if failed (Optional but recommended)
+                    // If failed, we should refund the partner.
+                    if (gameTxn.status !== 'FAILED') { // Only refund once
+                        await prisma.partner.update({
+                            where: { id: gameTxn.partnerId },
+                            data: { walletBalance: { increment: gameTxn.baseCost } }
+                        })
+                        console.log(`Refunded ${gameTxn.baseCost} to partner ${gameTxn.partnerId}`)
+                    }
+                }
+
+                return NextResponse.json({ received: true, status: newStatus })
+            }
+        }
+
+        // === EXISTING BEAM HANDLING ===
         const { referenceId, status } = body
 
         // Check if status is success
@@ -51,6 +110,15 @@ export async function POST(request: Request) {
                     }
                 })
                 console.log(`Subscription renewed for partner ${subscriptionTxn.partnerId}`)
+
+                // Notify Admin
+                await prisma.notification.create({
+                    data: {
+                        title: 'Subscription Renewed',
+                        message: `Partner ${subscriptionTxn.partner.name} renewed subscription`,
+                        type: 'SUBSCRIPTION_RENEW'
+                    }
+                })
             }
             return NextResponse.json({ received: true })
         }
@@ -82,6 +150,15 @@ export async function POST(request: Request) {
                     }
                 })
                 console.log(`Wallet topped up for partner ${topupTxn.partnerId} amount ${topupTxn.amount}`)
+
+                // Notify Admin
+                await prisma.notification.create({
+                    data: {
+                        title: 'Partner Wallet Topup',
+                        message: `Partner ${topupTxn.partner.name} topped up ${topupTxn.amount} THB`,
+                        type: 'PARTNER_TOPUP'
+                    }
+                })
             }
             return NextResponse.json({ received: true })
         }
