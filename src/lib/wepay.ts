@@ -1,4 +1,5 @@
 import axios from 'axios'
+import FormData from 'form-data'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import { getWePayErrorMessage } from './wepay-errors'
 
@@ -15,7 +16,7 @@ interface WePayResponse {
 
 interface MakePaymentParams {
     destRef: string
-    type: 'billpay' | 'mtopup' | 'cashcard'
+    type: 'billpay' | 'mtopup' | 'cashcard' | 'gtopup'
     amount: number
     company: string
     ref1: string
@@ -36,12 +37,18 @@ export class WePayClient {
 
         Object.keys(params).forEach(key => {
             if (params[key] !== undefined) {
-                formData.append(key, params[key])
+                formData.append(key, String(params[key])) // Ensure string conversation
             }
         })
 
         const config: any = {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: {
+                ...formData.getHeaders(),
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*'
+            },
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity
         }
 
         if (PROXY_URL) {
