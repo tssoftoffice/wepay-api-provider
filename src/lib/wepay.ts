@@ -41,6 +41,15 @@ export class WePayClient {
             }
         })
 
+        // Create a custom HTTPS Agent to handle legacy server compatibility
+        const https = require('https')
+        const httpsAgent = new https.Agent({
+            // Allow legacy ciphers (Node 18+ defaults to OpenSSL 3 which is strict)
+            ciphers: 'DEFAULT:@SECLEVEL=1',
+            minVersion: 'TLSv1',
+            rejectUnauthorized: false
+        })
+
         const config: any = {
             headers: {
                 ...formData.getHeaders(),
@@ -48,10 +57,15 @@ export class WePayClient {
                 'Accept': 'application/json, text/plain, */*'
             },
             maxBodyLength: Infinity,
-            maxContentLength: Infinity
+            maxContentLength: Infinity,
+            httpsAgent: httpsAgent
         }
 
         if (PROXY_URL) {
+            // Note: If using Proxy, socks-proxy-agent handles the connection. 
+            // We need to pass these SSL options to the proxy agent if possible, 
+            // BUT socks-proxy-agent might override httpsAgent.
+            // In Production, usually we DON'T use usage proxy (PROXY_URL is undefined).
             const agent = new SocksProxyAgent(PROXY_URL)
             config.httpsAgent = agent
             config.httpAgent = agent
