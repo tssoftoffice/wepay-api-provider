@@ -22,7 +22,7 @@ const kanit = Kanit({
 });
 
 export const metadata: Metadata = {
-  title: "EvoPlayShop - Game Topup",
+  title: "GamesFlows Platform",
   description: "Best rates for game topup. Automatic system 24/7.",
 };
 
