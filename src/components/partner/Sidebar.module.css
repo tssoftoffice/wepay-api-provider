@@ -26,8 +26,28 @@
 }
 
 .logo {
-    padding: 2rem;
+    padding: 1.25rem;
     border-bottom: 1px solid #374151;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brandText {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.brandSubDetails {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    margin: 0;
 }
 
 .logoText {

@@ -120,8 +120,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
                 <div className={styles.logo}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                            <img src="/logo.jpg" alt="Partner Panel" style={{ height: '40px', width: 'auto', borderRadius: '50%' }} />
+                        <div className={styles.brand}>
+                            <img src="/logo.jpg" alt="GamesFlows Partner" style={{ height: '40px', width: 'auto', borderRadius: '50%' }} />
+                            <div>
+                                <p className={styles.brandText}>GamesFlows</p>
+                                <p className={styles.brandSubDetails}>Partner Panel</p>
+                            </div>
                         </div>
                         {/* Close button for mobile */}
                         <div
