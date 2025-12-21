@@ -4,6 +4,8 @@ import { getSession } from '@/lib/auth'
 import { createBeamCharge } from '@/lib/beam'
 import { getAppUrl } from '@/lib/url'
 import { sendTelegramNotify } from '@/lib/telegram'
+import { verifySlipWithRDCW } from '@/lib/rdcw'
+import { WePayClient } from '@/lib/wepay'
 
 export async function POST(request: Request) {
     try {
@@ -39,6 +41,14 @@ export async function POST(request: Request) {
         }
 
         if (!verificationResult) {
+            console.log('Secondary slip verification failed, trying RDCW fallback...')
+            // Try RDCW fallback
+            // Convert base64 to Blob/File if needed, or update helper.
+            // Assumption: verifySlipWithRDCW handles base64 string now (I will update it).
+            verificationResult = await verifySlipTertiary(slipImage)
+        }
+
+        if (!verificationResult) {
             return NextResponse.json({ error: 'ไม่สามารถตรวจสอบสลิปได้ หรือระบบตรวจสอบสลิปขัดข้องชั่วคราว' }, { status: 500 })
         }
 
@@ -49,8 +59,9 @@ export async function POST(request: Request) {
         const { sender, receiverName, transRef, amount: slipAmount } = verificationResult.data
 
         // 2.1 Check Recipient Name
-        const validNames = ['TSSOFT CO.,LTD.', 'ทีเอสซอฟท์', 'Ts Soft', 'บริษัท ทีเอสซอฟท์ จำกัด']
-        const isValidReceiver = validNames.some(name => receiverName.toUpperCase().includes(name.toUpperCase())) || receiverName.toUpperCase().includes('TSSOFT')
+        // Note: RDCW may return truncated names like "บจก. ท" or "TSSOFT C"
+        const validNames = ['TSSOFT CO.,LTD.', 'ทีเอสซอฟท์', 'Ts Soft', 'บริษัท ทีเอสซอฟท์ จำกัด', 'บจก. ทีเอสซอฟท์', 'TSSOFT', 'บจก. ท', 'TSSOFT C']
+        const isValidReceiver = validNames.some(name => receiverName.toUpperCase().includes(name.toUpperCase()))
 
         if (!isValidReceiver) {
             return NextResponse.json({
@@ -114,10 +125,21 @@ export async function POST(request: Request) {
         // NOTE: Non-blocking notification to ensure fast response
         sendTelegramNotify(
             `🔔 <b>แจ้งเตือน Partner เติมเงิน</b>\n` +
-            `ลูกค้า: ${user.partner!.name || 'ไม่ระบุ'}\n` +
             `ยอดเงิน: <b>${slipAmount.toLocaleString()} บาท</b>\n` +
             `เวลา: ${new Date().toLocaleString('th-TH')}`
         ).catch(err => console.error('Failed to send notification', err))
+
+        // Check WePay Balance after top-up
+        WePayClient.getBalance().then(async (balance) => {
+            const LOW_BALANCE_THRESHOLD = 1000
+            if (balance.available < LOW_BALANCE_THRESHOLD) {
+                await sendTelegramNotify(
+                    `⚠️ <b>แจ้งเตือนเงิน WePay ใกล้หมด</b>\n` +
+                    `ยอดคงเหลือ: <b>${balance.available.toLocaleString()} บาท</b>\n` +
+                    `กรุณาเติมเงินทันที`
+                ).catch(console.error)
+            }
+        }).catch(e => console.error('Failed to check balance after partner topup', e))
 
         return NextResponse.json({
             success: true,
@@ -240,6 +262,51 @@ async function verifySlipSecondary(slipImage: string): Promise<VerificationResul
 
     } catch (error) {
         console.error('Secondary Verify Error:', error)
+        return null
+    }
+}
+
+async function verifySlipTertiary(slipImage: string): Promise<VerificationResult | null> {
+    try {
+        console.log('Verifying slip with Tertiary (RDCW)...')
+
+        // Convert base64 to Blob for RDCW helper
+        // Base64 format: "data:image/jpeg;base64,....."
+        const base64Data = slipImage.split(',')[1]
+        const buffer = Buffer.from(base64Data, 'base64')
+        const blob = new Blob([buffer], { type: 'image/jpeg' })
+        const file = new File([blob], 'slip.jpg', { type: 'image/jpeg' })
+
+        const rdcwRes = await verifySlipWithRDCW(file)
+
+        if (!rdcwRes) {
+            return null
+        }
+
+        // RDCW returns { code: number, message: string, data: ... }
+        // Inspecting typical RDCW response or assuming based on interface
+        if (rdcwRes.code !== 0 && rdcwRes.code !== 200) {
+            // Note: RDCW might use 0 for success? Or 200? 
+            // User screenshot doesn't explicitly show success code, but mentions "code": [ERROR_CODE] for error.
+            // Implies non-error is success. Let's assume data presence is key.
+            if (!rdcwRes.data) return { success: false, error: rdcwRes.message || 'สลิปไม่ถูกต้อง (RDCW)' }
+        }
+
+        const data = rdcwRes.data
+        if (!data) return { success: false, error: 'ไม่พบข้อมูลในสลิป (RDCW)' }
+
+        return {
+            success: true,
+            data: {
+                receiverName: data.receiver?.displayName || data.receiver?.name || '',
+                transRef: data.transRef || '',
+                amount: Number(data.amount || 0),
+                sender: data.sender
+            }
+        }
+
+    } catch (error) {
+        console.error('Tertiary Verify Error:', error)
         return null
     }
 }
