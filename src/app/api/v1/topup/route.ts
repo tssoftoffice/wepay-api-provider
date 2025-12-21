@@ -54,8 +54,15 @@ export async function POST(req: NextRequest) {
         }
 
         // 3. Create Pending Transaction
+        // Generate a short unique ID for WePay compatibility (avoiding 36-char UUIDs and hyphens)
+        // Format: T + Timestamp(Base36) + Random(Base36) -> approx 14-16 chars
+        const timestamp = Date.now().toString(36).toUpperCase()
+        const random = Math.random().toString(36).substring(2, 7).toUpperCase()
+        const transactionId = `T${timestamp}${random}`
+
         const transaction = await prisma.gameTopupTransaction.create({
             data: {
+                id: transactionId, // Override default UUID
                 partnerId: partner!.id,
                 gameId: game.id,
                 // customerId is optional/undefined for API
