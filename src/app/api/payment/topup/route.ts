@@ -50,8 +50,9 @@ export async function POST(request: Request) {
         const isValidReceiver = validNames.some(name => receiverName.toUpperCase().includes(name.toUpperCase()))
 
         if (!isValidReceiver) {
+            console.log(`Mismatch Receiver Name: '${receiverName}'`)
             return NextResponse.json({
-                error: 'ชื่อบัญชีผู้รับเงินไม่ถูกต้อง (ต้องเป็น: TSSOFT CO.,LTD.)'
+                error: `ชื่อบัญชีผู้รับเงินไม่ถูกต้อง (ได้รับ: ${receiverName} / ต้องเป็น: TSSOFT)`
             }, { status: 400 })
         }
 

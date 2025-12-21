@@ -106,6 +106,8 @@ async function verifySlipSecondary(slipImage: string): Promise<VerificationResul
             return { success: false, error: json.message || 'Slip2Go Verification Failed' }
         }
 
+        console.log('Slip2Go Valid Response:', JSON.stringify(json)) // Debug Receiver Name
+
         const data = json.data || json
 
         // Final check for valid data
@@ -116,7 +118,7 @@ async function verifySlipSecondary(slipImage: string): Promise<VerificationResul
         return {
             success: true,
             data: {
-                receiverName: data.receiver_name || data.receiver?.displayName || data.receiver?.name || '',
+                receiverName: data.receiver_name || data.receiver?.account?.name || data.receiver?.displayName || data.receiver?.name || '',
                 transRef: data.transRef || data.ref || data.transaction_reference_id || '',
                 amount: Number(data.amount),
                 sender: data.sender
