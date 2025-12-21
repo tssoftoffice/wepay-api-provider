@@ -1,88 +1,60 @@
+import axios from 'axios'
+import { SocksProxyAgent } from 'socks-proxy-agent'
 
-/**
- * TrueMoney Gift (AngPao) Helper
- */
-
-interface RedeemResponse {
-    status: {
-        code: string;
-        message: string;
-    };
-    data?: {
-        my_ticket: {
-            amount_baht: string;
-        };
-        tickets: {
-            mobile: string;
-        }[];
-    };
-}
-
-export async function redeemTrueMoneyGift(giftLink: string, mobileNumber: string): Promise<{ success: boolean; amount?: number; error?: string }> {
+export async function redeemTrueMoneyGift(link: string, mobile: string) {
     try {
-        // 1. Extract Voucher Hash
-        // Format: https://gift.truemoney.com/campaign/?v=xxxxxxxx
-        const url = new URL(giftLink);
-        const voucherHash = url.searchParams.get('v');
-
-        if (!voucherHash || !giftLink.includes('gift.truemoney.com')) {
-            return { success: false, error: 'ลิ้งค์ซองของขวัญไม่ถูกต้อง (Invalid Gift Link)' };
+        if (!link || !mobile) {
+            throw new Error('Link and Mobile are required')
         }
 
-        if (!mobileNumber) {
-            return { success: false, error: 'เบอร์รับเงินไม่ถูกต้อง (Invalid Mobile Number)' };
+        // Extract code from link (e.g. https://gift.truemoney.com/campaign/?v=...)
+        const codeMatch = link.match(/v=([a-zA-Z0-9]+)/)
+        const code = codeMatch ? codeMatch[1] : null
+
+        if (!code) {
+            throw new Error('รูปแบบลิ้งค์ซองของขวัญไม่ถูกต้อง')
         }
 
-        // 2. Redeem API
-        // Use axios for better header control and potentially different TLS behavior
-        const axios = require('axios');
+        // ZMine API: https://zmine.me/api/giftvoucher/{code}/{mobile}/
+        console.log(`Redeeming via ZMine: Code=${code}, Mobile=${mobile}`)
 
-        try {
-            const response = await axios.post(`https://gift.truemoney.com/campaign/v1/redeem`, {
-                mobile: mobileNumber,
-                voucher_hash: voucherHash
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
-                    'Accept': 'application/json',
-                    'Origin': 'https://gift.truemoney.com',
-                    'Referer': 'https://gift.truemoney.com/campaign/?v=' + voucherHash
-                },
-                timeout: 10000
-            });
+        const url = `https://zmine.me/api/giftvoucher/${code}/${mobile}/`
 
-            // Axios throws on 4xx/5xx by default, so if we get here, it's 2xx
-            const json = response.data as RedeemResponse;
+        // ZMine creates its own proxy/connection, so we don't need our own agent
+        const response = await axios.get(url, {
+            timeout: 20000 // Give them some time
+        })
 
-            // 3. Check Response Code
-            if (json.status.code === 'SUCCESS') {
-                const amount = parseFloat(json.data?.my_ticket.amount_baht || '0');
-                return { success: true, amount };
-            } else {
-                let errorMsg = 'ซองของขวัญใช้ไม่ได้';
-                const code = json.status.code;
+        const data = response.data
 
-                if (code === 'VOUCHER_OUT_OF_STOCK') errorMsg = 'ซองนี้ถูกรับไปหมดแล้ว';
-                else if (code === 'VOUCHER_NOT_FOUND') errorMsg = 'ไม่พบซองของขวัญนี้';
-                else if (code === 'VOUCHER_EXPIRED') errorMsg = 'ซองหมดอายุแล้ว';
-                else if (code === 'TARGET_USER_REDEEMED') errorMsg = 'คุณได้รับซองนี้ไปแล้ว';
-                else if (code === 'CANNOT_GET_OWN_VOUCHER') errorMsg = 'ไม่สามารถรับซองของตัวเองได้';
+        // Handle ZMine Response Structure
+        // Success: { "code": "200", "status": "success", "data": { "amount": ... } }
+        // Error: { "code": "100"..."105", "status": "error", "message": "..." }
 
-                return { success: false, error: `${errorMsg} (${code})` };
+        const statusCode = String(data.code)
+
+        if (statusCode === '200' && data.data) {
+            return {
+                success: true,
+                amount: Number(data.data.amount)
             }
-
-        } catch (error: any) {
-            if (error.response) {
-                const status = error.response.status;
-                console.error('TrueMoney API Error:', status);
-                return { success: false, error: `เชื่อมต่อ TrueMoney ล้มเหลว (${status}) - อาจเกิดจาก IP ถูกบล็อก` };
-            }
-            throw error;
         }
+
+        // Error Mapping
+        const errorMsg = data.message || data.message_en || 'Unknown Error'
+
+        // Map common codes for cleaner logs if needed, though 'message' is usually Thai friendly already
+        if (statusCode === '100') return { success: false, error: 'ลิงค์ซองของขวัญถูกใช้งานแล้ว (Used)' }
+        if (statusCode === '101') return { success: false, error: 'ลิงค์ซองของขวัญไม่ถูกต้อง (Invalid Link)' }
+        if (statusCode === '102') return { success: false, error: 'ไม่สามารถรับซองของตัวเองได้ (Own Voucher)' }
+        if (statusCode === '103') return { success: false, error: 'ซองนี้ต้องตั้งค่าให้รับได้เพียงคนเดียวเท่านั้น (One receiver only)' }
+        if (statusCode === '105') return { success: false, error: 'ลิงก์ซองของขวัญหมดอายุ (Expired)' }
+
+        // Fallback for other errors
+        return { success: false, error: `Redeem Failed: ${errorMsg} (Code: ${statusCode})` }
 
     } catch (error: any) {
-        console.error('Redeem Exception:', error);
-        return { success: false, error: error.message || 'Server Error' };
+        console.error('ZMine API Error:', error.message)
+        return { success: false, error: error.message || 'เชื่อมต่อ Server ยืนยันซองล้มเหลว' }
     }
 }

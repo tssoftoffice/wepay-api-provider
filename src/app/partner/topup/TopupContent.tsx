@@ -79,7 +79,7 @@ export function TopupContent() {
     const handleTrueMoneySubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!tmLink) {
-            setError('กรุณากรอกลิ้งค์ซองของขวัญ')
+            setError('กรุณากรอกลิงก์ซองของขวัญ')
             return
         }
 
@@ -93,7 +93,7 @@ export function TopupContent() {
                 body: JSON.stringify({ link: tmLink }),
             })
             const data = await res.json()
-            if (!res.ok) throw new Error(data.error || 'TrueMoney failed')
+            if (!res.ok) throw new Error(data.details || data.error || 'TrueMoney failed')
 
             handleSuccess(data)
         } catch (err: any) {
@@ -162,7 +162,7 @@ export function TopupContent() {
                         }}
                     >
                         <Gift size={20} />
-                        TrueMoney (ซอง)
+                        TrueMoney (Wallet)
                     </button>
                 </div>
 
@@ -284,40 +284,77 @@ export function TopupContent() {
                 {/* TRUEMONEY FORM */}
                 {method === 'TRUEMONEY' && (
                     <form onSubmit={handleTrueMoneySubmit} className={styles.form}>
+                        {/* Header Section with Brand Colors */}
                         <div style={{
                             background: 'linear-gradient(135deg, #FF5100 0%, #FF8F00 100%)',
                             borderRadius: '16px',
-                            padding: '20px',
+                            padding: '24px',
                             color: 'white',
                             marginBottom: '24px',
-                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                            boxShadow: '0 8px 16px rgba(255, 81, 0, 0.2)'
                         }}>
-                            <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
-                                ⚠️ ค่าธรรมเนียม 2.9%
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                                <div style={{
+                                    width: '56px',
+                                    height: '56px',
+                                    background: 'white',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginRight: '16px',
+                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                                }}>
+                                    <img src="/true_wallet_logo.png" onError={(e) => e.currentTarget.src = 'https://play-lh.googleusercontent.com/e2o_5Wq3bZKjF4hB1W2F-4A6w6oJg4C4o4o_5a5x5x5x5x5x5x5x5x5x'} alt="TrueMoney" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '50%' }} />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '2px' }}>เติมผ่านซองของขวัญ</div>
+                                    <div style={{ fontSize: '20px', fontWeight: 700 }}>TrueMoney Angpao</div>
+                                </div>
                             </div>
-                            <div style={{ fontSize: '14px', opacity: 0.9 }}>
-                                ระบบจะหักค่าธรรมเนียมจากยอดเงินที่ได้รับอัตโนมัติ (ขั้นต่ำ 10 บาท)
+
+                            <div style={{
+                                background: 'rgba(0,0,0,0.1)',
+                                borderRadius: '10px',
+                                padding: '10px 14px',
+                                fontSize: '13px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
+                            }}>
+                                <Gift size={16} />
+                                <div>ค่าธรรมเนียม 2.9%</div>
                             </div>
                         </div>
 
                         <div style={{ marginBottom: '24px' }}>
                             <label style={{ display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
-                                ลิ้งค์ซองของขวัญ (Gift Link)
+                                ลิงก์ซองของขวัญ (Gift Link)
                             </label>
                             <Input
-                                type="url"
+                                type="text"
                                 placeholder="https://gift.truemoney.com/campaign/?v=..."
                                 value={tmLink}
                                 onChange={(e) => setTmLink(e.target.value)}
                                 required
+                                style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)', color: 'white' }}
                             />
-                            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', marginTop: '8px' }}>
-                                * สร้างซองของขวัญส่งให้ตัวเอง หรือใส่ลิงก์ที่สร้างไว้ที่นี่
+                            <p style={{ marginTop: '8px', fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
+                                * สร้างซองของขวัญส่งให้ตัวเอง แล้วนำลิงก์มากรอกที่นี่
                             </p>
                         </div>
 
-                        <Button type="submit" disabled={loading} className={styles.button} style={{ background: '#FF5100', color: 'white', fontWeight: 'bold' }}>
-                            {loading ? 'กำลังเติมเงิน...' : 'เติมเงิน TrueMoney'}
+                        <Button
+                            type="submit"
+                            disabled={loading || !tmLink}
+                            className={styles.button}
+                            style={{
+                                background: 'linear-gradient(to right, #FF5100, #FF8F00)',
+                                border: 'none',
+                                boxShadow: '0 4px 12px rgba(255, 81, 0, 0.3)'
+                            }}
+                        >
+                            {loading ? 'กำลังตรวจสอบ...' : 'เติมเงินทันที'}
                         </Button>
                     </form>
                 )}

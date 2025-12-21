@@ -4,7 +4,7 @@ import { getSession } from '@/lib/auth'
 import { createBeamCharge } from '@/lib/beam'
 import { getAppUrl } from '@/lib/url'
 import { sendTelegramNotify } from '@/lib/telegram'
-import { verifySlipWithRDCW } from '@/lib/rdcw'
+import { verifySlip } from '@/lib/slip-verification'
 import { WePayClient } from '@/lib/wepay'
 
 export async function POST(request: Request) {
@@ -32,31 +32,17 @@ export async function POST(request: Request) {
         }
 
         // --- Slip Verification Logic ---
-        let verificationResult = await verifySlipPrimary(slipImage)
+        const verificationResult = await verifySlip(slipImage)
 
         if (!verificationResult) {
-            console.log('Primary slip verification failed, trying timeout/fallback...')
-            // Try fallback
-            verificationResult = await verifySlipSecondary(slipImage)
+            return NextResponse.json({ error: 'ไม่สามารถตรวจสอบสลิปได้ หรือระบบตรวจสอบขัดข้อง' }, { status: 500 })
         }
 
-        if (!verificationResult) {
-            console.log('Secondary slip verification failed, trying RDCW fallback...')
-            // Try RDCW fallback
-            // Convert base64 to Blob/File if needed, or update helper.
-            // Assumption: verifySlipWithRDCW handles base64 string now (I will update it).
-            verificationResult = await verifySlipTertiary(slipImage)
-        }
-
-        if (!verificationResult) {
-            return NextResponse.json({ error: 'ไม่สามารถตรวจสอบสลิปได้ หรือระบบตรวจสอบสลิปขัดข้องชั่วคราว' }, { status: 500 })
-        }
-
-        if (!verificationResult.success) {
+        if (!verificationResult.success || !verificationResult.data) {
             return NextResponse.json({ error: verificationResult.error || 'สลิปไม่ถูกต้อง' }, { status: 400 })
         }
 
-        const { sender, receiverName, transRef, amount: slipAmount } = verificationResult.data
+        const { receiverName, transRef, amount: slipAmount } = verificationResult.data
 
         // 2.1 Check Recipient Name
         // Note: RDCW may return truncated names like "บจก. ท" or "TSSOFT C"
@@ -154,159 +140,4 @@ export async function POST(request: Request) {
     }
 }
 
-// Helper types
-type VerificationResult = {
-    success: boolean
-    error?: string
-    data?: any
-}
-
-async function verifySlipPrimary(slipImage: string): Promise<VerificationResult | null> {
-    try {
-        console.log('Verifying slip with Primary...')
-        const slipRes = await fetch('https://slip-s.oiio.download/api/slip', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ img: slipImage })
-        })
-
-        if (!slipRes.ok) {
-            const errText = await slipRes.text()
-            console.error('Primary Slip API Error:', errText)
-            return null // Return null to trigger fallback
-        }
-
-        const slipData = await slipRes.json()
-
-        if (!slipData.success && !slipData.data) {
-            return { success: false, error: 'สลิปไม่ถูกต้อง หรืออ่านข้อมูลไม่ได้ (Primary)' }
-        }
-
-        const data = slipData.data || slipData
-        return {
-            success: true,
-            data: {
-                receiverName: data.receiver_name || data.receiver?.displayName || '',
-                transRef: data.ref || data.transRef || '',
-                amount: Number(data.amount || 0),
-                sender: data.sender // keep if needed
-            }
-        }
-    } catch (error) {
-        console.error('Primary Verify Error:', error)
-        return null // Return null to trigger fallback
-    }
-}
-
-async function verifySlipSecondary(slipImage: string): Promise<VerificationResult | null> {
-    try {
-        console.log('Verifying slip with Secondary (Slip2Go)...')
-        const apiUrl = process.env.SLIP2GO_API_URL
-        const secretKey = process.env.SLIP2GO_SECRET_KEY
-
-        if (!apiUrl || !secretKey) {
-            console.warn('SLIP2GO environment variables missing')
-            return null
-        }
-
-        // Construct URL - handle potential trailing slash in env
-        const baseUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl
-
-        // Try removing /api prefix defined in code if the user's url is likely the api root
-        // If baseUrl is "https://api.slip2go.com", we probably want "https://api.slip2go.com/verify-slip..."
-        // If baseUrl is "https://slip2go.com", we might want "https://slip2go.com/api/verify-slip..."
-        // Safe bet: The user usually puts the ROOT domain. 
-        // But previously we hardcoded `/api/...`.
-        // Let's try to detect or just default to /verify-slip if using api subdomain, OR just rely on user provided path.
-
-        // Let's try the path without /api first as per common convention for api subdomains
-        const url = `${baseUrl}/verify-slip/qr-base64/info`
-
-
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${secretKey}`
-            },
-            body: JSON.stringify({
-                payload: { imageBase64: slipImage }
-            })
-        })
-
-        if (!res.ok) {
-            const err = await res.text()
-            console.error('Slip2Go Error:', err)
-            return null
-        }
-
-        const json = await res.json()
-        // Check Slip2Go response format
-        // Based on docs/image: code="200000" means success
-        if (json.code !== '200000') {
-            return { success: false, error: json.message || 'สลิปไม่ถูกต้อง (Slip2Go)' }
-        }
-
-        const data = json.data
-        const receiverAccount = data.receiver?.account || {}
-
-        return {
-            success: true,
-            data: {
-                receiverName: receiverAccount.name || '', // "บริษัท ทีเอสซอฟท์ จำกัด"
-                transRef: data.transRef || '',
-                amount: Number(data.amount || 0),
-                sender: data.sender
-            }
-        }
-
-    } catch (error) {
-        console.error('Secondary Verify Error:', error)
-        return null
-    }
-}
-
-async function verifySlipTertiary(slipImage: string): Promise<VerificationResult | null> {
-    try {
-        console.log('Verifying slip with Tertiary (RDCW)...')
-
-        // Convert base64 to Blob for RDCW helper
-        // Base64 format: "data:image/jpeg;base64,....."
-        const base64Data = slipImage.split(',')[1]
-        const buffer = Buffer.from(base64Data, 'base64')
-        const blob = new Blob([buffer], { type: 'image/jpeg' })
-        const file = new File([blob], 'slip.jpg', { type: 'image/jpeg' })
-
-        const rdcwRes = await verifySlipWithRDCW(file)
-
-        if (!rdcwRes) {
-            return null
-        }
-
-        // RDCW returns { code: number, message: string, data: ... }
-        // Inspecting typical RDCW response or assuming based on interface
-        if (rdcwRes.code !== 0 && rdcwRes.code !== 200) {
-            // Note: RDCW might use 0 for success? Or 200? 
-            // User screenshot doesn't explicitly show success code, but mentions "code": [ERROR_CODE] for error.
-            // Implies non-error is success. Let's assume data presence is key.
-            if (!rdcwRes.data) return { success: false, error: rdcwRes.message || 'สลิปไม่ถูกต้อง (RDCW)' }
-        }
-
-        const data = rdcwRes.data
-        if (!data) return { success: false, error: 'ไม่พบข้อมูลในสลิป (RDCW)' }
-
-        return {
-            success: true,
-            data: {
-                receiverName: data.receiver?.displayName || data.receiver?.name || '',
-                transRef: data.transRef || '',
-                amount: Number(data.amount || 0),
-                sender: data.sender
-            }
-        }
-
-    } catch (error) {
-        console.error('Tertiary Verify Error:', error)
-        return null
-    }
-}
+// End of file

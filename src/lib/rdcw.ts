@@ -1,32 +1,13 @@
+import FormData from 'form-data'
+
 
 interface RDCWResponse {
     code: number;
     message: string;
-    data?: {
-        transRef: string;
-        sendingBank: string;
-        receivingBank: string;
-        amount: number;
-        transDate: string;
-        transTime: string;
-        sender: {
-            displayName: string;
-            name: string;
-            account: {
-                value: string;
-            };
-        };
-        receiver: {
-            displayName: string;
-            name: string;
-            account: {
-                value: string;
-            };
-        };
-    };
+    data?: any;
 }
 
-export async function verifySlipWithRDCW(file: File): Promise<any> {
+export async function verifySlipWithRDCW(fileBuffer: Buffer, filename: string = 'slip.jpg', mimeType: string = 'image/jpeg'): Promise<any> {
     const clientId = process.env.RDCW_CLIENT_ID
     const clientSecret = process.env.RDCW_CLIENT_SECRET
 
@@ -36,39 +17,43 @@ export async function verifySlipWithRDCW(file: File): Promise<any> {
     }
 
     try {
-        const formData = new FormData()
-        formData.append('file', file)
+        console.log(`Sending to RDCW: Size=${fileBuffer.length} bytes, Type=${mimeType}, Name=${filename}`)
+
+        const data = new FormData()
+        // form-data library requires options object for Buffer to set filename/type correctly
+        data.append('file', fileBuffer, {
+            filename: filename,
+            contentType: mimeType,
+            knownLength: fileBuffer.length
+        })
 
         // Basic Auth: base64(clientId:clientSecret)
         const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
+        // Debug Headers
+        const headers = data.getHeaders()
+        console.log('RDCW Request Headers:', JSON.stringify(headers))
+
         const response = await fetch('https://suba.rdcw.co.th/v2/inquiry', {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${auth}`
-                // Note: Content-Type for FormData is handled automatically by fetch
+                'Authorization': `Basic ${auth}`,
+                ...headers
             },
-            body: formData
+            body: data as any // Cast to any because node-fetch body types might differ slightly in strict TS
         })
 
         if (!response.ok) {
             const errorText = await response.text()
-            console.error('RDCW Verify Error:', response.status, errorText)
-            return null
+            console.error('RDCW Verify Error (Fetch):', response.status, errorText)
+            return { success: false, error: `RDCW ${response.status}: ${errorText}` }
         }
 
         const result = await response.json() as RDCWResponse
+        return { success: true, data: result.data || result }
 
-        // Check for success code (usually 0 or 200, need to verify documentation)
-        // Based on typical APIs, if data exists it's good.
-        // Assuming result structure fits our needs.
-
-        // Map to common format used in route.ts (if possible)
-        // or just return raw data to be mapped in the route
-        return result
-
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error calling RDCW API:', error)
-        return null
+        return { success: false, error: `RDCW Exception: ${error.message}` }
     }
 }
