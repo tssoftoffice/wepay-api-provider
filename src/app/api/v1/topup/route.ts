@@ -20,9 +20,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields: game_id, player_id' }, { status: 400 })
         }
 
-        // 1. Find the game
-        const game = await prisma.game.findUnique({
-            where: { id: game_id }
+        // 1. Find the game (Support ID or Code)
+        const game = await prisma.game.findFirst({
+            where: {
+                OR: [
+                    { id: game_id },
+                    { code: game_id }
+                ]
+            }
         })
 
         if (!game || game.status !== 'ACTIVE') {
@@ -31,7 +36,9 @@ export async function POST(req: NextRequest) {
 
         // 2. Determine cost & sell price
         const cost = Number(game.baseCost)
-        let sellPrice = cost
+        // Default Profit Margin: 2 THB if partner hasn't set custom price
+        const DEFAULT_PROFIT_MARGIN = 2
+        let sellPrice = cost + DEFAULT_PROFIT_MARGIN
 
         // Check if partner has set a custom price
         const customPrice = await prisma.partnerGamePrice.findUnique({

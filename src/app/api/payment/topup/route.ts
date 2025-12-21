@@ -14,8 +14,6 @@ export async function POST(request: Request) {
         const body = await request.json()
         const { amount, slipImage } = body
 
-        // allow amount to be optional if we trust the slip completely, but usually we want to match
-        // For now, let's require at least slipImage
         if (!slipImage) {
             return NextResponse.json({ error: 'กรุณาแนบสลิปโอนเงิน' }, { status: 400 })
         }
@@ -30,38 +28,26 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Partner not found' }, { status: 404 })
         }
 
-        // 1. Verify Slip with External API
-        console.log('Verifying slip...')
-        const slipRes = await fetch('https://slip-s.oiio.download/api/slip', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ img: slipImage })
-        })
+        // --- Slip Verification Logic ---
+        let verificationResult = await verifySlipPrimary(slipImage)
 
-        if (!slipRes.ok) {
-            const errText = await slipRes.text()
-            console.error('Slip API Error:', errText)
-            return NextResponse.json({ error: 'ไม่สามารถตรวจสอบสลิปได้ กรุณาลองใหม่' }, { status: 500 })
+        if (!verificationResult) {
+            console.log('Primary slip verification failed, trying timeout/fallback...')
+            // Try fallback
+            verificationResult = await verifySlipSecondary(slipImage)
         }
 
-        const slipData = await slipRes.json()
-
-        // 2. Validate Slip Data
-        // API format check: assuming success=true or similar. Based on common slip APIs:
-        // Structure usually contains: success, message, data: { sender, receiver: { displayName, ... }, amount, transRef, ... }
-        // We will log the response first to be sure during dev, but here we implement standard checks.
-
-        // Check if API returned success (adjust based on actual API response structure)
-        if (!slipData.success && !slipData.data) {
-            return NextResponse.json({ error: 'สลิปไม่ถูกต้อง หรืออ่านข้อมูลไม่ได้' }, { status: 400 })
+        if (!verificationResult) {
+            return NextResponse.json({ error: 'ไม่สามารถตรวจสอบสลิปได้ หรือระบบตรวจสอบสลิปขัดข้องชั่วคราว' }, { status: 500 })
         }
 
-        const data = slipData.data || slipData // Fallback if structure varies
+        if (!verificationResult.success) {
+            return NextResponse.json({ error: verificationResult.error || 'สลิปไม่ถูกต้อง' }, { status: 400 })
+        }
+
+        const { sender, receiverName, transRef, amount: slipAmount } = verificationResult.data
 
         // 2.1 Check Recipient Name
-        // API returns snake_case: receiver_name: "TSSOFT CO.,LTD."
-        const receiverName = data.receiver_name || data.receiver?.displayName || ''
-        // Check for "TSSOFT CO.,LTD." or "ทีเอสซอฟท์" or "Ts Soft"
         const validNames = ['TSSOFT CO.,LTD.', 'ทีเอสซอฟท์', 'Ts Soft', 'บริษัท ทีเอสซอฟท์ จำกัด']
         const isValidReceiver = validNames.some(name => receiverName.toUpperCase().includes(name.toUpperCase())) || receiverName.toUpperCase().includes('TSSOFT')
 
@@ -72,8 +58,6 @@ export async function POST(request: Request) {
         }
 
         // 2.2 Check Duplicate (TransRef)
-        // API returns `ref`
-        const transRef = data.ref || data.transRef || ''
         if (!transRef) {
             return NextResponse.json({ error: 'ไม่พบรหัสอ้างอิงในสลิป (Reference No.)' }, { status: 400 })
         }
@@ -86,14 +70,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'สลิปนี้ถูกใช้งานไปแล้ว' }, { status: 400 })
         }
 
-        // 2.3 Check Amount (Optional but recommended)
-        const slipAmount = Number(data.amount || 0)
+        // 2.3 Check Amount
         if (slipAmount <= 0) {
             return NextResponse.json({ error: 'ยอดเงินในสลิปไม่ถูกต้อง' }, { status: 400 })
         }
-
-        // If client sent amount, we typically ignore it and use slip amount for trust, 
-        // OR we verify they match. Let's trust the slip amount as the source of truth.
 
         // 3. Create Transaction & Update Wallet
         const result = await prisma.$transaction(async (tx) => {
@@ -140,5 +120,117 @@ export async function POST(request: Request) {
     } catch (error: any) {
         console.error('Topup error:', error)
         return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    }
+}
+
+// Helper types
+type VerificationResult = {
+    success: boolean
+    error?: string
+    data?: any
+}
+
+async function verifySlipPrimary(slipImage: string): Promise<VerificationResult | null> {
+    try {
+        console.log('Verifying slip with Primary...')
+        const slipRes = await fetch('https://slip-s.oiio.download/api/slip', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ img: slipImage })
+        })
+
+        if (!slipRes.ok) {
+            const errText = await slipRes.text()
+            console.error('Primary Slip API Error:', errText)
+            return null // Return null to trigger fallback
+        }
+
+        const slipData = await slipRes.json()
+
+        if (!slipData.success && !slipData.data) {
+            return { success: false, error: 'สลิปไม่ถูกต้อง หรืออ่านข้อมูลไม่ได้ (Primary)' }
+        }
+
+        const data = slipData.data || slipData
+        return {
+            success: true,
+            data: {
+                receiverName: data.receiver_name || data.receiver?.displayName || '',
+                transRef: data.ref || data.transRef || '',
+                amount: Number(data.amount || 0),
+                sender: data.sender // keep if needed
+            }
+        }
+    } catch (error) {
+        console.error('Primary Verify Error:', error)
+        return null // Return null to trigger fallback
+    }
+}
+
+async function verifySlipSecondary(slipImage: string): Promise<VerificationResult | null> {
+    try {
+        console.log('Verifying slip with Secondary (Slip2Go)...')
+        const apiUrl = process.env.SLIP2GO_API_URL
+        const secretKey = process.env.SLIP2GO_SECRET_KEY
+
+        if (!apiUrl || !secretKey) {
+            console.warn('SLIP2GO environment variables missing')
+            return null
+        }
+
+        // Construct URL - handle potential trailing slash in env
+        const baseUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl
+
+        // Try removing /api prefix defined in code if the user's url is likely the api root
+        // If baseUrl is "https://api.slip2go.com", we probably want "https://api.slip2go.com/verify-slip..."
+        // If baseUrl is "https://slip2go.com", we might want "https://slip2go.com/api/verify-slip..."
+        // Safe bet: The user usually puts the ROOT domain. 
+        // But previously we hardcoded `/api/...`.
+        // Let's try to detect or just default to /verify-slip if using api subdomain, OR just rely on user provided path.
+
+        // Let's try the path without /api first as per common convention for api subdomains
+        const url = `${baseUrl}/verify-slip/qr-base64/info`
+
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${secretKey}`
+            },
+            body: JSON.stringify({
+                payload: { imageBase64: slipImage }
+            })
+        })
+
+        if (!res.ok) {
+            const err = await res.text()
+            console.error('Slip2Go Error:', err)
+            return null
+        }
+
+        const json = await res.json()
+        // Check Slip2Go response format
+        // Based on docs/image: code="200000" means success
+        if (json.code !== '200000') {
+            return { success: false, error: json.message || 'สลิปไม่ถูกต้อง (Slip2Go)' }
+        }
+
+        const data = json.data
+        const receiverAccount = data.receiver?.account || {}
+
+        return {
+            success: true,
+            data: {
+                receiverName: receiverAccount.name || '', // "บริษัท ทีเอสซอฟท์ จำกัด"
+                transRef: data.transRef || '',
+                amount: Number(data.amount || 0),
+                sender: data.sender
+            }
+        }
+
+    } catch (error) {
+        console.error('Secondary Verify Error:', error)
+        return null
     }
 }
