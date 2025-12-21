@@ -142,13 +142,13 @@ export function GameHistoryClient({ initialData = [] }: Props) {
                                         </span>
                                     </td>
                                     <td style={{ fontFamily: 'monospace', color: '#64748b' }}>{txn.targetId || '-'}</td>
-                                    <td style={{ color: '#64748b' }}>
+                                    <td style={{ color: '#64748b', whiteSpace: 'nowrap' }}>
                                         ฿{Number(txn.baseCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                     </td>
-                                    <td style={{ fontWeight: 600, color: '#1e293b' }}>
+                                    <td style={{ fontWeight: 600, color: '#1e293b', whiteSpace: 'nowrap' }}>
                                         ฿{Number(txn.sellPrice).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                     </td>
-                                    <td style={{ fontWeight: 600, color: '#10b981' }}>
+                                    <td style={{ fontWeight: 600, color: '#10b981', whiteSpace: 'nowrap' }}>
                                         +฿{(Number(txn.sellPrice) - Number(txn.baseCost)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                     </td>
                                     <td>

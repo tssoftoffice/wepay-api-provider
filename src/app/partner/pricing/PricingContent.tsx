@@ -8,6 +8,7 @@ import styles from './page.module.css'
 
 import { Search, Edit2, ChevronDown, ChevronRight, Gamepad2, X, Save } from 'lucide-react'
 import { Modal } from '@/components/ui/Modal'
+import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
 
 interface PricingContentProps {
     data: {
@@ -71,7 +72,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction,
 
     const handleEdit = async (game: any) => {
         const price = data.currentPrices.find(p => p.gameId === game.id)
-        const currentSellPrice = price ? Number(price.sellPrice) : Math.ceil(Number(game.baseCost) * 1.1)
+        const currentSellPrice = price ? Number(price.sellPrice) : calculateDefaultPartnerSellPrice(Number(game.baseCost))
 
         // Fetch description if missing
         let description = game.description || ''
@@ -202,7 +203,7 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction,
                                             <tbody>
                                                 {items.sort((a: any, b: any) => Number(a.baseCost) - Number(b.baseCost)).map((game: any) => {
                                                     const price = data.currentPrices.find(p => p.gameId === game.id)
-                                                    const myPrice = price ? Number(price.sellPrice) : Math.ceil(Number(game.baseCost) * 1.1)
+                                                    const myPrice = price ? Number(price.sellPrice) : calculateDefaultPartnerSellPrice(Number(game.baseCost))
                                                     const profit = myPrice - Number(game.baseCost)
 
                                                     return (
@@ -212,9 +213,9 @@ export function PricingContent({ data, updatePriceAction, updateGameImageAction,
                                                             <td style={{ textAlign: 'right', color: '#64748b' }}>฿{Number(game.baseCost).toLocaleString()}</td>
                                                             <td style={{ textAlign: 'right', fontWeight: 600, color: '#1e293b' }}>
                                                                 ฿{myPrice.toLocaleString()}
-                                                                <div style={{ fontSize: 11, color: '#10b981', fontWeight: 500 }}>
-                                                                    +฿{profit.toLocaleString()}
-                                                                </div>
+                                                                <span style={{ fontSize: 13, color: '#10b981', fontWeight: 500, marginLeft: 8 }}>
+                                                                    (+฿{profit.toLocaleString()})
+                                                                </span>
                                                             </td>
                                                             <td style={{ textAlign: 'right' }}>
                                                                 <button

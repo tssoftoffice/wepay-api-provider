@@ -156,3 +156,20 @@ export function getPricingRate(type: string, code: string): PricingRate {
     // 4. Default
     return DEFAULT_RATE
 }
+
+// === Partner Selling Price Utilities ===
+
+/**
+ * Default profit margin percentage for Partners (when no custom price is set).
+ * Current Policy: 10% Markup from Base Cost.
+ */
+export const PARTNER_DEFAULT_PROFIT_MARGIN_PERCENT = 10
+
+/**
+ * Calculates the default selling price for a partner based on the base cost.
+ * Logic: Cost + 10% (Rounded UP to nearest integer for clean prices)
+ * @param baseCost The cost the partner pays to the system
+ */
+export function calculateDefaultPartnerSellPrice(baseCost: number): number {
+    return Math.ceil(baseCost * (1 + PARTNER_DEFAULT_PROFIT_MARGIN_PERCENT / 100))
+}

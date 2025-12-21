@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { validateApiKey } from '@/lib/api-auth'
 import { WePayClient } from '@/lib/wepay'
+import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
 
 export async function POST(req: NextRequest) {
     const auth = await validateApiKey(req)
@@ -36,9 +37,8 @@ export async function POST(req: NextRequest) {
 
         // 2. Determine cost & sell price
         const cost = Number(game.baseCost)
-        // Default Profit Margin: 2 THB if partner hasn't set custom price
-        const DEFAULT_PROFIT_MARGIN = 2
-        let sellPrice = cost + DEFAULT_PROFIT_MARGIN
+        // Default Selling Price: Cost + 10% (Using helper)
+        let sellPrice = calculateDefaultPartnerSellPrice(cost)
 
         // Check if partner has set a custom price
         const customPrice = await prisma.partnerGamePrice.findUnique({

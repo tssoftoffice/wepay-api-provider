@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/Input'
 import styles from './page.module.css'
 import { revalidatePath } from 'next/cache'
 import { PricingContent } from './PricingContent'
+import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
 
 async function getPricingData() {
     const session = await getSession()
@@ -143,7 +144,7 @@ async function updateGameImage(formData: FormData) {
                 gameId: game.id,
                 imageUrl,
                 exampleIdUrl,
-                sellPrice: game.providerPrice // Default to provider price if creating new entry
+                sellPrice: calculateDefaultPartnerSellPrice(Number(game.baseCost)) // Default to Calculated Price
             }
         })
     }
