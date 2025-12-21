@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
 import { createBeamCharge } from '@/lib/beam'
 import { getAppUrl } from '@/lib/url'
+import { sendTelegramNotify } from '@/lib/telegram'
 
 export async function POST(request: Request) {
     try {
@@ -109,6 +110,14 @@ export async function POST(request: Request) {
 
             return newTxn
         })
+
+        // NOTE: Non-blocking notification to ensure fast response
+        sendTelegramNotify(
+            `🔔 <b>แจ้งเตือน Partner เติมเงิน</b>\n` +
+            `ลูกค้า: ${user.partner!.name || 'ไม่ระบุ'}\n` +
+            `ยอดเงิน: <b>${slipAmount.toLocaleString()} บาท</b>\n` +
+            `เวลา: ${new Date().toLocaleString('th-TH')}`
+        ).catch(err => console.error('Failed to send notification', err))
 
         return NextResponse.json({
             success: true,

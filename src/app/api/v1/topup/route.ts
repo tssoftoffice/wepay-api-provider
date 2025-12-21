@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma'
 import { validateApiKey } from '@/lib/api-auth'
 import { WePayClient } from '@/lib/wepay'
 import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
+import { sendTelegramNotify } from '@/lib/telegram'
 
 export async function POST(req: NextRequest) {
     const auth = await validateApiKey(req)
@@ -128,6 +129,20 @@ export async function POST(req: NextRequest) {
                     }
                 })
             ])
+
+
+
+            // Low Balance Check (Non-blocking)
+            WePayClient.getBalance().then(async (balance) => {
+                const LOW_BALANCE_THRESHOLD = 1000 // Configurable threshold
+                if (balance.available < LOW_BALANCE_THRESHOLD) {
+                    await sendTelegramNotify(
+                        `⚠️ <b>แจ้งเตือนเงิน WePay ใกล้หมด</b>\n` +
+                        `ยอดคงเหลือ: <b>${balance.available.toLocaleString()} บาท</b>\n` +
+                        `กรุณาเติมเงินทันที`
+                    ).catch(console.error)
+                }
+            }).catch(e => console.error('Failed to check balance after topup', e))
 
             return NextResponse.json({
                 data: {
