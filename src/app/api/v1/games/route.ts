@@ -12,9 +12,15 @@ export async function GET(req: NextRequest) {
 
     const { partner } = auth
 
-    // Fetch all active games
+    // Fetch all active games (filtered for gtopup only as requested)
     const games = await prisma.game.findMany({
-        where: { status: 'ACTIVE' }
+        where: {
+            status: 'ACTIVE',
+            code: {
+                startsWith: 'gtopup',
+                mode: 'insensitive'
+            }
+        }
     })
 
     // Fetch partner's custom prices
