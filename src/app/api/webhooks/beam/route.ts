@@ -27,9 +27,16 @@ export async function POST(request: Request) {
             })
 
             if (gameTxn) {
-                // If incoming is Success and we are already Success, ignore.
+                // If incoming is Success and we are already Success, check if we need to update PIN/Serial
                 if (gameTxn.status === 'SUCCESS' && isWePaySuccess) {
-                    return NextResponse.json({ message: 'Already processed (Success)' })
+                    // If we already have PIN/Serial, OR the incoming request doesn't have them, then we can ignore value.
+                    const incomingPin = body.pin || body.card_pin || body.topup_code
+                    const incomingSerial = body.serial || body.serial_no
+
+                    if ((gameTxn.pin || !incomingPin) && (gameTxn.serial || !incomingSerial)) {
+                        return NextResponse.json({ message: 'Already processed (Success)' })
+                    }
+                    // Otherwise, continue to update PIN/Serial
                 }
                 // If we are already Failed, ignore everything
                 if (gameTxn.status === 'FAILED') {
@@ -41,11 +48,18 @@ export async function POST(request: Request) {
 
                 const newStatus = isWePaySuccess ? 'SUCCESS' : 'FAILED'
 
+                // Extract PIN and Serial from WePay payload (if available)
+                // Common fields: pin, card_pin, serial, serial_no
+                const pin = body.pin || body.card_pin || body.topup_code || null
+                const serial = body.serial || body.serial_no || null
+
                 await prisma.gameTopupTransaction.update({
                     where: { id: dest_ref },
                     data: {
                         status: newStatus,
-                        providerTxnId: body.transaction_id || gameTxn.providerTxnId
+                        providerTxnId: body.transaction_id || gameTxn.providerTxnId,
+                        pin: pin ? String(pin) : undefined,
+                        serial: serial ? String(serial) : undefined
                     }
                 })
 

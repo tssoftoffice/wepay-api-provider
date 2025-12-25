@@ -16,10 +16,10 @@ export async function GET(req: NextRequest) {
     const games = await prisma.game.findMany({
         where: {
             status: 'ACTIVE',
-            code: {
-                startsWith: 'gtopup',
-                mode: 'insensitive'
-            }
+            OR: [
+                { code: { startsWith: 'gtopup', mode: 'insensitive' } },
+                { code: { startsWith: 'cashcard', mode: 'insensitive' } }
+            ]
         }
     })
 

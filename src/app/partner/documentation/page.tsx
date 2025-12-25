@@ -232,7 +232,35 @@ console.log(response.data);`}
                         <code className={styles.url}>/api/v1/transaction/:id</code>
                     </div>
 
-                    <p className={styles.text}>:id คือ Transaction ID ที่ได้รับจาก Response ของ API Topup</p>
+                    <p className={styles.text}>
+                        ใช้สำหรับตรวจสอบสถานะ และดึง Code/PIN (กรณีบัตรเติมเงิน)
+                        <br />
+                        :id คือ Transaction ID ที่ได้รับจาก Response ของ API Topup
+                    </p>
+
+                    <h3 className={styles.subTitle}>ตัวอย่าง Response</h3>
+                    <pre className={styles.codeBlock}>
+                        {`{
+  "data": {
+    "transaction_id": "T123...",
+    "status": "SUCCESS",
+    "game_name": "Roblox Gift Card",
+    "target_id": "user@example.com",
+    "amount": 300,
+    "pin": "1234-5678-9012", // PIN/Code จะแสดงที่นี่
+    "serial": "SN987654321", // Serial Number (ถ้ามี)
+    "created_at": "2024-12-25T12:00:00.000Z"
+  }
+}`}
+                    </pre>
+
+                    <div className={styles.infoBox}>
+                        <strong>💡 คำแนะนำสำหรับบัตรเติมเงิน (Gift Cards):</strong>
+                        <p>
+                            ในบางครั้ง PIN อาจจะไม่ได้ถูกส่งกลับมาทันทีใน API Topup (Response เป็น null) <br />
+                            คุณสามารถเรียก API นี้ซ้ำๆ (Polling) ทุกๆ 5-10 วินาที จนกว่าจะได้รับ PIN หรือใช้ Webhook เพื่อรอรับข้อมูล
+                        </p>
+                    </div>
                 </section>
 
             </div>

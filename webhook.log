@@ -674,3 +674,17 @@
   "updatedAt": "2025-12-10T19:37:08.458426Z"
 }
 ---
+{
+  "dest_ref": "TMJLH6CXQSF5I8",
+  "status": "00000",
+  "pin": "1234-5678-TEST-PIN",
+  "serial": "SN-TEST-001"
+}
+---
+{
+  "dest_ref": "TMJLH6CXQSF5I8",
+  "status": "00000",
+  "pin": "1234-5678-TEST-PIN",
+  "serial": "SN-TEST-001"
+}
+---

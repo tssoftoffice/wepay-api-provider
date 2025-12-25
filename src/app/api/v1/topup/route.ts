@@ -125,7 +125,10 @@ export async function POST(req: NextRequest) {
                     where: { id: transaction.id },
                     data: {
                         status: 'SUCCESS', // WePay is synchronous success here usually
-                        providerTxnId: wepayRes.transactionId
+                        providerTxnId: wepayRes.transactionId,
+                        // Save PIN/Serial if available immediately
+                        pin: wepayRes.pin,
+                        serial: wepayRes.serial
                     }
                 })
             ])
@@ -150,7 +153,10 @@ export async function POST(req: NextRequest) {
                     status: 'SUCCESS',
                     game_name: game.name,
                     amount: cost,
-                    remaining_balance: partnerBalance - cost
+                    remaining_balance: partnerBalance - cost,
+                    // Return PIN/Serial if available
+                    pin: wepayRes.pin || null,
+                    serial: wepayRes.serial || null
                 }
             })
 

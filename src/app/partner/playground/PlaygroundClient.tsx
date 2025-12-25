@@ -109,13 +109,13 @@ export function PlaygroundClient({ apiKey, secretKey }: PlaygroundClientProps) {
 
                 {endpoint === '/topup' && (
                     <>
-                        <label className={styles.label}>Game ID</label>
-                        <input className={styles.input} name="game_id" value={params.game_id} onChange={handleChange} placeholder="e.g. 5fca..." />
+                        <label className={styles.label}>Game ID / Code</label>
+                        <input className={styles.input} name="game_id" value={params.game_id} onChange={handleChange} placeholder="e.g. gtopup_ROBLOX_300" />
 
-                        <label className={styles.label}>Player ID</label>
+                        <label className={styles.label}>Player ID / Ref 1</label>
                         <input className={styles.input} name="player_id" value={params.player_id} onChange={handleChange} placeholder="e.g. 12345678" />
 
-                        <label className={styles.label}>Server (Optional)</label>
+                        <label className={styles.label}>Server / Ref 2 (Optional)</label>
                         <input className={styles.input} name="server" value={params.server} onChange={handleChange} placeholder="e.g. asia" />
                     </>
                 )}

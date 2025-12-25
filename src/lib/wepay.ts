@@ -124,7 +124,10 @@ export class WePayClient {
             transactionId: res.transaction_id,
             queueId: res.queue_id,
             totalAmount: res.total_amount,
-            balance: res.balance
+            balance: res.balance,
+            // Capture PIN/Serial if returned immediately
+            pin: res.pin || res.card_pin || res.topup_code,
+            serial: res.serial || res.serial_no
         }
     }
 
