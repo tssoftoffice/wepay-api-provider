@@ -173,15 +173,15 @@ export async function syncGames() {
         }
 
         // Create Notification (Disabled due to Prisma Client lock)
-        // if (toCreate.length > 0 || toUpdate.length > 0) {
-        //     await prisma.notification.create({
-        //         data: {
-        //             title: 'Game Sync Complete',
-        //             message: `Sync สำเร็จ: เพิ่ม ${toCreate.length} เกม, อัปเดต ${toUpdate.length} เกม (จากทั้งหมด ${totalItems})`,
-        //             type: 'SUCCESS'
-        //         }
-        //     })
-        // }
+        if (toCreate.length > 0 || toUpdate.length > 0) {
+            await prisma.notification.create({
+                data: {
+                    title: 'Game Sync Complete',
+                    message: `Sync สำเร็จ: เพิ่ม ${toCreate.length} เกม, อัปเดต ${toUpdate.length} เกม (จากทั้งหมด ${totalItems})`,
+                    type: 'GAME_SYNC'
+                }
+            })
+        }
 
         revalidatePath('/admin/games')
         return { success: true, count: toCreate.length + toUpdate.length }

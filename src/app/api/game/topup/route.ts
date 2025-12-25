@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
+import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
 
 export async function POST(request: Request) {
     try {
@@ -45,11 +46,13 @@ export async function POST(request: Request) {
             }
         })
 
-        if (!partnerPrice) {
-            return NextResponse.json({ error: 'Item not available in this store' }, { status: 404 })
+        let sellPrice: number
+        if (partnerPrice) {
+            sellPrice = Number(partnerPrice.sellPrice)
+        } else {
+            // Default pricing fallback
+            sellPrice = calculateDefaultPartnerSellPrice(Number(game.baseCost))
         }
-
-        const sellPrice = partnerPrice.sellPrice
         const baseCost = game.baseCost
 
         // Check Balances

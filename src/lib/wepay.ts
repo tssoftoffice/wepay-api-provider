@@ -1,4 +1,5 @@
 import axios from 'axios'
+import FormData from 'form-data'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import { getWePayErrorMessage } from './wepay-errors'
 
@@ -15,7 +16,7 @@ interface WePayResponse {
 
 interface MakePaymentParams {
     destRef: string
-    type: 'billpay' | 'mtopup' | 'cashcard'
+    type: 'billpay' | 'mtopup' | 'cashcard' | 'gtopup'
     amount: number
     company: string
     ref1: string
@@ -36,15 +37,35 @@ export class WePayClient {
 
         Object.keys(params).forEach(key => {
             if (params[key] !== undefined) {
-                formData.append(key, params[key])
+                formData.append(key, String(params[key])) // Ensure string conversation
             }
         })
 
+        // Create a custom HTTPS Agent to handle legacy server compatibility
+        const https = require('https')
+        const httpsAgent = new https.Agent({
+            // Allow legacy ciphers (Node 18+ defaults to OpenSSL 3 which is strict)
+            ciphers: 'DEFAULT:@SECLEVEL=1',
+            minVersion: 'TLSv1',
+            rejectUnauthorized: false
+        })
+
         const config: any = {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: {
+                ...formData.getHeaders(),
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*'
+            },
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity,
+            httpsAgent: httpsAgent
         }
 
         if (PROXY_URL) {
+            // Note: If using Proxy, socks-proxy-agent handles the connection. 
+            // We need to pass these SSL options to the proxy agent if possible, 
+            // BUT socks-proxy-agent might override httpsAgent.
+            // In Production, usually we DON'T use usage proxy (PROXY_URL is undefined).
             const agent = new SocksProxyAgent(PROXY_URL)
             config.httpsAgent = agent
             config.httpAgent = agent

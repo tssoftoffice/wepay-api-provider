@@ -179,6 +179,35 @@ export default function AdminGamesPage() {
                 </div>
             </div>
 
+            {/* Sync Progress Bar */}
+            {isPending && (
+                <div style={{
+                    marginBottom: '24px',
+                    background: 'white',
+                    padding: '20px',
+                    borderRadius: '16px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '12px'
+                }}>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 500, color: '#475569' }}>
+                        <span>กำลังดึงข้อมูลจาก WePay...</span>
+                        <span>Please wait...</span>
+                    </div>
+                    <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div className="progress-bar-animate" style={{
+                            height: '100%',
+                            background: '#3b82f6',
+                            borderRadius: '4px',
+                            width: '100%'
+                        }} />
+                    </div>
+                    <p style={{ fontSize: '13px', color: '#64748b' }}>ระบบกำลังรวบรวมข้อมูลเกมและอัปเดตราคา อาจใช้เวลาสักครู่</p>
+                </div>
+            )}
+
             {/* Filters */}
             <div style={{ background: 'white', padding: '16px', borderRadius: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
@@ -453,6 +482,16 @@ export default function AdminGamesPage() {
             <style jsx global>{`
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
                 .spin { animation: spin 1s linear infinite; }
+                
+                @keyframes progressIndeterminate {
+                    0% { transform: translateX(-100%); }
+                    50% { transform: translateX(0%); }
+                    100% { transform: translateX(100%); }
+                }
+                .progress-bar-animate {
+                    animation: progressIndeterminate 1.5s infinite linear;
+                    transform-origin: 0% 50%;
+                }
             `}</style>
         </div>
     )

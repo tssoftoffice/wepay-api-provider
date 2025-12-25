@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { validateApiKey } from '@/lib/api-auth'
+import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
 
 export async function GET(req: NextRequest) {
     const auth = await validateApiKey(req)
@@ -11,9 +12,15 @@ export async function GET(req: NextRequest) {
 
     const { partner } = auth
 
-    // Fetch all active games
+    // Fetch all active games (filtered for gtopup only as requested)
     const games = await prisma.game.findMany({
-        where: { status: 'ACTIVE' }
+        where: {
+            status: 'ACTIVE',
+            code: {
+                startsWith: 'gtopup',
+                mode: 'insensitive'
+            }
+        }
     })
 
     // Fetch partner's custom prices
@@ -28,7 +35,7 @@ export async function GET(req: NextRequest) {
         // RRP (Recommended Retail Price) - What they should sell for
         let price = customPrice
             ? Number(customPrice.sellPrice)
-            : Math.ceil(Number(game.baseCost) * 1.1)
+            : calculateDefaultPartnerSellPrice(Number(game.baseCost))
 
         // Convert baseCost to Number
         const costPrice = Number(game.baseCost)

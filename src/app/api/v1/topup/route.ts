@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { validateApiKey } from '@/lib/api-auth'
 import { WePayClient } from '@/lib/wepay'
+import { calculateDefaultPartnerSellPrice } from '@/config/pricing'
+import { sendTelegramNotify } from '@/lib/telegram'
 
 export async function POST(req: NextRequest) {
     const auth = await validateApiKey(req)
@@ -20,9 +22,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields: game_id, player_id' }, { status: 400 })
         }
 
-        // 1. Find the game
-        const game = await prisma.game.findUnique({
-            where: { id: game_id }
+        // 1. Find the game (Support ID or Code)
+        const game = await prisma.game.findFirst({
+            where: {
+                OR: [
+                    { id: game_id },
+                    { code: game_id }
+                ]
+            }
         })
 
         if (!game || game.status !== 'ACTIVE') {
@@ -31,7 +38,8 @@ export async function POST(req: NextRequest) {
 
         // 2. Determine cost & sell price
         const cost = Number(game.baseCost)
-        let sellPrice = cost
+        // Default Selling Price: Cost + 10% (Using helper)
+        let sellPrice = calculateDefaultPartnerSellPrice(cost)
 
         // Check if partner has set a custom price
         const customPrice = await prisma.partnerGamePrice.findUnique({
@@ -54,8 +62,15 @@ export async function POST(req: NextRequest) {
         }
 
         // 3. Create Pending Transaction
+        // Generate a short unique ID for WePay compatibility (avoiding 36-char UUIDs and hyphens)
+        // Format: T + Timestamp(Base36) + Random(Base36) -> approx 14-16 chars
+        const timestamp = Date.now().toString(36).toUpperCase()
+        const random = Math.random().toString(36).substring(2, 7).toUpperCase()
+        const transactionId = `T${timestamp}${random}`
+
         const transaction = await prisma.gameTopupTransaction.create({
             data: {
+                id: transactionId, // Override default UUID
                 partnerId: partner!.id,
                 gameId: game.id,
                 // customerId is optional/undefined for API
@@ -90,9 +105,9 @@ export async function POST(req: NextRequest) {
             })
 
             const wepayRes = await WePayClient.makePayment({
-                destRef: Date.now().toString(), // Short unique ID
+                destRef: transaction.id, // Use Transaction ID as Reference
                 type: parts[0] as any,
-                amount: wePayAmount, // Use faceValue for WePay (integer denomination)
+                amount: wePayAmount,
                 company: company,
                 ref1: player_id,
                 ref2: server || undefined
@@ -114,6 +129,20 @@ export async function POST(req: NextRequest) {
                     }
                 })
             ])
+
+
+
+            // Low Balance Check (Non-blocking)
+            WePayClient.getBalance().then(async (balance) => {
+                const LOW_BALANCE_THRESHOLD = 1000 // Configurable threshold
+                if (balance.available < LOW_BALANCE_THRESHOLD) {
+                    await sendTelegramNotify(
+                        `⚠️ <b>แจ้งเตือนเงิน WePay ใกล้หมด</b>\n` +
+                        `ยอดคงเหลือ: <b>${balance.available.toLocaleString()} บาท</b>\n` +
+                        `กรุณาเติมเงินทันที`
+                    ).catch(console.error)
+                }
+            }).catch(e => console.error('Failed to check balance after topup', e))
 
             return NextResponse.json({
                 data: {

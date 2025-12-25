@@ -234,3 +234,64 @@ export async function resetPartnerUserPassword(userId: string, newPassword: stri
         return { success: false, error: 'Failed to reset password' }
     }
 }
+
+// Adjust Partner Balance
+export async function adjustPartnerBalance(partnerId: string, amount: number, note: string) {
+    try {
+        console.log('Adjusting balance for partner:', partnerId, amount, note)
+
+        if (!amount || amount === 0) {
+            return { success: false, error: 'Amount must be non-zero' }
+        }
+
+        if (!note) {
+            return { success: false, error: 'Note is required' }
+        }
+
+        const partner = await prisma.partner.findUnique({ where: { id: partnerId } })
+        if (!partner) return { success: false, error: 'Partner not found' }
+
+        await prisma.$transaction(async (tx) => {
+            // 1. Create Transaction (PartnerTopupTransaction)
+            // We reuse PartnerTopupTransaction for simplicity, marking it as SUCCESS immediately
+            // providerTxnId will store "ADMIN_ADJUSTMENT: <note>"
+            await tx.partnerTopupTransaction.create({
+                data: {
+                    partnerId: partnerId,
+                    amount: amount,
+                    status: 'SUCCESS',
+                    providerTxnId: `ADMIN: ${note}`
+                }
+            })
+
+            // 2. Update Partner Balance
+            const updateAction = amount > 0
+                ? { increment: amount }
+                : { decrement: Math.abs(amount) }
+
+            await tx.partner.update({
+                where: { id: partnerId },
+                data: {
+                    walletBalance: updateAction
+                }
+            })
+
+            // 3. Audit Log
+            await tx.auditLog.create({
+                data: {
+                    partnerId: partnerId,
+                    action: 'ADMIN_ADJUST_BALANCE',
+                    details: JSON.stringify({ amount, note })
+                }
+            })
+        })
+
+        revalidatePath('/admin/partners/' + partnerId)
+        revalidatePath('/admin/partners')
+
+        return { success: true }
+    } catch (error: any) {
+        console.error('Error adjusting balance:', error)
+        return { success: false, error: error.message || 'Failed to adjust balance' }
+    }
+}

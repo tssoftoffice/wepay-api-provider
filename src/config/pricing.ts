@@ -14,9 +14,15 @@ export const DEFAULT_RATE: PricingRate = {
 }
 
 // Helper to calculate ratios with 1.5% margin for Admin
-function createRate(discountPercent: number): PricingRate {
+function createRate(discountPercent: number, capAtFace = false): PricingRate {
     const costRatio = 1 - (discountPercent / 100)
-    const priceRatio = costRatio + 0.015 // 1.5% Admin Margin
+    let priceRatio = costRatio + 0.015 // 1.5% Admin Margin
+
+    // Optional: Cap at Face Value (1.0) if margin allows positive profit
+    if (capAtFace && priceRatio > 1.0 && costRatio < 1.0) {
+        priceRatio = 1.0
+    }
+
     return {
         costRatio: Number(costRatio.toFixed(4)),
         priceRatio: Number(priceRatio.toFixed(4))
@@ -25,7 +31,7 @@ function createRate(discountPercent: number): PricingRate {
 
 // Category-based Rates
 export const CATEGORY_RATES: Record<string, PricingRate> = {
-    'mtopup': createRate(0.5), // Fallback Mobile 0.5%
+    'mtopup': createRate(0.5, true), // Fallback Mobile 0.5% -> Cap at 1.0
     'gtopup': createRate(5),   // Fallback Game 5%
     'cashcard': createRate(1.5),// Fallback Card 1.5%
     'billpay': createRate(0)    // Fallback Bill 0%
@@ -35,14 +41,15 @@ export const CATEGORY_RATES: Record<string, PricingRate> = {
 // Mapping based on user list and inspection results
 export const SPECIAL_RATES: Record<string, PricingRate> = {
     // === Mobile Topup ===
-    'AIS': createRate(1),
+    'AIS': createRate(1, true), // Cap at 1.0 (Admin takes 1% margin)
     'DTAC': createRate(3),
     'TRUEMOVE': createRate(3),
+    'TRMV': createRate(3), // Add TRMV mapping (TrueMove H)
     'MY': createRate(3.5),
     'MY-AOP': createRate(4), // My By Cat Promo
 
     // Mobile Promo Packages
-    'AIS-AOP': createRate(1.5),
+    'AIS-AOP': createRate(1.5, true),
     'HAPPY-AOP': createRate(4), // Dtac Promo
     'TRMV-AOP': createRate(4),  // True Promo
 
@@ -148,4 +155,21 @@ export function getPricingRate(type: string, code: string): PricingRate {
 
     // 4. Default
     return DEFAULT_RATE
+}
+
+// === Partner Selling Price Utilities ===
+
+/**
+ * Default profit margin percentage for Partners (when no custom price is set).
+ * Current Policy: 10% Markup from Base Cost.
+ */
+export const PARTNER_DEFAULT_PROFIT_MARGIN_PERCENT = 10
+
+/**
+ * Calculates the default selling price for a partner based on the base cost.
+ * Logic: Cost + 10% (Rounded UP to nearest integer for clean prices)
+ * @param baseCost The cost the partner pays to the system
+ */
+export function calculateDefaultPartnerSellPrice(baseCost: number): number {
+    return Math.ceil(baseCost * (1 + PARTNER_DEFAULT_PROFIT_MARGIN_PERCENT / 100))
 }
