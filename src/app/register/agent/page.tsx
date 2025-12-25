@@ -160,7 +160,7 @@ export default function AgentRegisterPage() {
                 <div className={styles.card}>
                     <div className={styles.header}>
                         <h1 className={styles.title}>สมัครสมาชิกพาร์ทเนอร์ ✨</h1>
-                        <p className={styles.subtitle}>เข้าร่วมเป็นครอบครัว EvoPlayShop วันนี้</p>
+                        <p className={styles.subtitle}>เข้าร่วมเป็นครอบครัว GamesFlows วันนี้</p>
                     </div>
 
                     {error && <div className={styles.error}>{error}</div>}

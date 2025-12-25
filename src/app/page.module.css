@@ -709,11 +709,12 @@
   border: 1px solid #ffe4bc;
   /* Lighter Orange Border */
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   height: 100%;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
@@ -726,17 +727,29 @@
 }
 
 .serviceIcon {
-  width: 56px;
-  height: 56px;
+  width: 100px;
+  height: 100px;
   background: #fff5e6;
   /* Very light orange tint */
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   color: #FB9B00;
   /* Custom Orange Icon */
+  transition: transform 0.5s ease;
+}
+
+.serviceIconImage {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(251, 155, 0, 0.2));
+}
+
+.serviceCard:hover .serviceIcon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .serviceCard h3 {

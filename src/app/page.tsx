@@ -106,7 +106,7 @@ export default function HomePage() {
                     {/* Service 1: API */}
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                            <img src="/service_link_3d.png" alt="API Service" className={styles.serviceIconImage} />
                         </div>
                         <h3>บริการ API เติมเกม</h3>
                         <p>ให้บริการระบบ API เติมเกมแบบครบวงจร รองรับการเชื่อมต่อเว็บไซต์เติมเกม รวดเร็ว เสถียร และพร้อมใช้งานเชิงธุรกิจ</p>
@@ -115,16 +115,16 @@ export default function HomePage() {
                     {/* Service 2: Auto */}
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+                            <img src="/service_flash_3d.png" alt="Auto System" className={styles.serviceIconImage} />
                         </div>
                         <h3>ระบบเติมเกมอัตโนมัติ</h3>
-                        <p>ระบบประมวลผลคำสั่งเติมเกมแบบเรียลไทม์ ทำงานอัตโนมัติ 24 ชั่วโมง ช่วยลดขั้นตอนและต้นทุนการดำเนินงาน</p>
+                        <p>ระบบประมวลผลคำสั่งเติมเกมบริการแบบเรียลไทม์ ทำงานอัตโนมัติ 24 ชั่วโมง ช่วยลดขั้นตอนและต้นทุนการดำเนินงาน</p>
                     </div>
 
                     {/* Service 3: Structure */}
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
+                            <img src="/service_layout_3d.png" alt="Portal Structure" className={styles.serviceIconImage} />
                         </div>
                         <h3>โครงสร้างสำหรับเจ้าของเว็บ</h3>
                         <p>ออกแบบมาเพื่อเจ้าของเว็บไซต์เติมเกมโดยเฉพาะ กำหนดรูปแบบการขายและราคาด้วยตัวเอง พร้อมต่อยอดและขยายธุรกิจในอนาคต</p>
@@ -133,7 +133,7 @@ export default function HomePage() {
                     {/* Service 4: Security */}
                     <div className={styles.serviceCard}>
                         <div className={styles.serviceIcon}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                            <img src="/service_shield_3d.png" alt="Security" className={styles.serviceIconImage} />
                         </div>
                         <h3>ความปลอดภัยและความเสถียร</h3>
                         <p>ระบบมีการตรวจสอบคำสั่งซ้ำและความถูกต้อง ป้องกันข้อผิดพลาดระหว่างการใช้งาน มั่นใจได้ในทุกคำสั่งเติมเกม</p>

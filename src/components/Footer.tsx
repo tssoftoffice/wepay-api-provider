@@ -24,8 +24,6 @@ export function Footer() {
                     <h4>บริการ</h4>
                     <div className={styles.footerLinks}>
                         <Link href="/">หน้าหลัก</Link>
-
-                        <Link href="/contact">ติดต่อเรา</Link>
                     </div>
                 </div>
                 <div className={styles.footerColumn}>
