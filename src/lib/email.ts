@@ -101,31 +101,60 @@ export async function sendSubscriptionExpiringEmail(to: string, partnerName: str
 
     try {
         await transporter.sendMail({
-            from: `"GamesFlows" <${process.env.SMTP_USER}>`,
+            from: `"GamesFlows System" <${process.env.SMTP_USER}>`,
             to,
-            subject: 'แจ้งเตือน: การสมัครสมาชิกของคุณกำลังจะหมดอายุลง',
+            subject: 'แจ้งเตือน: การต่ออายุสมาชิก GamesFlows (ด่วน)',
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <h2 style="color: #4f46e5; text-align: center;">GamesFlows</h2>
-                    <div style="padding: 20px; text-align: center;">
-                        <p style="font-size: 16px; color: #374151;">เรียนคุณ <strong>${partnerName}</strong></p>
-                        <p style="font-size: 16px; color: #374151;">
-                            การสมัครสมาชิกของคุณกำลังจะหมดอายุในวันที่ <br />
-                            <strong style="color: #ef4444; font-size: 18px;">${expiryDate}</strong>
-                        </p>
-                        <p style="color: #6b7280; font-size: 14px;">
-                            กรุณาต่ออายุสมาชิกเพื่อการใช้งานที่ต่อเนื่อง และไม่พลาดสิทธิประโยชน์ต่างๆ
-                        </p>
+                <div style="font-family: 'Sarabun', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background-color: #ffffff; border: 1px solid #e5e7eb;">
+                    <!-- Header -->
+                    <div style="background-color: #4f46e5; padding: 30px 20px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold;">GamesFlows</h1>
+                        <p style="color: #e0e7ff; margin: 5px 0 0; font-size: 14px;">ระบบจัดการร้านค้าเกมครบวงจร</p>
+                    </div>
+
+                    <!-- Content -->
+                    <div style="padding: 40px 30px; color: #374151;">
+                        <p style="font-size: 16px; margin-bottom: 20px;">เรียน คุณ <strong>${partnerName}</strong></p>
                         
-                        <div style="margin: 30px 0;">
-                            <a href="${renewLink}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
-                                ต่ออายุสมาชิกทันที
+                        <p style="line-height: 1.6; margin-bottom: 15px;">
+                            ฝ่ายบริการลูกค้า GamesFlows ขอเรียนแจ้งให้ท่านทราบว่า แพ็กเกจสมาชิกปัจจุบันของท่านกำลังจะครบกำหนดอายุการใช้งานในวันที่
+                        </p>
+
+                        <div style="background-color: #f3f4f6; border-left: 4px solid #4f46e5; padding: 15px; margin: 25px 0;">
+                            <p style="margin: 0; font-size: 18px; font-weight: bold; color: #111827;">
+                                วันหมดอายุ: ${expiryDate}
+                            </p>
+                            <p style="margin: 5px 0 0; font-size: 14px; color: #6b7280;">เหลือเวลาอีก 3 วัน</p>
+                        </div>
+
+                        <p style="line-height: 1.6; margin-bottom: 15px;">
+                            เพื่อให้ธุรกิจของท่านดำเนินไปได้อย่างต่อเนื่อง แะลป้องกันการระงับการให้บริการที่อาจส่งผลกระทบต่อลูกค้าของท่าน ทางเราขอแนะนำให้ท่านดำเนินการต่ออายุสมาชิกก่อนถึงวันดังกล่าว
+                        </p>
+
+                         <p style="line-height: 1.6; margin-bottom: 25px;">
+                            <strong>สิทธิประโยชน์ต่อเนื่องที่ท่านจะได้รับ:</strong><br/>
+                            • การเข้าถึงระบบจัดการร้านค้าตลอด 24 ชั่วโมง<br/>
+                            • การอัปเดตสถานะการเติมเกมแบบ Real-time<br/>
+                            • การสนับสนุนทางเทคนิคจากทีมงานมืออาชีพ
+                        </p>
+
+                        <div style="text-align: center; margin: 40px 0;">
+                            <a href="${renewLink}" style="background-color: #4f46e5; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);">
+                                ดำเนินการต่ออายุสมาชิก
                             </a>
                         </div>
 
-                        <p style="font-size: 12px; color: #9ca3af; margin-top: 20px;">
-                            หากคุณได้ทำการต่ออายุแล้ว กรุณาเพิกเฉยต่ออีเมลฉบับนี้
+                        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;" />
+                        
+                        <p style="font-size: 14px; color: #6b7280; line-height: 1.5;">
+                            หมายเหตุ: หากท่านได้ดำเนินการชำระค่าบริการเรียบร้อยแล้ว ทางระบบต้องขออภัยในความไม่สะดวกมา ณ ที่นี้ และท่านสามารถเพิกเฉยต่ออีเมลฉบับนี้ได้
                         </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0;">&copy; ${new Date().getFullYear()} GamesFlows System. All rights reserved.</p>
+                        <p style="margin: 5px 0 0;">นี่เป็นอีเมลอัตโนมัติ กรุณาอย่าตอบกลับ</p>
                     </div>
                 </div>
             `,
