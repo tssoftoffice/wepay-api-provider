@@ -165,6 +165,14 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                         <span>ID: {partner.id}</span>
                         <span>•</span>
                         <span>สมัครเมื่อ: {new Date(partner.createdAt).toLocaleDateString('th-TH')}</span>
+                        {partner.subscriptionEnd && (
+                            <>
+                                <span>•</span>
+                                <span style={{ color: new Date(partner.subscriptionEnd) < new Date() ? '#ef4444' : '#10b981' }}>
+                                    หมดอายุ: {new Date(partner.subscriptionEnd).toLocaleDateString('th-TH')}
+                                </span>
+                            </>
+                        )}
                     </div>
                 </div>
                 <div className={styles.walletCard}>
@@ -373,7 +381,11 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
 
                                 if (!name) return alert('กรุณาระบุชื่อร้านค้า')
 
-                                const res = await updatePartner(id, { name, domain, subscriptionStatus })
+                                const subscriptionEnd = formData.get('subscriptionEnd') as string
+
+                                if (!name) return alert('กรุณาระบุชื่อร้านค้า')
+
+                                const res = await updatePartner(id, { name, domain, subscriptionStatus, subscriptionEnd })
 
                                 if (res.success) {
                                     alert('บันทึกข้อมูลเรียบร้อยแล้ว')
@@ -413,6 +425,19 @@ export default function PartnerDetailPage({ params }: { params: Promise<{ id: st
                                         <option value="PENDING">PENDING (รออนุมัติ)</option>
                                         <option value="SUSPENDED">SUSPENDED (ระงับการใช้งาน)</option>
                                     </select>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>วันหมดอายุสมาชิก (Subscription End)</label>
+                                    <input
+                                        type="date"
+                                        name="subscriptionEnd"
+                                        defaultValue={partner.subscriptionEnd ? new Date(partner.subscriptionEnd).toISOString().split('T')[0] : ''}
+                                        className={styles.input}
+                                    />
+                                    <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                                        * หากไม่ระบุ จะถือว่าไม่มีวันหมดอายุ
+                                    </div>
                                 </div>
 
                                 <button

@@ -165,7 +165,7 @@ export async function getPartnerDetails(id: string) {
 }
 
 // Update partner details
-export async function updatePartner(id: string, data: { name: string, domain: string, subscriptionStatus: string }) {
+export async function updatePartner(id: string, data: { name: string, domain: string, subscriptionStatus: string, subscriptionEnd?: string }) {
     try {
         console.log('Updating partner:', id, data)
         await prisma.partner.update({
@@ -173,7 +173,8 @@ export async function updatePartner(id: string, data: { name: string, domain: st
             data: {
                 name: data.name,
                 domain: data.domain || null,
-                subscriptionStatus: data.subscriptionStatus
+                subscriptionStatus: data.subscriptionStatus,
+                subscriptionEnd: data.subscriptionEnd ? new Date(data.subscriptionEnd) : null
             }
         })
 
