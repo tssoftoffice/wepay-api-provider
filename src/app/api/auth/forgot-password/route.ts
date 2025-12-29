@@ -40,10 +40,10 @@ export async function POST(req: NextRequest) {
 
         // 4. Send Email
         const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${token}`
-        const emailSent = await sendPasswordResetEmail(email, resetLink)
+        const result = await sendPasswordResetEmail(email, resetLink)
 
-        if (!emailSent) {
-            return NextResponse.json({ error: 'Failed to send email' }, { status: 500 })
+        if (!result.success) {
+            return NextResponse.json({ error: 'Failed to send email: ' + (result.error || 'Unknown error') }, { status: 500 })
         }
 
         // DEV/DEMO MODE: Return the link if no real email was sent (implied by lack of SMTP config handling in lib)

@@ -48,7 +48,7 @@ export async function sendOTPEmail(to: string, otp: string): Promise<boolean> {
     }
 }
 
-export async function sendPasswordResetEmail(to: string, resetLink: string): Promise<boolean> {
+export async function sendPasswordResetEmail(to: string, resetLink: string): Promise<{ success: boolean; error?: string }> {
     // Check if SMTP credentials are configured
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
         console.log('==================================================')
@@ -56,7 +56,7 @@ export async function sendPasswordResetEmail(to: string, resetLink: string): Pro
         console.log(`[DEV MODE] Reset Password Email to: ${to}`)
         console.log(`[DEV MODE] Reset Link: ${resetLink}`)
         console.log('==================================================')
-        return true // Pretend success for development
+        return { success: true } // Pretend success for development
     }
 
     try {
@@ -80,10 +80,10 @@ export async function sendPasswordResetEmail(to: string, resetLink: string): Pro
                 </div>
             `,
         })
-        return true
-    } catch (error) {
+        return { success: true }
+    } catch (error: any) {
         console.error('Error sending email:', error)
-        return false
+        return { success: false, error: error.message || 'Unknown SMTP Error' }
     }
 }
 
