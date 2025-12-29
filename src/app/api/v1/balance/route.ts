@@ -61,6 +61,8 @@ export async function GET(req: NextRequest) {
             partner_name: partner!.name,
             wallet_balance: Number(partner!.walletBalance),
             currency: 'THB',
+            subscription_expires_at: partner!.subscriptionEnd,
+            subscription_status: partner!.subscriptionStatus,
             contact: contact,
             statistics: {
                 total_revenue: totalRevenue,

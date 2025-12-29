@@ -13,6 +13,8 @@ export async function GET(req: NextRequest) {
     const { partner } = auth
 
     // Fetch all active games (filtered for gtopup only as requested)
+    // TODO: In the future, we might want to bring back other categories (cards, mtopup, etc.)
+    // Remove the 'code: { startsWith: ... }' filter to enable them again.
     const games = await prisma.game.findMany({
         where: {
             status: 'ACTIVE',
