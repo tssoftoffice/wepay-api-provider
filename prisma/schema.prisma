@@ -79,23 +79,23 @@ model Game {
   baseCost      Decimal
   status        String                 @default("ACTIVE")
   imageUrl      String?
-  exampleIdUrl  String?
   description   String?
-  group         String?
   servers       String?
+  exampleIdUrl  String?
+  group         String?
   topups        GameTopupTransaction[]
   prices        PartnerGamePrice[]
 }
 
 model PartnerGamePrice {
-  id        String  @id @default(uuid())
-  partnerId String
-  gameId    String
-  sellPrice Decimal
-  imageUrl  String?
+  id           String  @id @default(uuid())
+  partnerId    String
+  gameId       String
+  sellPrice    Decimal
+  imageUrl     String?
   exampleIdUrl String?
-  game      Game    @relation(fields: [gameId], references: [id])
-  partner   Partner @relation(fields: [partnerId], references: [id])
+  game         Game    @relation(fields: [gameId], references: [id])
+  partner      Partner @relation(fields: [partnerId], references: [id])
 
   @@unique([partnerId, gameId])
 }
@@ -117,19 +117,19 @@ model GameTopupTransaction {
   customerId    String?
   partnerId     String
   gameId        String
-  baseCost      Decimal   // Partner Price (What Partner pays System) -> Admin Revenue
-  providerPrice Decimal   @default(0) // WePay Cost (What System pays WePay) -> Admin Cost
+  baseCost      Decimal
+  providerPrice Decimal   @default(0)
   sellPrice     Decimal
   status        String    @default("PENDING")
   server        String?
   targetId      String?
   providerTxnId String?
   createdAt     DateTime  @default(now())
+  pin           String?
+  serial        String?
   customer      Customer? @relation(fields: [customerId], references: [id])
   game          Game      @relation(fields: [gameId], references: [id])
   partner       Partner   @relation(fields: [partnerId], references: [id])
-  pin           String?
-  serial        String?
 }
 
 model PartnerTopupTransaction {

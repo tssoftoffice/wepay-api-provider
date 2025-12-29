@@ -1,0 +1,17 @@
+name: Daily Subscription Check
+
+on:
+  schedule:
+    # Runs at 17:00 UTC = 00:00 Bangkok Time (UTC+7)
+    - cron: '0 17 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Subscription Check API
+        run: |
+          echo "Calling Subscription Check API..."
+          curl -X GET https://gamesflows.com/api/cron/subscription-check \
+          -H "User-Agent: GitHub-Action-Cron"

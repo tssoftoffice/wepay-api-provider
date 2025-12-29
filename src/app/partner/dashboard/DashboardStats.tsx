@@ -87,7 +87,7 @@ async function getStats(partnerId: string) {
 
     const partner = await prisma.partner.findUnique({
         where: { id: partnerId },
-        select: { walletBalance: true, subscriptionStatus: true }
+        select: { walletBalance: true, subscriptionStatus: true, subscriptionEnd: true }
     })
 
     return {
@@ -201,9 +201,27 @@ export async function DashboardStats({ partnerId }: { partnerId: string }) {
                         <div className={styles.cardValue} style={{ fontSize: '1.5rem', marginTop: 8 }}>{partner?.subscriptionStatus || 'INACTIVE'}</div>
                         <div className={styles.cardTitle}>สถานะสมาชิก</div>
                     </div>
-                    {partner?.subscriptionStatus !== 'ACTIVE' && (
-                        <a href="/partner/subscription" className={styles.link} style={{ color: '#f97316', marginTop: 4, display: 'block' }}>ต่ออายุ →</a>
-                    )}
+                    {(() => {
+                        const isInactive = partner?.subscriptionStatus !== 'ACTIVE'
+                        let showRenew = isInactive
+
+                        if (!isInactive && partner?.subscriptionEnd) {
+                            const now = new Date()
+                            const subEnd = new Date(partner.subscriptionEnd)
+                            const diffTime = subEnd.getTime() - now.getTime()
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+                            if (diffDays <= 3) {
+                                showRenew = true
+                            }
+                        }
+
+                        if (showRenew) {
+                            return (
+                                <a href="/partner/subscription" className={styles.link} style={{ color: '#f97316', marginTop: 4, display: 'block' }}>ต่ออายุ →</a>
+                            )
+                        }
+                        return null
+                    })()}
                 </div>
 
             </div>

@@ -87,3 +87,53 @@ export async function sendPasswordResetEmail(to: string, resetLink: string): Pro
     }
 }
 
+export async function sendSubscriptionExpiringEmail(to: string, partnerName: string, expiryDate: string, renewLink: string): Promise<boolean> {
+    // Check if SMTP credentials are configured
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
+        console.log('==================================================')
+        console.log(`[DEV MODE] SMTP Not Configured.`)
+        console.log(`[DEV MODE] Expiring Email to: ${to}`)
+        console.log(`[DEV MODE] Partner: ${partnerName}`)
+        console.log(`[DEV MODE] Expiry: ${expiryDate}`)
+        console.log('==================================================')
+        return true // Pretend success for development
+    }
+
+    try {
+        await transporter.sendMail({
+            from: `"GamesFlows" <${process.env.SMTP_USER}>`,
+            to,
+            subject: 'แจ้งเตือน: การสมัครสมาชิกของคุณกำลังจะหมดอายุลง',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <h2 style="color: #4f46e5; text-align: center;">GamesFlows</h2>
+                    <div style="padding: 20px; text-align: center;">
+                        <p style="font-size: 16px; color: #374151;">เรียนคุณ <strong>${partnerName}</strong></p>
+                        <p style="font-size: 16px; color: #374151;">
+                            การสมัครสมาชิกของคุณกำลังจะหมดอายุในวันที่ <br />
+                            <strong style="color: #ef4444; font-size: 18px;">${expiryDate}</strong>
+                        </p>
+                        <p style="color: #6b7280; font-size: 14px;">
+                            กรุณาต่ออายุสมาชิกเพื่อการใช้งานที่ต่อเนื่อง และไม่พลาดสิทธิประโยชน์ต่างๆ
+                        </p>
+                        
+                        <div style="margin: 30px 0;">
+                            <a href="${renewLink}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+                                ต่ออายุสมาชิกทันที
+                            </a>
+                        </div>
+
+                        <p style="font-size: 12px; color: #9ca3af; margin-top: 20px;">
+                            หากคุณได้ทำการต่ออายุแล้ว กรุณาเพิกเฉยต่ออีเมลฉบับนี้
+                        </p>
+                    </div>
+                </div>
+            `,
+        })
+        return true
+    } catch (error) {
+        console.error('Error sending expiring email:', error)
+        return false
+    }
+}
+
