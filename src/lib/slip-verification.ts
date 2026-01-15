@@ -22,13 +22,11 @@ export type VerificationData = {
 export async function verifySlip(slipImage: string): Promise<VerificationResult> {
     const errors: string[] = []
 
-    // 1. Primary (Disabled 404)
-    /*
+    // 1. Primary (New Private API)
     let result = await verifySlipPrimary(slipImage)
     if (result && result.success) return result
     if (result?.error) errors.push(`Primary: ${result.error}`)
-    */
-    let result: any = null // Placeholder
+    // let result: any = null // Placeholder
 
     // 2. Secondary (Slip2Go) - Enabled for TrueMoney support
     console.log('Primary fail/disabled, trying Secondary (Slip2Go)...')
@@ -51,9 +49,69 @@ export async function verifySlip(slipImage: string): Promise<VerificationResult>
 // --- Providers ---
 
 async function verifySlipPrimary(slipImage: string): Promise<VerificationResult | null> {
-    // ... (Keep existing implementation or leave as is if not changing)
-    // For brevity, assuming this valid code exists above or is being replaced if inside the block
-    return { success: false, error: 'Disabled' }
+    try {
+        console.log('Verifying slip with Primary (Private API)...')
+
+        const apiUrl = 'https://slip-c.oiioioiiioooioio.download/api/slip'
+
+        // This provider requires the full base64 string including data:image/...
+        const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                img: slipImage,
+                tos: true,
+                privacy: true,
+                eula: true
+            })
+        })
+
+        if (!res.ok) {
+            const errText = await res.text()
+            console.error(`Primary API Error (${res.status}):`, errText)
+            return { success: false, error: `Primary HTTP ${res.status}: ${errText}` }
+        }
+
+        const contentType = res.headers.get('content-type')
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await res.text()
+            console.error('Primary API Invalid Content-Type:', contentType, text.substring(0, 100))
+            return { success: false, error: `Primary API invalid response (Not JSON): ${text.substring(0, 50)}...` }
+        }
+
+        const json = await res.json()
+        console.log('Primary API Response:', JSON.stringify(json))
+
+        // Adjust response parsing based on likely format (usually similar to others or standard)
+        // Assuming success structure based on common patterns or previous EasySlip
+        // If the user didn't specify response format, we'll try to adapt common fields
+
+        if (json.code && json.code !== 200 && json.code !== 0) {
+            return { success: false, error: json.message || 'Verification Failed' }
+        }
+
+        const data = json.data || json
+
+        if (!data.amount) {
+            return { success: false, error: 'No amount found in response' }
+        }
+
+        return {
+            success: true,
+            data: {
+                receiverName: data.receiver_name || data.receiver?.account?.name || data.receiver?.displayName || data.receiver?.name || '',
+                transRef: data.transRef || data.ref || data.transaction_reference_id || '',
+                amount: Number(data.amount),
+                sender: data.sender
+            }
+        }
+
+    } catch (error: any) {
+        console.error('Primary Exception:', error)
+        return { success: false, error: error.message }
+    }
 }
 
 async function verifySlipSecondary(slipImage: string): Promise<VerificationResult | null> {
