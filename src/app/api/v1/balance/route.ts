@@ -3,7 +3,7 @@ import { validateApiKey } from '@/lib/api-auth'
 import prisma from '@/lib/prisma'
 
 export async function GET(req: NextRequest) {
-    const auth = await validateApiKey(req)
+    const auth = await validateApiKey(req, { skipSubscriptionCheck: true })
 
     if (auth.error) {
         return NextResponse.json({ error: auth.error }, { status: auth.status })

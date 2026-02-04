@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function validateApiKey(req: NextRequest) {
+export async function validateApiKey(req: NextRequest, options?: { skipSubscriptionCheck?: boolean }) {
     const apiKey = req.headers.get('X-API-KEY')
     const secretKey = req.headers.get('X-API-SECRET')
 
@@ -21,6 +21,10 @@ export async function validateApiKey(req: NextRequest) {
         // Optional: Enforce secret key if present, or just rely on API Key for simplicity if preferred.
         // For higher security, we should check it.
         return { error: 'Invalid Secret Key', status: 401 }
+    }
+
+    if (options?.skipSubscriptionCheck) {
+        return { partner }
     }
 
     if (partner.subscriptionStatus !== 'ACTIVE') {
